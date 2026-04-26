@@ -129,42 +129,70 @@ a {
     text-align: center;
 }
 
-@media (max-width: 900px) {
+@media (max-width: 768px) {
+
+    body {
+        align-items: flex-start;
+        padding: 20px;
+        box-sizing: border-box;
+    }
+
+    .login-wrapper {
+        flex-direction: column;
+        width: 100%;
+        min-height: 100vh;
+    }
+
+    /* Bilder links/rechts ausblenden */
     .side {
         display: none;
     }
 
-    .login-card {
-        position: relative;
-        margin: 20px;
-    }
-}
-@media (max-width: 768px) {
-
+    /* LOGIN KACHEL */
     .login-box,
     .login-container,
     .form-box {
         width: 95%;
-        max-width: 500px;   /* größer als vorher */
+        max-width: 500px;
         margin: 20px auto;
-        padding: 40px 28px; /* mehr Innenabstand */
+        padding: 40px 28px;
         border-radius: 24px;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+        background: rgba(255,255,255,0.05);
+        backdrop-filter: blur(10px);
     }
 
+    /* INPUT FELDER */
     input {
+        width: 100%;
         padding: 16px;
         font-size: 18px;
         margin-bottom: 16px;
+        border-radius: 12px;
+        border: none;
+        outline: none;
     }
 
+    /* BUTTON */
     button {
+        width: 100%;
         padding: 16px;
         font-size: 18px;
         border-radius: 12px;
+        border: none;
+        cursor: pointer;
     }
 
+    /* TEXT */
     h1, h2 {
         font-size: 32px;
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    p, a {
+        text-align: center;
+        display: block;
     }
 }
 </style>
