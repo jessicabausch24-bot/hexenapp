@@ -136,58 +136,39 @@ a {
 }
 
 @media screen and (max-width: 768px) {
-
-    @media screen and (max-width: 768px) {
     .login-card {
-        width: 95vw !important;
-        min-height: 650px !important;
-        transform: translate(-50%, -50%) scale(1.35) !important;
-        background: red !important;
-        z-index: 99999 !important;
-    }
-}
+        position: absolute !important;
+        top: 50% !important;
+        left: 50% !important;
+        transform: translate(-50%, -50%) !important;
 
-    .login-card form {
-        width: 100% !important;
-    }
+        width: 90vw !important;
+        max-width: 90vw !important;
 
-    .login-card label {
-        font-size: 24px !important;
-        margin-bottom: 12px !important;
-        display: block !important;
-    }
-
-    .login-card input {
-        width: 100% !important;
-        height: 70px !important;
-        font-size: 22px !important;
-        padding: 18px !important;
-        margin-bottom: 28px !important;
-        border-radius: 18px !important;
+        padding: 35px 24px !important;
+        border-radius: 24px !important;
+        z-index: 10 !important;
         box-sizing: border-box !important;
     }
 
+    .login-card input {
+        height: 52px !important;
+        font-size: 17px !important;
+        margin-bottom: 18px !important;
+    }
+
     .login-card button {
-        width: 100% !important;
-        height: 72px !important;
-        font-size: 22px !important;
-        border-radius: 20px !important;
+        height: 54px !important;
+        font-size: 17px !important;
+    }
+
+    .login-card label {
+        font-size: 18px !important;
     }
 
     .register-text,
     .register-text a {
-        font-size: 20px !important;
-    }
-}
-@media screen and (max-width: 768px) {
-    .login-card {
-        background: red !important;
-        width: 95vw !important;
-        transform: translate(-50%, -50%) scale(1.4) !important;
-        position: absolute !important;
-        top: 50% !important;
-        left: 50% !important;
-        z-index: 99999 !important;
+        font-size: 16px !important;
     }
 }
 </style>
