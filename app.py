@@ -22,9 +22,11 @@ DATABASE_URL = os.environ.get("DATABASE_URL")
 print("DATABASE_URL CHECK:", DATABASE_URL.replace("0QlRTReZFTD8u0px", "****") if DATABASE_URL else "FEHLT")
 
 def get_db():
-    if not DATABASE_URL:
-        raise Exception("DATABASE_URL fehlt in Render Environment")
-    return psycopg2.connect(DATABASE_URL, sslmode="require")
+    return psycopg2.connect(
+        DATABASE_URL,
+        sslmode="require",
+        client_encoding="UTF8"
+    )
 
 # ---------------------------------------------------------
 # DATEI-HILFSFUNKTIONEN
