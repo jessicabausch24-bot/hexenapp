@@ -132,67 +132,73 @@ a {
 @media (max-width: 768px) {
 
     body {
-        align-items: flex-start;
-        padding: 20px;
-        box-sizing: border-box;
-    }
-
-    .login-wrapper {
-        flex-direction: column;
-        width: 100%;
+        margin: 0;
+        padding: 0;
         min-height: 100vh;
     }
 
-    /* Bilder links/rechts ausblenden */
-    .side {
-        display: none;
+    .login-wrapper {
+        position: relative;
+        width: 100%;
+        height: 100vh;
     }
 
-    /* LOGIN KACHEL */
+    /* Bilder bleiben sichtbar */
+    .side {
+        display: block;
+        width: 100%;
+        height: 50vh;
+    }
+
+    .side img {
+        height: 100%;
+        object-fit: cover;
+    }
+
+    /* 🔥 LOGIN KACHEL ALS OVERLAY */
     .login-box,
     .login-container,
-    .form-box {
-        width: 95%;
-        max-width: 500px;
-        margin: 20px auto;
+    .form-box,
+    .card {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+
+        width: 90%;
+        max-width: 420px;
+
         padding: 40px 28px;
-        border-radius: 24px;
-        box-shadow: 0 10px 40px rgba(0,0,0,0.3);
-        background: rgba(255,255,255,0.05);
-        backdrop-filter: blur(10px);
+        border-radius: 28px;
+
+        z-index: 10;
+
+        background: rgba(255,255,255,0.1);
+        backdrop-filter: blur(12px);
+
+        box-shadow: 0 10px 40px rgba(0,0,0,0.4);
     }
 
-    /* INPUT FELDER */
+    /* Inputs größer */
     input {
         width: 100%;
-        padding: 16px;
+        height: 55px;
         font-size: 18px;
+        padding: 14px;
         margin-bottom: 16px;
         border-radius: 12px;
-        border: none;
-        outline: none;
     }
 
-    /* BUTTON */
     button {
         width: 100%;
-        padding: 16px;
+        height: 55px;
         font-size: 18px;
         border-radius: 12px;
-        border: none;
-        cursor: pointer;
     }
 
-    /* TEXT */
     h1, h2 {
-        font-size: 32px;
+        font-size: 28px;
         text-align: center;
-        margin-bottom: 20px;
-    }
-
-    p, a {
-        text-align: center;
-        display: block;
     }
 }
 </style>
