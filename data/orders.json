@@ -1,0 +1,75 @@
+[
+    {
+        "id": "3e4ead56-8f0c-491d-a44f-4e7b0c3f5c99",
+        "datum": "23.04.2026 21:59",
+        "user": "Jessi24",
+        "email": "Jessica.Bausch24@gmail.com",
+        "items": [
+            {
+                "anmerkung": "",
+                "anzahl": 2,
+                "bild": null,
+                "groesse": "S",
+                "id": 1,
+                "name": "Lila Hexenpulli",
+                "preis": 49.9
+            },
+            {
+                "anmerkung": "",
+                "anzahl": 1,
+                "bild": null,
+                "groesse": "XXL",
+                "id": 1,
+                "name": "Lila Hexenpulli",
+                "preis": 49.9
+            },
+            {
+                "anmerkung": "",
+                "anzahl": 1,
+                "bild": "placeholder.png",
+                "extras": {},
+                "groesse": "",
+                "id": 102,
+                "name": "Hanfzöpfe",
+                "preis": 7.9
+            },
+            {
+                "anmerkung": "",
+                "anzahl": 1,
+                "bild": "hexenbecher.jpg",
+                "extras": {
+                    "Mit Deckel": "Ja",
+                    "Name für Aufdruck": "Jessi"
+                },
+                "groesse": "",
+                "id": 201,
+                "name": "Hexenbecher",
+                "preis": 12.9
+            }
+        ],
+        "total": 170.5
+    },
+    {
+        "id": "bed8b8fb-14cd-4ddd-acdf-c3ef6bd0dd9a",
+        "datum": "24.04.2026 23:37",
+        "user": "Jessi24",
+        "email": "Jessica.Bausch24@gmail.com",
+        "items": [
+            {
+                "anmerkung": "",
+                "anzahl": 1,
+                "bild": "Maske.png",
+                "extras": {},
+                "groesse": "Erwachsene",
+                "groessen_verfuegbar": [
+                    "Erwachsene",
+                    "Kinder"
+                ],
+                "id": 6,
+                "name": "Maske",
+                "preis": 129.9
+            }
+        ],
+        "total": 129.9
+    }
+]

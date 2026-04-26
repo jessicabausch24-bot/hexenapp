@@ -1,0 +1,172 @@
+{% extends "base.html" %}
+
+{% block title %}Meine Reservierungen{% endblock %}
+
+{% block styles %}
+
+.wrapper {
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.header {
+    margin-bottom: 20px;
+}
+
+h1 {
+    margin: 0;
+}
+
+.card {
+    background: white;
+    color: #1f1936;
+    border-radius: 18px;
+    padding: 20px;
+    margin-bottom: 18px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+}
+
+.res-head {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 12px;
+}
+
+.res-id {
+    font-size: 13px;
+    color: #666;
+}
+
+.info {
+    border-top: 1px solid #ddd;
+    padding-top: 10px;
+    margin-top: 10px;
+    line-height: 1.6;
+}
+
+.places {
+    font-size: 22px;
+    font-weight: bold;
+    color: #6a1cff;
+}
+
+.hint {
+    background: #fff6d8;
+    color: #5b4600;
+    padding: 14px;
+    border-radius: 14px;
+    margin-top: 14px;
+    line-height: 1.5;
+}
+
+.empty {
+    background: white;
+    color: #1f1936;
+    border-radius: 18px;
+    padding: 20px;
+}
+
+.btn {
+    display: inline-block;
+    margin-top: 14px;
+    padding: 10px 14px;
+    border-radius: 12px;
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.btn-primary {
+    background: #6a1cff;
+}
+
+.btn-danger {
+    background: #cf3f3f;
+}
+
+.btn-warning {
+    background: #d99000;
+}
+
+{% endblock %}
+
+{% block content %}
+
+<div class="wrapper">
+
+    <div class="header">
+        <h1>Meine Reservierungen</h1>
+    </div>
+
+    {% if reservierungen %}
+        {% for r in reservierungen %}
+            <div class="card">
+
+                <div class="res-head">
+                    <div>
+                        <strong>{{ r.ausfahrt }}</strong><br>
+                        <span class="res-id">Reservierungsnummer: {{ r.id }}</span>
+                    </div>
+
+                    <div class="places">
+                        {{ r.anzahl }} Platz{% if r.anzahl != 1 %}plätze{% endif %}
+                    </div>
+                </div>
+
+                <div class="info">
+                    {% if r.veranstaltungsdatum %}
+                        <strong>Datum:</strong> {{ r.veranstaltungsdatum }}<br>
+                    {% endif %}
+
+                    {% if r.abfahrtszeit %}
+                        <strong>Abfahrt:</strong> {{ r.abfahrtszeit }}<br>
+                    {% endif %}
+
+                    {% if r.haltestellen %}
+                        <strong>Haltestellen:</strong> {{ r.haltestellen|join(", ") }}<br>
+                    {% endif %}
+
+                    <strong>Reserviert am:</strong> {{ r.datum }}<br>
+                    <strong>Name:</strong> {{ r.name }}<br>
+                    <strong>E-Mail:</strong> {{ r.email }}
+                </div>
+
+                {% if r.stornierbar_kostenlos %}
+                    <div class="hint">
+                        Diese Reservierung kann noch kostenlos storniert werden.
+                    </div>
+
+                    <a class="btn btn-danger"
+                       href="/reservierung-stornieren/{{ r.id }}"
+                       onclick="return confirm('Reservierung wirklich kostenlos stornieren?');">
+                        ❌ Kostenlos stornieren
+                    </a>
+
+                {% elif r.stornogebuehr %}
+                    <div class="hint">
+                        Die kostenlose Stornierungsfrist ist abgelaufen.
+                        Für diese Stornierung fällt eine Stornierungsgebühr von 15 € an.
+                    </div>
+
+                    <a class="btn btn-warning"
+                       href="/reservierung-stornieren/{{ r.id }}"
+                       onclick="return confirm('Die kostenlose Frist ist abgelaufen. Es fällt eine Stornierungsgebühr von 15 € an. Trotzdem stornieren?');">
+                        ⚠️ Stornieren mit 15 € Gebühr
+                    </a>
+                {% endif %}
+
+            </div>
+        {% endfor %}
+    {% else %}
+        <div class="empty">
+            Du hast aktuell keine Busreservierungen.
+            <br>
+            <a class="btn btn-primary" href="/bus">Zur Busplatz-Buchung</a>
+        </div>
+    {% endif %}
+
+</div>
+
+{% endblock %}

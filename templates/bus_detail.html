@@ -1,0 +1,165 @@
+{% extends "base.html" %}
+
+{% block title %}{{ event.titel }}{% endblock %}
+
+{% block styles %}
+
+.wrapper {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.card {
+    background: white;
+    color: #1f1936;
+    border-radius: 22px;
+    padding: 28px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.25);
+}
+
+h1 {
+    margin-top: 0;
+}
+
+.status-box {
+    background: #f3f0ff;
+    border-radius: 18px;
+    padding: 18px;
+    margin: 18px 0;
+}
+
+.status-large {
+    font-size: 24px;
+    font-weight: bold;
+    color: #6a1cff;
+}
+
+.progress {
+    width: 100%;
+    height: 14px;
+    background: #ddd;
+    border-radius: 99px;
+    margin-top: 10px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    background: #6a1cff;
+    border-radius: 99px;
+}
+
+label {
+    display: block;
+    margin-top: 18px;
+    margin-bottom: 8px;
+    font-weight: bold;
+}
+
+select {
+    width: 100%;
+    padding: 14px;
+    border-radius: 14px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+    box-sizing: border-box;
+}
+
+button {
+    width: 100%;
+    margin-top: 22px;
+    padding: 15px;
+    border: none;
+    border-radius: 16px;
+    background: #6a1cff;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.success {
+    background: #e7f8ea;
+    color: #147a2e;
+    padding: 14px;
+    border-radius: 14px;
+    margin-bottom: 15px;
+    font-weight: bold;
+}
+
+.error {
+    background: #fdeaea;
+    color: #b00020;
+    padding: 14px;
+    border-radius: 14px;
+    margin-bottom: 15px;
+    font-weight: bold;
+}
+
+.hint {
+    background: #fff6d8;
+    color: #5b4600;
+    padding: 14px;
+    border-radius: 14px;
+    margin-top: 18px;
+    line-height: 1.5;
+}
+
+{% endblock %}
+
+{% block content %}
+
+<div class="wrapper">
+
+    <div class="card">
+        {% if success %}
+            <div class="success">{{ success }}</div>
+        {% endif %}
+
+        {% if error %}
+            <div class="error">{{ error }}</div>
+        {% endif %}
+
+        <h1>🚌 {{ event.titel }}</h1>
+
+        <p><strong>Datum:</strong> {{ event.datum }}</p>
+        <p><strong>Abfahrtszeit:</strong> {{ event.abfahrtszeit }}</p>
+        <p><strong>Haltestellen:</strong> {{ event.haltestellen|join(", ") }}</p>
+
+        {% set prozent = (belegt / event.gesamtplaetze * 100) if event.gesamtplaetze > 0 else 0 %}
+
+        <div class="status-box">
+            <div class="status-large">🪑 {{ belegt }} / {{ event.gesamtplaetze }} belegt</div>
+            <div>Noch frei: {{ frei }} Plätze</div>
+
+            <div class="progress">
+                <div class="progress-fill" style="width: {{ prozent }}%;"></div>
+            </div>
+        </div>
+
+        {% if frei > 0 %}
+            <form method="POST">
+                <label for="anzahl">Anzahl Plätze</label>
+                <select id="anzahl" name="anzahl">
+                    {% for i in range(1, frei + 1) %}
+                        {% if i <= 10 %}
+                            <option value="{{ i }}">{{ i }}</option>
+                        {% endif %}
+                    {% endfor %}
+                </select>
+
+                <button type="submit">Reservierung speichern</button>
+            </form>
+        {% else %}
+            <div class="error">Diese Veranstaltung ist bereits ausgebucht.</div>
+        {% endif %}
+
+        <div class="hint">
+            <strong>Hinweis:</strong><br>
+            Der Platz ist bis 5 Tage vor Veranstaltung über „Meine Reservierungen“ stornierbar.
+            Für spätere Stornierungen fällt eine Stornierungsgebühr von 15 € an.
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}

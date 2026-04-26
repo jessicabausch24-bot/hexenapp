@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bestellung Details</title>
+
+<style>
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg, #1f1936, #a64fff);
+    color: white;
+    padding: 20px;
+    min-height: 100vh;
+}
+
+.wrapper {
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.header h1 {
+    margin: 0;
+}
+
+.actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.btn {
+    padding: 10px 14px;
+    border-radius: 10px;
+    text-decoration: none;
+    font-weight: bold;
+    border: none;
+    cursor: pointer;
+    display: inline-block;
+}
+
+.btn-edit {
+    background: #6a1cff;
+    color: white;
+}
+
+.btn-delete {
+    background: #cf3f3f;
+    color: white;
+}
+
+.btn-print {
+    background: #222;
+    color: white;
+}
+
+.card {
+    background: white;
+    color: #1f1936;
+    padding: 20px;
+    border-radius: 18px;
+    margin-bottom: 20px;
+}
+
+.item {
+    border-bottom: 1px solid #ddd;
+    padding: 10px 0;
+}
+
+.item:last-child {
+    border-bottom: none;
+}
+
+.total {
+    font-size: 20px;
+    font-weight: bold;
+    margin-top: 20px;
+}
+
+.back {
+    margin-top: 20px;
+    display: inline-block;
+    color: white;
+    text-decoration: underline;
+}
+</style>
+</head>
+
+<body>
+<div class="wrapper">
+
+<div class="header">
+    <h1>Bestellung</h1>
+
+    <div class="actions">
+        <a class="btn btn-edit" href="/admin/bestellung-bearbeiten/{{ order.id }}">Bearbeiten</a>
+
+        <a class="btn btn-print" href="/admin/bestellung-drucken/{{ order.id }}" target="_blank">
+            Drucken
+        </a>
+
+        <a class="btn btn-delete"
+           href="/admin/bestellung-loeschen/{{ order.id }}"
+           onclick="return confirm('Bestellung wirklich löschen?');">
+            Löschen
+        </a>
+    </div>
+</div>
+
+<div class="card">
+    <p><strong>Bestell-ID:</strong> {{ order.id }}</p>
+    <p><strong>Datum:</strong> {{ order.datum }}</p>
+    <p><strong>User:</strong> {{ order.user }}</p>
+    <p><strong>E-Mail:</strong> {{ order.email }}</p>
+</div>
+
+<div class="card">
+    <h2>Artikel</h2>
+
+    {% for item in order.get("items", []) %}
+    <div class="item">
+
+        <strong>{{ item.name }}</strong><br>
+
+        Anzahl: {{ item.anzahl }}<br>
+
+        {% if item.groesse %}
+            Größe: {{ item.groesse }}<br>
+        {% endif %}
+
+        {% if item.extras %}
+            {% for key, value in item.extras.items() %}
+                {% if value %}
+                    {{ key }}: {{ value }}<br>
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+
+        {% if item.anmerkung %}
+            Anmerkung: {{ item.anmerkung }}<br>
+        {% endif %}
+
+        Preis: {{ "%.2f"|format(item.preis) }} €
+    </div>
+    {% endfor %}
+
+    <div class="total">
+        Gesamt: {{ "%.2f"|format(order.total) }} €
+    </div>
+</div>
+
+<a class="back" href="/admin/bestellungen">← Zurück</a>
+
+</div>
+</body>
+</html>

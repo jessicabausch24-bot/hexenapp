@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sonstiges</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #1f1936, #a64fff);
+            color: white;
+            padding: 20px;
+            min-height: 100vh;
+            box-sizing: border-box;
+        }
+
+        .wrapper {
+            max-width: 1100px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            min-height: 90vh;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        h1 {
+            margin: 0;
+        }
+
+        .cart-link {
+            padding: 10px 14px;
+            background: black;
+            border-radius: 12px;
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .cart-link:hover {
+            background: #5200b8;
+        }
+
+        .search-box {
+            margin-bottom: 20px;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 12px;
+            border-radius: 12px;
+            border: none;
+            font-size: 16px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 20px;
+        }
+
+        .card {
+            background: white;
+            color: #333;
+            border-radius: 18px;
+            padding: 18px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+            text-align: center;
+            text-decoration: none;
+            display: block;
+        }
+
+        .card:hover {
+            transform: translateY(-3px);
+            background: #f2f2f2;
+        }
+
+        .card h2 {
+            margin-top: 0;
+            margin-bottom: 12px;
+            font-size: 22px;
+            color: #1f1936;
+        }
+
+        .product-img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            border-radius: 12px;
+            margin: 10px 0;
+        }
+
+        .type {
+            margin-top: 8px;
+            color: #6d6d6d;
+        }
+
+        .price {
+            font-weight: bold;
+            font-size: 20px;
+            margin-top: 10px;
+            color: #6a1cff;
+        }
+
+        .btn-secondary {
+            margin-top: 12px;
+            padding: 10px;
+            border: none;
+            border-radius: 12px;
+            background: #ddd;
+            width: 100%;
+            cursor: pointer;
+            font-weight: bold;
+            color: #222;
+        }
+
+        .footer-links {
+            margin-top: auto;
+            padding-top: 30px;
+        }
+
+        .footer-links a {
+            margin-right: 15px;
+            padding: 10px 14px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 12px;
+            color: white;
+            text-decoration: none;
+        }
+
+        .footer-links a:hover {
+            background: rgba(255,255,255,0.35);
+        }
+
+        .empty-box {
+            background: rgba(255,255,255,0.95);
+            color: #222;
+            border-radius: 18px;
+            padding: 20px;
+        }
+    </style>
+</head>
+
+<body>
+<div class="wrapper">
+
+    <!-- HEADER -->
+    <div class="header">
+        <h1>Sonstiges</h1>
+        <a class="cart-link" href="{{ url_for('cart') }}">🛒 Warenkorb</a>
+    </div>
+
+    <!-- SUCHE -->
+    <div class="search-box">
+        <input type="text" placeholder="Suchen... (optional)">
+    </div>
+
+    <!-- PRODUKTE -->
+    {% if produkte %}
+        <div class="grid">
+            {% for produkt in produkte %}
+                <a class="card" href="{{ url_for('produkt_detail', produkt_id=produkt.id) }}">
+
+                    <h2>{{ produkt.name }}</h2>
+
+                    <img
+                        src="{{ url_for('static', filename=produkt.bild if produkt.bild else 'placeholder.png') }}"
+                        class="product-img"
+                    >
+
+                    {% if produkt.typ %}
+                        <div class="type">{{ produkt.typ }}</div>
+                    {% endif %}
+
+                    {% if produkt.preis is defined %}
+                        <div class="price">{{ "%.2f"|format(produkt.preis) }} €</div>
+                    {% endif %}
+
+                    <button class="btn-secondary">Details anzeigen</button>
+
+                </a>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="empty-box">
+            Aktuell keine Produkte vorhanden.
+        </div>
+    {% endif %}
+
+    <!-- FOOTER -->
+    <div class="footer-links">
+        <a href="{{ url_for('shop') }}">⬅ Zurück zum Shop</a>
+        <a href="{{ url_for('dashboard') }}">🏠 Startseite</a>
+    </div>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<title>Bus-Reservierungen</title>
+
+<style>
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg, #1f1936, #a64fff);
+    color: white;
+    padding: 20px;
+    min-height: 100vh;
+}
+
+.wrapper {
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.card {
+    background: white;
+    color: #1f1936;
+    border-radius: 18px;
+    padding: 20px;
+    margin-bottom: 15px;
+}
+
+.btn-danger {
+    display: inline-block;
+    padding: 9px 12px;
+    background: #cf3f3f;
+    color: white;
+    text-decoration: none;
+    border-radius: 12px;
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+.back {
+    color: white;
+    text-decoration: underline;
+}
+</style>
+</head>
+
+<body>
+<div class="wrapper">
+
+    <h1>Reservierungen für {{ event.titel }}</h1>
+    <p>Datum: {{ event.datum }} | Abfahrt: {{ event.abfahrtszeit }}</p>
+
+    {% if reservierungen %}
+        {% for r in reservierungen %}
+            <div class="card">
+                <strong>{{ r.name }}</strong><br>
+                E-Mail: {{ r.email }}<br>
+                Plätze: {{ r.anzahl }}<br>
+                Reserviert am: {{ r.datum }}<br>
+
+                <a class="btn-danger"
+                   href="/admin/bus/reservierung-loeschen/{{ r.id }}"
+                   onclick="return confirm('Reservierung wirklich löschen?');">
+                   Reservierung löschen
+                </a>
+            </div>
+        {% endfor %}
+    {% else %}
+        <div class="card">
+            Für diese Veranstaltung gibt es noch keine Reservierungen.
+        </div>
+    {% endif %}
+
+    <a class="back" href="/admin/bus">← Zurück zu Veranstaltungen</a>
+
+</div>
+</body>
+</html>

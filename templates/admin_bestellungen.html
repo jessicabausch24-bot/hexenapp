@@ -1,0 +1,164 @@
+{% extends "base.html" %}
+
+{% block title %}Bestellungen{% endblock %}
+
+{% block styles %}
+
+.wrapper {
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+/* HEADER */
+.header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.header h1 {
+    margin-bottom: 15px;
+}
+
+/* SUCHE */
+.search-bar {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.search-bar input {
+    padding: 10px;
+    border-radius: 12px;
+    border: none;
+    width: 250px;
+}
+
+.search-bar button {
+    padding: 10px 14px;
+    border-radius: 12px;
+    border: none;
+    background: #6a1cff;
+    color: white;
+    cursor: pointer;
+}
+
+/* 🔥 PRINT BUTTON */
+.print-all-wrap {
+    text-align: center;
+    margin: 20px 0 25px;
+}
+
+.print-all {
+    display: inline-block;
+    padding: 12px 18px;
+    border-radius: 12px;
+    background: black;
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.print-all:hover {
+    background: #333;
+}
+
+/* BESTELL-KARTE */
+.order-card {
+    background: white;
+    color: #1f1936;
+    border-radius: 20px;
+    padding: 20px;
+    margin-bottom: 18px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+/* LINKS */
+.order-left {
+    line-height: 1.6;
+}
+
+/* RECHTS */
+.order-actions {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.order-actions a {
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.action-view { color: black; }
+.action-edit { color: blue; }
+.action-delete { color: red; }
+
+{% endblock %}
+
+{% block content %}
+
+<div class="wrapper">
+
+    <div class="header">
+        <h1>📦 Bestellungen</h1>
+
+        <form class="search-bar" method="GET">
+            <input type="text" name="q" placeholder="Suche..." value="{{ suche }}">
+            <button type="submit">Suchen</button>
+        </form>
+    </div>
+
+    <!-- 🔥 NEUER BUTTON -->
+    <div class="print-all-wrap">
+        <a class="print-all" href="{{ url_for('admin_bestellungen_drucken') }}">
+            🖨️ Alle Bestellungen drucken
+        </a>
+    </div>
+
+    {% if orders %}
+
+        {% for order in orders %}
+        <div class="order-card">
+
+            <div class="order-left">
+                <strong>{{ order.user }}</strong><br>
+                📧 {{ order.email }}<br>
+                📅 {{ order.datum }}<br>
+                🆔 {{ order.id }}<br>
+                💰 {{ "%.2f"|format(order.total) }} €
+            </div>
+
+            <div class="order-actions">
+                <a class="action-view" href="{{ url_for('admin_bestellung_detail', order_id=order.id) }}">
+                    Einsehen
+                </a>
+
+            
+
+                <a class="action-edit" href="{{ url_for('admin_bestellung_bearbeiten', order_id=order.id) }}">
+                    Bearbeiten
+                </a>
+
+                <a class="action-delete"
+                   href="{{ url_for('admin_bestellung_loeschen', order_id=order.id) }}"
+                   onclick="return confirm('Bestellung wirklich löschen?');">
+                    Löschen
+                </a>
+            </div>
+
+        </div>
+        {% endfor %}
+
+    {% else %}
+        <p style="text-align:center;">Keine Bestellungen gefunden.</p>
+    {% endif %}
+
+</div>
+
+{% endblock %}

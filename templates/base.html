@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{% block title %}Oachberghexa App{% endblock %}</title>
+
+<style>
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg, #1f1936, #a64fff);
+    color: white;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.main {
+    flex: 1;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.footer-bar {
+    background: #1f1936;
+    padding: 14px;
+    text-align: center;
+}
+
+.footer-bar a {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+    margin: 0 18px;
+    font-size: 16px;
+}
+
+.footer-bar a:hover {
+    text-decoration: underline;
+}
+
+{% block styles %}{% endblock %}
+</style>
+</head>
+
+<body>
+
+<div class="main">
+    {% block content %}{% endblock %}
+</div>
+
+<div class="footer-bar">
+    <a href="javascript:history.back()">Zurück</a>
+    <a href="{{ url_for('dashboard') }}">Startseite</a>
+
+    {% if session.user == "Jessi24" %}
+        <a href="{{ url_for('admin') }}">Admin</a>
+    {% endif %}
+
+    <a href="{{ url_for('logout') }}">Logout</a>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,153 @@
+{% extends "base.html" %}
+
+{% block title %}Bestellliste{% endblock %}
+
+{% block styles %}
+
+.wrapper {
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.btn {
+    padding: 10px 14px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+/* 🔥 Druck Button */
+.btn-print {
+    background: #222;
+    color: white;
+}
+
+.card {
+    background: white;
+    color: #1f1936;
+    border-radius: 18px;
+    padding: 20px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th, td {
+    padding: 12px;
+    border-bottom: 1px solid #ddd;
+    text-align: left;
+}
+
+th {
+    background: #f5f5f5;
+}
+
+.total {
+    margin-top: 20px;
+    font-weight: bold;
+    font-size: 18px;
+}
+
+/* 🔥 Footer Zurück */
+.back-footer {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.back-footer a {
+    color: white;
+    text-decoration: underline;
+}
+
+/* 🔥 DRUCK */
+@media print {
+
+    body {
+        background: white;
+        color: black;
+        padding: 0;
+    }
+
+    .header {
+        display: none;
+    }
+
+    .back-footer {
+        display: none;
+    }
+
+    .card {
+        box-shadow: none;
+        border: none;
+    }
+}
+
+{% endblock %}
+
+{% block content %}
+
+<div class="wrapper">
+
+    <div class="header">
+        <h1>Bestellliste</h1>
+
+        <!-- 🔥 Nur noch Drucken oben -->
+        <button class="btn btn-print" onclick="window.print()">
+            🖨️ Drucken
+        </button>
+    </div>
+
+    <div class="card">
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Bestellnummer</th>
+                    <th>Name</th>
+                    <th>E-Mail</th>
+                    <th>Datum</th>
+                    <th>Gesamtsumme</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% set gesamt_summe = 0 %}
+
+                {% for order in orders %}
+                <tr>
+                    <td>{{ order.id }}</td>
+                    <td>{{ order.user }}</td>
+                    <td>{{ order.email }}</td>
+                    <td>{{ order.datum }}</td>
+                    <td>{{ "%.2f"|format(order.total) }} €</td>
+                </tr>
+
+                {% set gesamt_summe = gesamt_summe + order.total %}
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <div class="total">
+            Gesamtumsatz: {{ "%.2f"|format(gesamt_summe) }} €
+        </div>
+
+    </div>
+
+    <!-- 🔥 Zurück jetzt UNTEN -->
+    <div class="back-footer">
+        <a href="/admin">← Zurück zum Adminbereich</a>
+    </div>
+
+</div>
+
+{% endblock %}

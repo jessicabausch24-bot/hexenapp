@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<title>User verwalten</title>
+
+<style>
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg, #1f1936, #a64fff);
+    color: white;
+    padding: 20px;
+}
+
+.wrapper {
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+.card {
+    background: white;
+    color: #1f1936;
+    border-radius: 18px;
+    padding: 18px;
+    margin-bottom: 12px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+}
+
+.row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.info {
+    line-height: 1.6;
+}
+
+.actions {
+    display: flex;
+    gap: 15px;
+}
+
+/* 🔥 Farben */
+.actions a {
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.actions a.edit {
+    color: #6a1cff;
+}
+
+.actions a.delete {
+    color: #cf2a2a;
+}
+
+.actions a:hover {
+    text-decoration: underline;
+}
+
+.back {
+    margin-top: 25px;
+    display: block;
+    text-align: center;
+    color: white;
+    text-decoration: underline;
+}
+</style>
+</head>
+
+<body>
+
+<div class="wrapper">
+
+    <h1>👤 Benutzer verwalten</h1>
+
+    {% for email, user in users.items() %}
+        <div class="card">
+
+            <div class="row">
+
+                <div class="info">
+                    <strong>{{ user.name }}</strong><br>
+                    📧 {{ email }}
+                </div>
+
+                <div class="actions">
+                    <a class="edit" href="/admin/user-bearbeiten/{{ email }}">
+                        Bearbeiten
+                    </a>
+
+                    <a class="delete"
+                       href="/admin/user-loeschen/{{ email }}"
+                       onclick="return confirm('Benutzer wirklich löschen?');">
+                        Löschen
+                    </a>
+                </div>
+
+            </div>
+
+        </div>
+    {% endfor %}
+
+    <a class="back" href="/admin">← Zurück zum Adminbereich</a>
+
+</div>
+
+</body>
+</html>

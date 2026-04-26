@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Warenkorb</title>
+
+<style>
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg, #1f1936, #a64fff);
+    color: white;
+    padding: 20px;
+    box-sizing: border-box;
+    min-height: 100vh;
+}
+
+.wrapper {
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+.header {
+    margin-bottom: 20px;
+}
+
+.cart-item {
+    background: white;
+    color: #1f1936;
+    padding: 15px;
+    border-radius: 16px;
+    margin-bottom: 15px;
+    display: flex;
+    gap: 15px;
+    align-items: flex-start;
+}
+
+.cart-item img {
+    width: 100px;
+    height: 100px;
+    object-fit: contain;
+    background: #ead9c8;
+    border-radius: 12px;
+    flex-shrink: 0;
+}
+
+.item-left {
+    flex: 1;
+}
+
+.item-right {
+    min-width: 180px;
+    text-align: right;
+}
+
+.meta-line {
+    margin-top: 4px;
+    color: #444;
+}
+
+.note {
+    font-style: italic;
+    color: #444;
+    margin-bottom: 10px;
+}
+
+.price {
+    font-weight: bold;
+    color: #6a1cff;
+    margin-top: 10px;
+}
+
+select {
+    padding: 8px;
+    border-radius: 10px;
+    margin-top: 5px;
+}
+
+button {
+    padding: 10px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.btn-danger {
+    background: #cf3f3f;
+    color: white;
+}
+
+.btn-primary {
+    background: #6a1cff;
+    color: white;
+    margin-top: 20px;
+}
+
+.footer {
+    margin-top: 30px;
+}
+
+@media (max-width: 750px) {
+    .cart-item {
+        flex-direction: column;
+    }
+
+    .item-right {
+        min-width: 100%;
+        text-align: left;
+    }
+}
+</style>
+</head>
+
+<body>
+<div class="wrapper">
+
+    <div class="header">
+        <h1>Warenkorb</h1>
+    </div>
+
+    {% if message %}
+        <div class="cart-item">
+            {{ message }}
+        </div>
+    {% endif %}
+
+    {% if cart_items %}
+
+        {% for item in cart_items %}
+        <div class="cart-item">
+
+            <img src="{{ url_for('static', filename='img/' + (item.get('bild') if item.get('bild') else 'placeholder.png')) }}"
+                 alt="{{ item.get('name', 'Produkt') }}">
+
+            <div class="item-left">
+
+                <strong>{{ item.get('name', 'Produkt') }}</strong>
+
+                {% if item.get('groesse') %}
+                    <div class="meta-line">Größe: {{ item.get('groesse') }}</div>
+                {% endif %}
+
+                {% if item.get('extras') %}
+                    {% for key, value in item.get('extras').items() %}
+                        {% if value %}
+                            <div class="meta-line">{{ key }}: {{ value }}</div>
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
+
+                <form method="POST" action="{{ url_for('update_cart') }}" style="margin-top: 10px;">
+                    <input type="hidden" name="index" value="{{ loop.index0 }}">
+                    Menge:
+                    <select name="anzahl" onchange="this.form.submit()">
+                        {% for i in range(1, 6) %}
+                            <option value="{{ i }}" {% if i == item.get('anzahl', 1) %}selected{% endif %}>
+                                {{ i }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </form>
+
+                {% if item.get('groessen_verfuegbar') and item.get('groessen_verfuegbar')|length > 0 %}
+                <form method="POST" action="{{ url_for('update_size') }}" style="margin-top: 10px;">
+                    <input type="hidden" name="index" value="{{ loop.index0 }}">
+                    Größe:
+                    <select name="groesse" onchange="this.form.submit()">
+                        <option value="">Bitte wählen...</option>
+                        {% for g in item.get('groessen_verfuegbar', []) %}
+                            <option value="{{ g }}" {% if item.get('groesse') == g %}selected{% endif %}>
+                                {{ g }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </form>
+                {% endif %}
+
+                <div class="price">
+                    {{ "%.2f"|format(item.get('preis', 0) * item.get('anzahl', 1)) }} €
+                </div>
+
+            </div>
+
+            <div class="item-right">
+
+                {% if item.get('anmerkung') %}
+                    <div class="note">
+                        {{ item.get('anmerkung') }}
+                    </div>
+                {% endif %}
+
+                <form method="POST" action="{{ url_for('remove_from_cart') }}">
+                    <input type="hidden" name="index" value="{{ loop.index0 }}">
+                    <button type="submit" class="btn-danger">Entfernen</button>
+                </form>
+
+            </div>
+
+        </div>
+        {% endfor %}
+
+        <h2>Gesamt: {{ "%.2f"|format(total) }} €</h2>
+
+        <form method="POST">
+            <button type="submit" class="btn-primary">Bestellung abschicken</button>
+        </form>
+
+    {% else %}
+        <p>Warenkorb ist leer.</p>
+    {% endif %}
+
+    <div class="footer">
+        <a href="javascript:history.back()" style="color:white;">← Zurück</a>
+    </div>
+
+</div>
+</body>
+</html>

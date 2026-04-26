@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<title>Dashboard</title>
+
+<style>
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg, #1f1936, #a64fff);
+    color: white;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* 🔥 Hauptbereich mittig */
+.main {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 30px 20px;
+}
+
+.wrapper {
+    max-width: 1200px;
+    width: 100%;
+}
+
+/* 🔥 Titel */
+h1 {
+    text-align: center;
+    margin-bottom: 40px;
+    font-size: 38px;
+}
+
+/* 🔥 Layout */
+.dashboard {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 60px;
+}
+
+/* 🔥 Bild */
+.left {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+}
+
+.side-img {
+    width: 100%;
+    max-width: 450px;
+    max-height: 500px;
+    object-fit: contain;
+}
+
+/* 🔥 Kacheln */
+.right {
+    flex: 1;
+}
+
+.grid {
+    display: grid;
+    gap: 20px;
+}
+
+.card {
+    background: white;
+    color: #1f1936;
+    border-radius: 18px;
+    padding: 24px;
+    text-align: center;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 20px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+}
+
+.card:hover {
+    background: #f2f2f2;
+    transform: translateY(-3px);
+}
+
+/* 🔥 Footer ganz unten */
+.footer-bar {
+    background: #1f1936;
+    padding: 14px;
+    text-align: center;
+}
+
+.footer-bar a {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+    margin: 0 20px;
+    font-size: 18px;
+}
+
+.footer-bar a:hover {
+    text-decoration: underline;
+}
+
+/* 🔥 Mobile */
+@media (max-width: 800px) {
+    .dashboard {
+        flex-direction: column;
+        gap: 30px;
+    }
+
+    .side-img {
+        max-width: 280px;
+    }
+
+    h1 {
+        font-size: 28px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="main">
+    <div class="wrapper">
+
+        <h1>Hallo {{ user }}</h1>
+
+        <div class="dashboard">
+
+            <div class="left">
+                <img src="{{ url_for('static', filename='img/header.jpeg') }}"
+                     alt="Hexenbild"
+                     class="side-img">
+            </div>
+
+            <div class="right">
+                <div class="grid">
+
+                    <a class="card" href="{{ url_for('shop') }}">
+                        🛒 Shop
+                    </a>
+
+                    <a class="card" href="{{ url_for('bus') }}">
+                        🚌 Bus
+                    </a>
+
+                    <a class="card" href="{{ url_for('meine_bestellungen') }}">
+                        📦 Meine Bestellungen
+                    </a>
+
+                    <a class="card" href="{{ url_for('reservierungen') }}">
+                        📅 Meine Reservierungen
+                    </a>
+
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+<!-- 🔥 FIX unten -->
+<div class="footer-bar">
+    {% if session.user == "Jessi24" %}
+        <a href="{{ url_for('admin') }}">Adminbereich</a>
+    {% endif %}
+    <a href="{{ url_for('logout') }}">Logout</a>
+</div>
+
+</body>
+</html>

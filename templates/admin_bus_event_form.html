@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<title>Bus-Veranstaltung</title>
+
+<style>
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg, #1f1936, #a64fff);
+    color: white;
+    padding: 20px;
+    min-height: 100vh;
+}
+
+.wrapper {
+    max-width: 650px;
+    margin: 0 auto;
+}
+
+.card {
+    background: white;
+    color: #1f1936;
+    border-radius: 20px;
+    padding: 25px;
+}
+
+label {
+    display: block;
+    margin-top: 15px;
+    margin-bottom: 8px;
+    font-weight: bold;
+}
+
+input, textarea {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 12px;
+    border-radius: 12px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+}
+
+button {
+    width: 100%;
+    margin-top: 20px;
+    padding: 14px;
+    border: none;
+    border-radius: 14px;
+    background: #6a1cff;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.back {
+    display: inline-block;
+    margin-top: 20px;
+    color: white;
+}
+</style>
+</head>
+
+<body>
+<div class="wrapper">
+
+    {% if event %}
+        <h1>Veranstaltung bearbeiten</h1>
+    {% else %}
+        <h1>Veranstaltung hinzufügen</h1>
+    {% endif %}
+
+    <div class="card">
+        <form method="POST">
+            <label>Titel</label>
+            <input type="text" name="titel" value="{{ event.titel if event else '' }}" required>
+
+            <label>Datum</label>
+            <input type="date" name="datum" value="{{ event.datum if event else '' }}" required>
+
+            <label>Abfahrtszeit</label>
+            <input type="text" name="abfahrtszeit" value="{{ event.abfahrtszeit if event else '' }}" placeholder="z.B. 11:30 Uhr" required>
+
+            <label>Haltestellen</label>
+            <textarea name="haltestellen" placeholder="Rathaus, Sportplatz, Festhalle">{{ event.haltestellen|join(', ') if event else '' }}</textarea>
+
+            <label>Gesamtplätze</label>
+            <input type="number" name="gesamtplaetze" value="{{ event.gesamtplaetze if event else '' }}" min="1" required>
+
+            <button type="submit">Speichern</button>
+        </form>
+    </div>
+
+    <a class="back" href="/admin/bus">← Zurück</a>
+
+</div>
+</body>
+</html>

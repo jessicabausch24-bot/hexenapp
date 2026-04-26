@@ -1,0 +1,335 @@
+{
+    "haes_teile": [
+        {
+            "id": 1,
+            "name": "Lila Hexenpulli",
+            "typ": "Oberteil",
+            "preis": 42.0,
+            "groessen": [
+                "S",
+                "M",
+                "L",
+                "XL",
+                "XXL",
+                "XXXL",
+                "110",
+                "116",
+                "122",
+                "128",
+                "134",
+                "140",
+                "146",
+                "152",
+                "158"
+            ],
+            "bild": "placeholder.png"
+        },
+        {
+            "id": 2,
+            "name": "Hexenhose",
+            "typ": "Hose",
+            "preis": 39.9,
+            "groessen": [
+                "S",
+                "M",
+                "L",
+                "XL",
+                "XXL",
+                "XXXL",
+                "110",
+                "116",
+                "122",
+                "128",
+                "134",
+                "140",
+                "146",
+                "152",
+                "158"
+            ],
+            "bild": "placeholder.png"
+        },
+        {
+            "id": 3,
+            "name": "Hexenrock",
+            "typ": "Rock",
+            "preis": 34.9,
+            "groessen": [
+                "Einheitsgröße Erwachsene",
+                "110",
+                "116",
+                "122",
+                "128",
+                "134",
+                "140",
+                "146",
+                "152",
+                "158"
+            ],
+            "bild": "Rock.png"
+        },
+        {
+            "id": 4,
+            "name": "Schürze",
+            "typ": "Zubehör",
+            "preis": 29.9,
+            "groessen": [
+                "Erwachsene",
+                "Kinder"
+            ],
+            "bild": "Schürze.png"
+        },
+        {
+            "id": 5,
+            "name": "Stola",
+            "typ": "Zubehör",
+            "preis": 24.9,
+            "groessen": [
+                "Extra Groß",
+                "Normal",
+                "Kinder"
+            ],
+            "bild": "Stola.png"
+        },
+        {
+            "id": 6,
+            "name": "Maske",
+            "typ": "Maske",
+            "preis": 129.9,
+            "groessen": [
+                "Erwachsene",
+                "Kinder"
+            ],
+            "bild": "Maske.png"
+        },
+        {
+            "id": 7,
+            "name": "Kopftuch",
+            "typ": "Zubehör",
+            "preis": 14.9,
+            "groessen": [],
+            "bild": "placeholder.png"
+        },
+        {
+            "id": 209,
+            "name": "Zackenlitze Schürze",
+            "typ": "Zubehör",
+            "preis": 2.5,
+            "groessen": [],
+            "bild": "Zackenlitze.png",
+            "extras": []
+        }
+    ],
+    "masken_zubehoer": [
+        {
+            "id": 100,
+            "name": "Schaumstoff",
+            "typ": "Zubehör",
+            "preis": 4.9,
+            "groessen": [],
+            "bild": "placeholder.png"
+        },
+        {
+            "id": 101,
+            "name": "Hanfzöpfe",
+            "typ": "Zubehör",
+            "preis": 9.9,
+            "groessen": [],
+            "bild": "placeholder.png"
+        },
+        {
+            "id": 102,
+            "name": "Zackenlitze Kopftuch",
+            "typ": "Zubehör",
+            "preis": 3.9,
+            "groessen": [],
+            "bild": "Zackenlitze.png"
+        },
+        {
+            "id": 103,
+            "name": "Wappen Kopftuch",
+            "typ": "Zubehör",
+            "preis": 5.9,
+            "groessen": [],
+            "bild": "placeholder.png"
+        },
+        {
+            "id": 104,
+            "name": "Maskennummer",
+            "typ": "Zubehör",
+            "preis": 2.9,
+            "groessen": [],
+            "bild": "Maskennummer.png",
+            "extras": [
+                {
+                    "name": "maskennummer",
+                    "label": "Benötigte Maskennummer",
+                    "type": "text"
+                }
+            ]
+        },
+        {
+            "id": 105,
+            "name": "Klettband",
+            "typ": "Zubehör",
+            "preis": 1.9,
+            "groessen": [],
+            "bild": "placeholder.png"
+        },
+        {
+            "id": 106,
+            "name": "Gummi",
+            "typ": "Zubehör",
+            "preis": 1.5,
+            "groessen": [],
+            "bild": "placeholder.png"
+        }
+    ],
+    "merchandise": [
+        {
+            "id": 200,
+            "name": "Hexenbecher",
+            "typ": "Merchandise",
+            "preis": 12.9,
+            "groessen": [],
+            "bild": "placeholder.png",
+            "extras": [
+                {
+                    "name": "name",
+                    "label": "Name",
+                    "type": "text"
+                },
+                {
+                    "name": "deckel",
+                    "label": "Mit Deckel",
+                    "type": "select",
+                    "options": [
+                        "Nein",
+                        "Ja"
+                    ]
+                }
+            ]
+        },
+        {
+            "id": 201,
+            "name": "Schnapsbecher",
+            "typ": "Merchandise",
+            "preis": 8.9,
+            "groessen": [],
+            "bild": "placeholder.png",
+            "extras": [
+                {
+                    "name": "name",
+                    "label": "Name",
+                    "type": "text"
+                }
+            ]
+        },
+        {
+            "id": 202,
+            "name": "Fleecejacke",
+            "typ": "Bekleidung",
+            "preis": 39.9,
+            "groessen": [
+                "128",
+                "134",
+                "140",
+                "146",
+                "152",
+                "158",
+                "164",
+                "S",
+                "M",
+                "L",
+                "XL",
+                "XXL",
+                "3XL"
+            ],
+            "bild": "Hexen_Fleecejacke.png",
+            "extras": [
+                {
+                    "name": "name",
+                    "label": "Name",
+                    "type": "text"
+                }
+            ]
+        },
+        {
+            "id": 203,
+            "name": "Hexen T-Shirt",
+            "typ": "Bekleidung",
+            "preis": 19.9,
+            "groessen": [
+                "128",
+                "134",
+                "140",
+                "146",
+                "152",
+                "158",
+                "164",
+                "S",
+                "M",
+                "L",
+                "XL",
+                "XXL",
+                "3XL"
+            ],
+            "bild": "placeholder.png"
+        },
+        {
+            "id": 204,
+            "name": "Stirnband",
+            "typ": "Accessoire",
+            "preis": 9.9,
+            "groessen": [
+                "Erwachsene",
+                "Kinder"
+            ],
+            "bild": "placeholder.png"
+        },
+        {
+            "id": 205,
+            "name": "Mütze",
+            "typ": "Accessoire",
+            "preis": 11.9,
+            "groessen": [
+                "Erwachsene",
+                "Kinder"
+            ],
+            "bild": "placeholder.png"
+        },
+        {
+            "id": 206,
+            "name": "Mütze mit Bommel",
+            "typ": "Accessoire",
+            "preis": 13.9,
+            "groessen": [
+                "Erwachsene",
+                "Kinder"
+            ],
+            "bild": "placeholder.png"
+        },
+        {
+            "id": 207,
+            "name": "Käppi",
+            "typ": "Accessoire",
+            "preis": 14.9,
+            "groessen": [
+                "Erwachsene",
+                "Kinder"
+            ],
+            "bild": "placeholder.png"
+        },
+        {
+            "id": 208,
+            "name": "Mini Hexenmaske",
+            "typ": "Deko",
+            "preis": 16.9,
+            "groessen": [
+                "groß",
+                "klein"
+            ],
+            "bild": "Mini_Hexenmaske.png"
+        }
+    ],
+    "sonstiges": []
+}

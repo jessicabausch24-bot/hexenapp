@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Adminbereich</title>
+
+<style>
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg, #1f1936, #a64fff);
+    color: white;
+    padding: 20px;
+    min-height: 100vh;
+    box-sizing: border-box;
+}
+
+.wrapper {
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.header {
+    text-align: center;
+    margin-bottom: 35px;
+}
+
+.header h1 {
+    margin: 0;
+    font-size: 36px;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(280px, 1fr));
+    gap: 22px;
+}
+
+.tile {
+    background: white;
+    color: #111;
+    min-height: 150px;
+    border-radius: 22px;
+    padding: 28px;
+    text-decoration: none;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.25);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    transition: 0.2s;
+}
+
+.tile:hover {
+    transform: scale(1.03);
+    background: #f3f0ff;
+}
+
+.tile-title {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.tile-desc {
+    font-size: 16px;
+    color: #444;
+    line-height: 1.4;
+}
+
+.footer {
+    margin-top: 35px;
+    text-align: center;
+}
+
+.footer a {
+    color: white;
+    text-decoration: underline;
+    margin: 0 12px;
+    font-size: 17px;
+}
+
+@media (max-width: 750px) {
+    .grid {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="wrapper">
+
+    <div class="header">
+        <h1>⚙️ Adminbereich</h1>
+    </div>
+
+    <div class="grid">
+
+        <a class="tile" href="/admin/produkte">
+            <div class="tile-title">📦 Produkte verwalten</div>
+            <div class="tile-desc">Produkte hinzufügen, bearbeiten oder löschen.</div>
+        </a>
+
+        <a class="tile" href="/admin/users">
+            <div class="tile-title">👤 User verwalten</div>
+            <div class="tile-desc">Benutzer ansehen, Namen, E-Mail und Passwort ändern.</div>
+        </a>
+        <a class="tile" href="/admin/bus">
+            <div class="tile-title">🚌 Bus-Veranstaltungen</div>
+            <div class="tile-desc">Veranstaltungen, Plätze, Abfahrtszeiten und Haltestellen verwalten.</div>
+        </a>
+
+        <a class="tile" href="/admin/stornogebuehren">
+            <div class="tile-title">💶 Stornogebühren</div>
+            <div class="tile-desc">Alle kostenpflichtigen Stornierungen mit Gesamtsumme anzeigen.</div>
+        </a>
+        <a class="tile" href="/admin/bestellungen">
+            <div class="tile-title">🧾 Bestellungen</div>
+            <div class="tile-desc">Alle Shop-Bestellungen ansehen, bearbeiten, löschen und drucken.</div>
+        </a>
+
+        <a class="tile" href="/admin/bestellliste">
+            <div class="tile-title">📄 Bestellliste</div>
+            <div class="tile-desc">Übersicht aller Bestellungen mit Name, Nummer und Gesamtsumme.</div>
+        </a>
+
+        
+
+    </div>
+
+    <div class="footer">
+        <a href="/dashboard">← Zurück zur Startseite</a>
+        <a href="/logout">Logout</a>
+    </div>
+
+</div>
+
+</body>
+</html>

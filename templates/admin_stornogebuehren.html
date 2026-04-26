@@ -1,0 +1,177 @@
+{% extends "base.html" %}
+
+{% block title %}Stornogebühren{% endblock %}
+
+{% block styles %}
+
+.wrapper {
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+/* Header */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+/* 🔥 Druck Button wie Bestellliste */
+.btn {
+    padding: 10px 14px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.btn-print {
+    background: #222;
+    color: white;
+}
+
+/* Card */
+.card {
+    background: white;
+    color: #1f1936;
+    border-radius: 18px;
+    padding: 20px;
+    overflow-x: auto;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+}
+
+/* Tabelle */
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th, td {
+    padding: 12px;
+    border-bottom: 1px solid #ddd;
+    text-align: left;
+}
+
+th {
+    background: #f3f3f3;
+}
+
+/* Summe */
+.total {
+    margin-top: 20px;
+    font-size: 22px;
+    font-weight: bold;
+    color: #6a1cff;
+}
+
+/* 🔥 Footer Zurück */
+.back-footer {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.back-footer a {
+    color: white;
+    text-decoration: underline;
+}
+
+/* 🔥 DRUCK */
+@media print {
+
+    body {
+        background: white;
+        color: black;
+        padding: 0;
+    }
+
+    .header {
+        display: none;
+    }
+
+    .back-footer {
+        display: none;
+    }
+
+    .card {
+        box-shadow: none;
+        border-radius: 0;
+        padding: 0;
+    }
+
+    table {
+        width: 100%;
+        border: 1px solid black;
+    }
+
+    th, td {
+        border: 1px solid black;
+        color: black;
+    }
+
+    th {
+        background: #eee;
+    }
+
+    .total {
+        color: black;
+        font-size: 18px;
+    }
+}
+
+{% endblock %}
+
+{% block content %}
+
+<div class="wrapper">
+
+    <div class="header">
+        <h1>💶 Stornogebühren</h1>
+
+        <!-- 🔥 Druckbutton wie gewünscht -->
+        <button class="btn btn-print" onclick="window.print()">
+            🖨️ Drucken
+        </button>
+    </div>
+
+    <div class="card">
+        {% if stornos %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>Storno-Datum</th>
+                        <th>Name</th>
+                        <th>E-Mail</th>
+                        <th>Veranstaltung</th>
+                        <th>Veranstaltungsdatum</th>
+                        <th>Plätze</th>
+                        <th>Betrag</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for s in stornos %}
+                    <tr>
+                        <td>{{ s.datum }}</td>
+                        <td>{{ s.name }}</td>
+                        <td>{{ s.email }}</td>
+                        <td>{{ s.veranstaltung }}</td>
+                        <td>{{ s.veranstaltungsdatum }}</td>
+                        <td>{{ s.anzahl }}</td>
+                        <td>{{ "%.2f"|format(s.betrag) }} €</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            <div class="total">
+                Gesamtsumme: {{ "%.2f"|format(gesamt) }} €
+            </div>
+        {% else %}
+            <p>Es gibt aktuell keine Stornogebühren.</p>
+        {% endif %}
+    </div>
+
+
+</div>
+
+{% endblock %}

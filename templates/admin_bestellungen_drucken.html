@@ -1,0 +1,160 @@
+{% extends "base.html" %}
+
+{% block title %}Alle Bestellungen drucken{% endblock %}
+
+{% block styles %}
+.wrapper {
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.btn-print {
+    padding: 10px 14px;
+    border-radius: 10px;
+    border: none;
+    background: #222;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.order {
+    background: white;
+    color: #1f1936;
+    border-radius: 18px;
+    padding: 20px;
+    margin-bottom: 20px;
+    page-break-inside: avoid;
+}
+
+.order h2 {
+    margin-top: 0;
+}
+
+.item {
+    border-top: 1px solid #ddd;
+    padding-top: 10px;
+    margin-top: 10px;
+}
+
+.total {
+    font-weight: bold;
+    color: #6a1cff;
+    margin-top: 15px;
+    font-size: 20px;
+}
+
+.grand-total {
+    background: white;
+    color: #1f1936;
+    border-radius: 18px;
+    padding: 20px;
+    font-size: 22px;
+    font-weight: bold;
+}
+
+.back-footer {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.back-footer a {
+    color: white;
+    text-decoration: underline;
+}
+
+@media print {
+    .footer-bar,
+    .btn-print,
+    .back-footer {
+        display: none;
+    }
+
+    body {
+        background: white;
+        color: black;
+    }
+
+    .order,
+    .grand-total {
+        box-shadow: none;
+        border: 1px solid #000;
+        border-radius: 0;
+    }
+
+    .total,
+    .grand-total {
+        color: black;
+    }
+}
+{% endblock %}
+
+{% block content %}
+<div class="wrapper">
+
+    <div class="header">
+        <h1>Alle Bestellungen</h1>
+        <button class="btn-print" onclick="window.print()">🖨️ Drucken</button>
+    </div>
+
+    {% for order in orders %}
+        <div class="order">
+            <h2>{{ order.user }}</h2>
+            <div style="color:#666; font-size:14px;">
+    Bestellung vom {{ order.datum }}
+</div>
+
+            <p>
+                <strong>Bestellnummer:</strong> {{ order.id }}<br>
+                <strong>Name:</strong> {{ order.user }}<br>
+                <strong>E-Mail:</strong> {{ order.email }}
+            </p>
+
+            {% for item in order.get("items", []) %}
+                <div class="item">
+                    <strong>{{ item.name }}</strong><br>
+                    Anzahl: {{ item.anzahl }}<br>
+
+                    {% if item.groesse %}
+                        Größe: {{ item.groesse }}<br>
+                    {% endif %}
+
+                    {% if item.extras %}
+                        {% for key, value in item.extras.items() %}
+                            {% if value %}
+                                {{ key }}: {{ value }}<br>
+                            {% endif %}
+                        {% endfor %}
+                    {% endif %}
+
+                    {% if item.anmerkung %}
+                        Anmerkung: {{ item.anmerkung }}<br>
+                    {% endif %}
+
+                    Einzelpreis: {{ "%.2f"|format(item.preis) }} €
+                </div>
+            {% endfor %}
+
+            <div class="total">
+                Gesamtsumme: {{ "%.2f"|format(order.total) }} €
+            </div>
+        </div>
+    {% endfor %}
+
+    <div class="grand-total">
+        Gesamtumsatz aller Bestellungen: {{ "%.2f"|format(gesamt) }} €
+    </div>
+
+    <div class="back-footer">
+        <a href="/admin/bestellungen">← Zurück zu Bestellungen</a>
+    </div>
+
+</div>
+{% endblock %}

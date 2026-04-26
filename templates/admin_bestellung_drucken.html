@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bestellung drucken</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: white;
+            color: black;
+            margin: 0;
+            padding: 30px;
+        }
+
+        .page {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        h1, h2 {
+            margin-top: 0;
+        }
+
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .print-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 10px 14px;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: bold;
+            border: none;
+            cursor: pointer;
+            background: #6a1cff;
+            color: white;
+        }
+
+        .btn.secondary {
+            background: #444;
+        }
+
+        .info-box {
+            border: 1px solid #ccc;
+            border-radius: 12px;
+            padding: 18px;
+            margin-bottom: 24px;
+        }
+
+        .info-line {
+            margin-bottom: 8px;
+        }
+
+        .item {
+            border: 1px solid #ccc;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 14px;
+        }
+
+        .item-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .total {
+            margin-top: 24px;
+            font-size: 22px;
+            font-weight: bold;
+        }
+
+        @media print {
+            .topbar,
+            .print-buttons {
+                display: none;
+            }
+
+            body {
+                padding: 0;
+            }
+
+            .page {
+                max-width: 100%;
+            }
+
+            .item,
+            .info-box {
+                break-inside: avoid;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="page">
+
+    <div class="topbar">
+        <h1>Bestellung</h1>
+        <div class="print-buttons">
+            <button class="btn" onclick="window.print()">Jetzt drucken</button>
+            <a class="btn secondary" href="/admin/bestellung/{{ order.id }}">Zurück</a>
+        </div>
+    </div>
+
+    <div class="info-box">
+        <div class="info-line"><strong>Bestell-ID:</strong> {{ order.id }}</div>
+        <div class="info-line"><strong>Datum:</strong> {{ order.datum }}</div>
+        <div class="info-line"><strong>User:</strong> {{ order.user }}</div>
+        <div class="info-line"><strong>E-Mail:</strong> {{ order.email }}</div>
+    </div>
+
+    <h2>Artikel</h2>
+
+    {% for item in order.get("items", []) %}
+    <div class="item">
+        <div class="item-title">{{ item.name }}</div>
+        <div><strong>Anzahl:</strong> {{ item.anzahl }}</div>
+
+        {% if item.groesse %}
+            <div><strong>Größe:</strong> {{ item.groesse }}</div>
+        {% endif %}
+
+        {% if item.extras %}
+            {% for key, value in item.extras.items() %}
+                {% if value %}
+                    <div><strong>{{ key }}:</strong> {{ value }}</div>
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+
+        {% if item.anmerkung %}
+            <div><strong>Anmerkung:</strong> {{ item.anmerkung }}</div>
+        {% endif %}
+
+        <div><strong>Preis pro Stück:</strong> {{ "%.2f"|format(item.preis) }} €</div>
+        <div><strong>Zwischensumme:</strong> {{ "%.2f"|format(item.preis * item.anzahl) }} €</div>
+    </div>
+    {% endfor %}
+
+   <div class="total">
+    Gesamtsumme: {{ "%.2f"|format(orders | sum(attribute='total')) }} €
+</div>
+
+</div>
+</body>
+</html>

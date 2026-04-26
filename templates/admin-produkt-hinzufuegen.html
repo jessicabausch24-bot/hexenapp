@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<title>Admin - Produkt hinzufügen</title>
+
+<style>
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg, #1f1936, #a64fff);
+    color: white;
+    padding: 20px;
+    min-height: 100vh;
+}
+
+.page-wrapper {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.card {
+    background: white;
+    color: #333;
+    border-radius: 20px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.25);
+}
+
+.card-body {
+    padding: 28px;
+}
+
+h1 {
+    margin-top: 0;
+}
+
+label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: bold;
+}
+
+input, textarea, select {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 15px;
+    border-radius: 12px;
+    border: 1px solid #ddd;
+    font-size: 15px;
+}
+
+textarea {
+    resize: vertical;
+}
+
+.btn {
+    width: 100%;
+    padding: 14px;
+    background: #6a1cff;
+    color: white;
+    border: none;
+    border-radius: 14px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.btn:hover {
+    background: #5200b8;
+}
+
+.back-link {
+    display: inline-block;
+    margin-top: 15px;
+    color: #6a1cff;
+    text-decoration: none;
+}
+</style>
+</head>
+
+<body>
+<div class="page-wrapper">
+<div class="card">
+<div class="card-body">
+
+<h1>Produkt hinzufügen</h1>
+
+<form method="post">
+
+<label>Name</label>
+<input type="text" name="name" required>
+
+<label>Typ</label>
+<input type="text" name="typ" placeholder="z.B. Oberteil, Zubehör">
+
+<label>Preis (€)</label>
+<input type="number" name="preis" step="0.01" required>
+
+<label>Größen (kommagetrennt)</label>
+<textarea name="groessen" placeholder="z.B. S,M,L oder leer lassen"></textarea>
+
+<label>Bild (Dateiname)</label>
+<input type="text" name="bild" placeholder="z.B. shirt.jpg">
+
+<label>Kategorie</label>
+<select name="kategorie" required>
+    <option value="haes_teile">Häß-Teile</option>
+    <option value="masken_zubehoer">Maskenzubehör</option>
+    <option value="merchandise">Merchandise</option>
+    <option value="sonstiges">Sonstiges</option>
+</select>
+
+<hr>
+
+<h3>Extras (optional)</h3>
+
+<label>Name für Aufdruck (Textbox)</label>
+<input type="text" name="extra_name">
+
+<label>Extra Auswahl (z.B. Deckel Ja/Nein)</label>
+<input type="text" name="extra_select_label" placeholder="z.B. Mit Deckel">
+<input type="text" name="extra_select_options" placeholder="z.B. Nein,Ja">
+
+<button class="btn">Speichern</button>
+
+</form>
+
+<a class="back-link" href="/admin/produkte">← Zurück</a>
+
+</div>
+</div>
+</div>
+</body>
+</html>

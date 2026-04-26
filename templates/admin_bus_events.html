@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<title>Bus Veranstaltungen</title>
+
+<style>
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg, #1f1936, #a64fff);
+    color: white;
+    padding: 20px;
+}
+
+.wrapper {
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+.card {
+    background: white;
+    color: #1f1936;
+    border-radius: 18px;
+    padding: 18px;
+    margin-bottom: 15px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+}
+
+.row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.info {
+    line-height: 1.6;
+}
+
+.actions {
+    display: flex;
+    gap: 15px;
+}
+
+/* 🔥 Farben */
+.actions a {
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.actions a.view {
+    color: black;
+}
+
+.actions a.edit {
+    color: #6a1cff;
+}
+
+.actions a.delete {
+    color: #cf2a2a;
+}
+
+.actions a:hover {
+    text-decoration: underline;
+}
+
+/* Button oben */
+.add-btn {
+    display: inline-block;
+    margin-bottom: 20px;
+    padding: 12px 18px;
+    border-radius: 12px;
+    background: #6a1cff;
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.add-btn:hover {
+    background: #5200b8;
+}
+
+.back {
+    margin-top: 20px;
+    display: block;
+    text-align: center;
+    color: white;
+    text-decoration: underline;
+}
+</style>
+</head>
+
+<body>
+
+<div class="wrapper">
+
+    <h1>🚌 Bus Veranstaltungen</h1>
+
+    <a class="add-btn" href="/admin/bus/hinzufuegen">
+        ➕ Neue Veranstaltung
+    </a>
+
+    {% for event in events %}
+        <div class="card">
+
+            <div class="row">
+
+                <div class="info">
+                    <strong>{{ event.titel }}</strong><br>
+                    📅 {{ event.datum }}<br>
+                    🕒 {{ event.abfahrtszeit }}<br>
+                    📍 {{ event.haltestellen | join(", ") }}<br>
+                    🪑 {{ belegung.get(event.id, 0) }} / {{ event.gesamtplaetze }} belegt
+                </div>
+
+                <div class="actions">
+                    <a class="view" href="/admin/bus/reservierungen/{{ event.id }}">
+                        Einsehen
+                    </a>
+
+                    <a class="edit" href="/admin/bus/bearbeiten/{{ event.id }}">
+                        Bearbeiten
+                    </a>
+
+                    <a class="delete"
+                       href="/admin/bus/loeschen/{{ event.id }}"
+                       onclick="return confirm('Wirklich löschen?');">
+                        Löschen
+                    </a>
+                </div>
+
+            </div>
+
+        </div>
+    {% endfor %}
+
+    <a class="back" href="/admin">← Zurück zum Adminbereich</a>
+
+</div>
+
+</body>
+</html>

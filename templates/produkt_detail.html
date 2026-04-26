@@ -1,0 +1,159 @@
+{% extends "base.html" %}
+
+{% block title %}{{ produkt.name }}{% endblock %}
+
+{% block styles %}
+
+.wrapper {
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+/* 🔥 Karte */
+.card {
+    background: white;
+    color: #1f1936;
+    border-radius: 25px;
+    padding: 25px;
+    text-align: center;
+    box-shadow: 0 12px 30px rgba(0,0,0,0.25);
+}
+
+/* Titel */
+h1 {
+    font-size: 28px;
+    margin-bottom: 15px;
+}
+
+/* Bild */
+.product-img {
+    width: 100%;
+    max-width: 300px;
+    height: auto;
+    object-fit: contain;
+    margin-bottom: 20px;
+}
+
+/* Preis */
+.price {
+    font-size: 28px;
+    font-weight: bold;
+    color: #000;
+    margin-bottom: 20px;
+}
+
+/* Formular */
+.form-group {
+    margin-bottom: 12px;
+    text-align: left;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 6px;
+    font-size: 15px;
+}
+
+/* Inputs */
+select,
+input {
+    width: 100%;
+    height: 48px;
+    padding: 0 15px;
+    border-radius: 14px;
+    border: 1px solid #ccc;
+    font-size: 15px;
+    box-sizing: border-box;
+    background: white;
+}
+
+/* Button */
+button {
+    width: 100%;
+    height: 50px;
+    margin-top: 15px;
+    border: none;
+    border-radius: 16px;
+    background: #111;
+    color: white;
+    font-size: 18px;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #333;
+}
+
+{% endblock %}
+
+{% block content %}
+
+<div class="wrapper">
+
+    <div class="card">
+
+        <h1>{{ produkt.name }}</h1>
+
+        <img class="product-img"
+             src="{{ url_for('static', filename='img/' + (produkt.bild or 'placeholder.png')) }}"
+             alt="{{ produkt.name }}">
+
+        <div class="price">
+            {{ "%.2f"|format(produkt.preis) }} €
+        </div>
+
+        <form method="POST" action="{{ url_for('add_to_cart', produkt_id=produkt.id) }}">
+
+            {% if produkt.groessen %}
+            <div class="form-group">
+                <label>Größe</label>
+                <select name="groesse" required>
+                    <option value="">Bitte wählen...</option>
+                    {% for g in produkt.groessen %}
+                        <option value="{{ g }}">{{ g }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            {% endif %}
+
+            {% if produkt.extras %}
+                {% for extra in produkt.extras %}
+                <div class="form-group">
+                    <label>{{ extra.label }}</label>
+
+                    {% if extra.type == "text" %}
+                        <input type="text" name="{{ extra.name }}">
+                    {% elif extra.type == "select" %}
+                        <select name="{{ extra.name }}">
+                            {% for option in extra.options %}
+                                <option value="{{ option }}">{{ option }}</option>
+                            {% endfor %}
+                        </select>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            {% endif %}
+
+            <div class="form-group">
+                <label>Anzahl</label>
+                <select name="anzahl">
+                    {% for i in range(1, 6) %}
+                        <option value="{{ i }}">{{ i }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Anmerkung</label>
+                <input type="text" name="anmerkung">
+            </div>
+
+            <button type="submit">In den Warenkorb</button>
+
+        </form>
+
+    </div>
+
+</div>
+
+{% endblock %}
