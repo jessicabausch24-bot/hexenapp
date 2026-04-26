@@ -455,7 +455,17 @@ def index():
     if is_logged_in():
         return redirect('/dashboard')
     return redirect('/login')
+# ---------------------------------------------------------
+# DATENSCHUTZ & IMPRESSUM
+# ---------------------------------------------------------
 
+@app.route('/datenschutz')
+def datenschutz():
+    return render_template('datenschutz.html')
+
+@app.route('/impressum')
+def impressum():
+    return render_template('impressum.html')
 
 # ---------------------------------------------------------
 # LOGIN
