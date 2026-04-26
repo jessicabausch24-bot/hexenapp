@@ -493,7 +493,10 @@ def impressum():
 def login():
 
     if request.method == 'POST':
-        users = load_users()
+        try:
+            users = load_users()
+        except Exception as e:
+             return render_template('login.html', error=f"Datenbankfehler: {e}")
 
         email = request.form.get('email', '').strip()
         password = request.form.get('password', '')
@@ -516,7 +519,10 @@ def login():
 # ---------------------------------------------------------
 @app.route('/register', methods=['GET', 'POST'])
 def register():
-    users = load_users()
+    try:
+        users = load_users()
+    except Exception as e:
+            return render_template('register.html', error=f"Datenbankfehler: {e}")
 
     if request.method == 'POST':
         name = request.form.get('name', '').strip()
