@@ -185,7 +185,7 @@ def is_logged_in():
 
 
 def admin_required():
-    return session.get("user") == "Jessi24"
+    return session.get("user") == "Jessica.Bausch24@gmail.com"
 
 
 # ---------------------------------------------------------
