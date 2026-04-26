@@ -6,6 +6,7 @@ import json
 import uuid
 import datetime
 import psycopg2
+import time
 
 app = Flask(__name__)
 app.secret_key = "super_secret_key"
@@ -22,11 +23,24 @@ DATABASE_URL = os.environ.get("DATABASE_URL")
 print("DATABASE_URL CHECK:", DATABASE_URL.replace("0QlRTReZFTD8u0px", "****") if DATABASE_URL else "FEHLT")
 
 def get_db():
-    return psycopg2.connect(
-        DATABASE_URL,
-        sslmode="require",
-        client_encoding="UTF8"
-    )
+    if not DATABASE_URL:
+        raise Exception("DATABASE_URL fehlt")
+
+    last_error = None
+
+    for attempt in range(3):
+        try:
+            return psycopg2.connect(
+                DATABASE_URL,
+                sslmode="require",
+                client_encoding="UTF8",
+                connect_timeout=10
+            )
+        except psycopg2.OperationalError as e:
+            last_error = e
+            time.sleep(2)
+
+    raise last_error
 
 # ---------------------------------------------------------
 # DATEI-HILFSFUNKTIONEN
@@ -477,9 +491,10 @@ def impressum():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-    users = load_users()
 
     if request.method == 'POST':
+        users = load_users()
+
         email = request.form.get('email', '').strip()
         password = request.form.get('password', '')
 
