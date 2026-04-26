@@ -5,24 +5,30 @@ import os
 import json
 import uuid
 import datetime
+import psycopg2
 
 app = Flask(__name__)
 app.secret_key = "super_secret_key"
 
-USER_FILE = "users.json"
-ORDERS_FILE = "data/orders.json"
-PRODUCTS_FILE = "products.json"
-BUS_EVENTS_FILE = "data/bus_events.json"
-BUS_RESERVIERUNGEN_FILE = "data/bus_reservierungen.json"
-STORNO_FILE = "data/stornogebuehren.json"
+DATA_DIR = os.environ.get("DATA_DIR", "data")
 
+USER_FILE = os.path.join(DATA_DIR, "users.json")
+ORDERS_FILE = os.path.join(DATA_DIR, "orders.json")
+PRODUCTS_FILE = os.path.join(DATA_DIR, "products.json")
+BUS_EVENTS_FILE = os.path.join(DATA_DIR, "bus_events.json")
+BUS_RESERVIERUNGEN_FILE = os.path.join(DATA_DIR, "bus_reservierungen.json")
+STORNO_FILE = os.path.join(DATA_DIR, "stornogebuehren.json")
+DATABASE_URL = os.environ.get("DATABASE_URL")
+
+def get_db():
+    return psycopg2.connect(DATABASE_URL)
 
 # ---------------------------------------------------------
 # DATEI-HILFSFUNKTIONEN
 # ---------------------------------------------------------
 
 def ensure_data_files():
-    os.makedirs("data", exist_ok=True)
+    os.makedirs(DATA_DIR, exist_ok=True)
 
     if not os.path.exists(USER_FILE):
         with open(USER_FILE, "w", encoding="utf-8") as f:
@@ -47,17 +53,56 @@ def ensure_data_files():
 
 # ---------------- USERS ----------------
 
+def init_db():
+    conn = get_db()
+    cur = conn.cursor()
+    cur.execute("""
+        CREATE TABLE IF NOT EXISTS users (
+            email TEXT PRIMARY KEY,
+            name TEXT NOT NULL,
+            password TEXT NOT NULL
+        )
+    """)
+    conn.commit()
+    cur.close()
+    conn.close()
+
+
 def load_users():
-    ensure_data_files()
-    with open(USER_FILE, "r", encoding="utf-8") as f:
-        return json.load(f)
+    init_db()
+    conn = get_db()
+    cur = conn.cursor()
+    cur.execute("SELECT email, name, password FROM users")
+    rows = cur.fetchall()
+    cur.close()
+    conn.close()
+
+    users = {}
+    for email, name, password in rows:
+        users[email] = {
+            "name": name,
+            "password": password
+        }
+
+    return users
 
 
 def save_users(users):
-    ensure_data_files()
-    with open(USER_FILE, "w", encoding="utf-8") as f:
-        json.dump(users, f, indent=4, ensure_ascii=False)
+    init_db()
+    conn = get_db()
+    cur = conn.cursor()
 
+    cur.execute("DELETE FROM users")
+
+    for email, user in users.items():
+        cur.execute("""
+            INSERT INTO users (email, name, password)
+            VALUES (%s, %s, %s)
+        """, (email, user["name"], user["password"]))
+
+    conn.commit()
+    cur.close()
+    conn.close()
 
 # ---------------- ORDERS ----------------
 
