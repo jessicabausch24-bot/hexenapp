@@ -19,6 +19,7 @@ BUS_EVENTS_FILE = os.path.join(DATA_DIR, "bus_events.json")
 BUS_RESERVIERUNGEN_FILE = os.path.join(DATA_DIR, "bus_reservierungen.json")
 STORNO_FILE = os.path.join(DATA_DIR, "stornogebuehren.json")
 DATABASE_URL = os.environ.get("DATABASE_URL")
+print("DATABASE_URL CHECK:", DATABASE_URL.replace("0QlRTReZFTD8u0px", "****") if DATABASE_URL else "FEHLT")
 
 def get_db():
     if not DATABASE_URL:
