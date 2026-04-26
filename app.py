@@ -21,7 +21,9 @@ STORNO_FILE = os.path.join(DATA_DIR, "stornogebuehren.json")
 DATABASE_URL = os.environ.get("DATABASE_URL")
 
 def get_db():
-    return psycopg2.connect(DATABASE_URL)
+    if not DATABASE_URL:
+        raise Exception("DATABASE_URL fehlt in Render Environment")
+    return psycopg2.connect(DATABASE_URL, sslmode="require")
 
 # ---------------------------------------------------------
 # DATEI-HILFSFUNKTIONEN
