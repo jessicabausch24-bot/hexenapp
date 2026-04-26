@@ -2,6 +2,7 @@
 <html lang="de">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Dashboard</title>
 
 <style>
@@ -13,15 +14,15 @@ body {
     min-height: 100vh;
     display: flex;
     flex-direction: column;
+    overflow-x: hidden;
 }
 
-/* 🔥 Hauptbereich mittig */
+/* 🔥 Hauptbereich */
 .main {
     flex: 1;
     display: flex;
-    align-items: center;
     justify-content: center;
-    padding: 30px 20px;
+    padding: 20px 15px;
 }
 
 .wrapper {
@@ -32,8 +33,8 @@ body {
 /* 🔥 Titel */
 h1 {
     text-align: center;
-    margin-bottom: 40px;
-    font-size: 38px;
+    margin-bottom: 25px;
+    font-size: 34px;
 }
 
 /* 🔥 Layout */
@@ -41,7 +42,7 @@ h1 {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 60px;
+    gap: 50px;
 }
 
 /* 🔥 Bild */
@@ -53,8 +54,8 @@ h1 {
 
 .side-img {
     width: 100%;
-    max-width: 450px;
-    max-height: 500px;
+    max-width: 420px;
+    max-height: 480px;
     object-fit: contain;
 }
 
@@ -65,14 +66,14 @@ h1 {
 
 .grid {
     display: grid;
-    gap: 20px;
+    gap: 18px;
 }
 
 .card {
     background: white;
     color: #1f1936;
     border-radius: 18px;
-    padding: 24px;
+    padding: 22px;
     text-align: center;
     text-decoration: none;
     font-weight: bold;
@@ -85,10 +86,10 @@ h1 {
     transform: translateY(-3px);
 }
 
-/* 🔥 Footer ganz unten */
+/* 🔥 Footer */
 .footer-bar {
     background: #1f1936;
-    padding: 14px;
+    padding: 12px;
     text-align: center;
 }
 
@@ -96,27 +97,71 @@ h1 {
     color: white;
     text-decoration: none;
     font-weight: bold;
-    margin: 0 20px;
-    font-size: 18px;
+    margin: 0 15px;
+    font-size: 16px;
 }
 
 .footer-bar a:hover {
     text-decoration: underline;
 }
 
-/* 🔥 Mobile */
+/* 🔥 MOBILE OPTIMIERUNG */
 @media (max-width: 800px) {
-    .dashboard {
-        flex-direction: column;
-        gap: 30px;
-    }
 
-    .side-img {
-        max-width: 280px;
+    .main {
+        padding: 15px 12px;
     }
 
     h1 {
-        font-size: 28px;
+        font-size: 26px;
+        margin-bottom: 15px;
+    }
+
+    .dashboard {
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .left {
+        width: 100%;
+    }
+
+    .side-img {
+        max-width: 220px;
+        max-height: 240px;
+    }
+
+    .right {
+        width: 100%;
+    }
+
+    .grid {
+        width: 100%;
+        gap: 12px;
+    }
+
+    .card {
+        width: 100%;
+        box-sizing: border-box;
+        padding: 18px;
+        font-size: 18px;
+    }
+}
+
+/* 🔥 EXTRA kleine Handys */
+@media (max-width: 420px) {
+
+    .side-img {
+        max-width: 180px;
+    }
+
+    h1 {
+        font-size: 24px;
+    }
+
+    .card {
+        padding: 16px;
+        font-size: 17px;
     }
 }
 </style>
@@ -164,7 +209,6 @@ h1 {
     </div>
 </div>
 
-<!-- 🔥 FIX unten -->
 <div class="footer-bar">
     {% if session.user == "Jessi24" %}
         <a href="{{ url_for('admin') }}">Adminbereich</a>
