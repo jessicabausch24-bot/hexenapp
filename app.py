@@ -5,13 +5,12 @@ import os
 import json
 import uuid
 import datetime
-import psycopg2
-import time
 
 app = Flask(__name__)
 app.secret_key = "super_secret_key"
 
-DATA_DIR = os.environ.get("DATA_DIR", "data")
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+DATA_DIR = os.path.join(BASE_DIR, "data")
 
 USER_FILE = os.path.join(DATA_DIR, "users.json")
 ORDERS_FILE = os.path.join(DATA_DIR, "orders.json")
@@ -19,28 +18,7 @@ PRODUCTS_FILE = os.path.join(DATA_DIR, "products.json")
 BUS_EVENTS_FILE = os.path.join(DATA_DIR, "bus_events.json")
 BUS_RESERVIERUNGEN_FILE = os.path.join(DATA_DIR, "bus_reservierungen.json")
 STORNO_FILE = os.path.join(DATA_DIR, "stornogebuehren.json")
-DATABASE_URL = os.environ.get("DATABASE_URL")
-print("DATABASE_URL CHECK:", DATABASE_URL.replace("0QlRTReZFTD8u0px", "****") if DATABASE_URL else "FEHLT")
 
-def get_db():
-    if not DATABASE_URL:
-        raise Exception("DATABASE_URL fehlt")
-
-    last_error = None
-
-    for attempt in range(3):
-        try:
-            return psycopg2.connect(
-                DATABASE_URL,
-                sslmode="require",
-                client_encoding="UTF8",
-                connect_timeout=10
-            )
-        except psycopg2.OperationalError as e:
-            last_error = e
-            time.sleep(2)
-
-    raise last_error
 
 # ---------------------------------------------------------
 # DATEI-HILFSFUNKTIONEN
@@ -69,60 +47,18 @@ def ensure_data_files():
         with open(STORNO_FILE, "w", encoding="utf-8") as f:
             json.dump([], f, indent=4, ensure_ascii=False)
 
-
 # ---------------- USERS ----------------
 
-def init_db():
-    conn = get_db()
-    cur = conn.cursor()
-    cur.execute("""
-        CREATE TABLE IF NOT EXISTS users (
-            email TEXT PRIMARY KEY,
-            name TEXT NOT NULL,
-            password TEXT NOT NULL
-        )
-    """)
-    conn.commit()
-    cur.close()
-    conn.close()
-
-
 def load_users():
-    init_db()
-    conn = get_db()
-    cur = conn.cursor()
-    cur.execute("SELECT email, name, password FROM users")
-    rows = cur.fetchall()
-    cur.close()
-    conn.close()
+    ensure_data_files()
 
-    users = {}
-    for email, name, password in rows:
-        users[email] = {
-            "name": name,
-            "password": password
-        }
-
-    return users
-
-
-def save_users(users):
-    init_db()
-    conn = get_db()
-    cur = conn.cursor()
-
-    cur.execute("DELETE FROM users")
-
-    for email, user in users.items():
-        cur.execute("""
-            INSERT INTO users (email, name, password)
-            VALUES (%s, %s, %s)
-        """, (email, user["name"], user["password"]))
-
-    conn.commit()
-    cur.close()
-    conn.close()
-
+    try:
+        with open(USER_FILE, "r", encoding="utf-8") as f:
+            return json.load(f)
+    except:
+        with open(USER_FILE, "w", encoding="utf-8") as f:
+            json.dump({}, f, indent=4, ensure_ascii=False)
+        return {}
 # ---------------- ORDERS ----------------
 
 def load_orders():
