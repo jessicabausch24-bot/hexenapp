@@ -478,10 +478,7 @@ def register():
             "name": name,
             "password": generate_password_hash(password)
         }
-        def save_users(users):
-            ensure_data_files()
-            with open(USER_FILE, "w", encoding="utf-8") as f:
-             json.dump(users, f, indent=4, ensure_ascii=False)
+        
 
     return render_template('register.html')
 
@@ -1569,6 +1566,14 @@ def admin_stornogebuehren():
         stornos=stornos,
         gesamt=gesamt
     )
+@app.route('/debug-files')
+def debug_files():
+    return {
+        "BASE_DIR": BASE_DIR,
+        "DATA_DIR": DATA_DIR,
+        "USER_FILE": USER_FILE,
+        "users_exists": os.path.exists(USER_FILE)
+    }
 # ---------------------------------------------------------
 # START
 # ---------------------------------------------------------
