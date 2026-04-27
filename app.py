@@ -432,9 +432,9 @@ def login():
         try:
             users = load_users()
         except Exception as e:
-             return render_template('login.html', error=f"Datenbankfehler: {e}")
+            return render_template('login.html', error=f"Datenbankfehler: {e}")
 
-        email = request.form.get('email', '').strip()
+        email = request.form.get('email', '').strip().lower()
         password = request.form.get('password', '')
 
         if email in users:
@@ -449,7 +449,6 @@ def login():
 
     return render_template('login.html')
 
-
 # ---------------------------------------------------------
 # REGISTRIERUNG
 # ---------------------------------------------------------
@@ -458,13 +457,14 @@ def register():
     try:
         users = load_users()
     except Exception as e:
-            return render_template('register.html', error=f"Datenbankfehler: {e}")
+        return render_template('register.html', error=f"Datenbankfehler: {e}")
 
     if request.method == 'POST':
         name = request.form.get('name', '').strip()
-        email = request.form.get('email', '').strip()
+        email = request.form.get('email', '').strip().lower()
         password = request.form.get('password', '')
 
+        # Validierung
         if not name or not email or not password:
             return render_template('register.html', error="Bitte alle Felder ausfüllen")
 
@@ -474,15 +474,17 @@ def register():
         if email in users:
             return render_template('register.html', error="E-Mail existiert bereits")
 
+        # User speichern
         users[email] = {
             "name": name,
             "password": generate_password_hash(password)
         }
-        
+
+        save_users(users)
+
+        return redirect('/login')
 
     return render_template('register.html')
-
-
 # ---------------------------------------------------------
 # LOGOUT
 # ---------------------------------------------------------
