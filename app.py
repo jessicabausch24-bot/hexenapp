@@ -478,8 +478,10 @@ def register():
             "name": name,
             "password": generate_password_hash(password)
         }
-        save_users(users)
-        return redirect('/login')
+        def save_users(users):
+            ensure_data_files()
+            with open(USER_FILE, "w", encoding="utf-8") as f:
+             json.dump(users, f, indent=4, ensure_ascii=False)
 
     return render_template('register.html')
 
