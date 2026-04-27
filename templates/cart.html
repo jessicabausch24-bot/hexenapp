@@ -109,21 +109,36 @@ button {
         min-width: 100%;
         text-align: left;
     }
-}.footer-bar {
-    margin-top: 30px;
+.footer-bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: linear-gradient(135deg, #1f1936, #a64fff);
     display: flex;
     justify-content: center;
     gap: 15px;
-    flex-wrap: wrap;
+    padding: 15px;
+    z-index: 1000;
 }
 
-.footer-bar a {
-    background: #7b2ff7;
-    color: white;
-    padding: 12px 18px;
-    border-radius: 12px;
+.footer-bar .btn {
+    background: white;
+    color: #1f1936;
+    padding: 10px 18px;
+    border-radius: 20px;
     text-decoration: none;
     font-weight: bold;
+    transition: 0.2s;
+}
+
+.footer-bar .btn:hover {
+    transform: scale(1.05);
+}
+
+.footer-bar .logout {
+    background: #ff4d4d;
+    color: white;
 }
 </style>
 </head>
@@ -227,9 +242,14 @@ button {
     {% endif %}
 
     <div class="footer-bar">
-    <a href="{{ url_for('shop') }}">Zurück zum Shop</a>
-    <a href="{{ url_for('dashboard') }}">Startseite</a>
-    <a href="{{ url_for('logout') }}">Logout</a>
+    <a href="{{ url_for('shop') }}" class="btn">Zum Shop</a>
+    <a href="{{ url_for('dashboard') }}" class="btn">Start</a>
+
+    {% if session.get("email", "").lower() == "jessica.bausch24@gmail.com" %}
+        <a href="{{ url_for('admin') }}" class="btn">Admin</a>
+    {% endif %}
+
+    <a href="{{ url_for('logout') }}" class="btn logout">Logout</a>
 </div>
 
 </div>
