@@ -421,18 +421,34 @@ def datenschutz():
 def impressum():
     return render_template('impressum.html')
 
+# ---------------- USERS ----------------
+
+def load_users():
+    ensure_data_files()
+
+    try:
+        with open(USER_FILE, "r", encoding="utf-8") as f:
+            return json.load(f)
+    except:
+        with open(USER_FILE, "w", encoding="utf-8") as f:
+            json.dump({}, f, indent=4, ensure_ascii=False)
+        return {}
+
+
+def save_users(users):
+    ensure_data_files()
+    with open(USER_FILE, "w", encoding="utf-8") as f:
+        json.dump(users, f, indent=4, ensure_ascii=False)
+
+
 # ---------------------------------------------------------
 # LOGIN
 # ---------------------------------------------------------
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-
     if request.method == 'POST':
-        try:
-            users = load_users()
-        except Exception as e:
-            return render_template('login.html', error=f"Datenbankfehler: {e}")
+        users = load_users()
 
         email = request.form.get('email', '').strip().lower()
         password = request.form.get('password', '')
@@ -449,22 +465,20 @@ def login():
 
     return render_template('login.html')
 
+
 # ---------------------------------------------------------
 # REGISTRIERUNG
 # ---------------------------------------------------------
+
 @app.route('/register', methods=['GET', 'POST'])
 def register():
-    try:
-        users = load_users()
-    except Exception as e:
-        return render_template('register.html', error=f"Datenbankfehler: {e}")
+    users = load_users()
 
     if request.method == 'POST':
         name = request.form.get('name', '').strip()
         email = request.form.get('email', '').strip().lower()
         password = request.form.get('password', '')
 
-        # Validierung
         if not name or not email or not password:
             return render_template('register.html', error="Bitte alle Felder ausfüllen")
 
@@ -474,7 +488,6 @@ def register():
         if email in users:
             return render_template('register.html', error="E-Mail existiert bereits")
 
-        # User speichern
         users[email] = {
             "name": name,
             "password": generate_password_hash(password)
@@ -485,15 +498,16 @@ def register():
         return redirect('/login')
 
     return render_template('register.html')
+
+
 # ---------------------------------------------------------
 # LOGOUT
 # ---------------------------------------------------------
+
 @app.route('/logout')
 def logout():
     session.clear()
     return redirect('/login')
-
-
 # ---------------------------------------------------------
 # DASHBOARD
 # ---------------------------------------------------------
