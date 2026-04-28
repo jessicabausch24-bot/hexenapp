@@ -672,7 +672,7 @@ def bus_detail(event_id):
         reservierungen.append(reservierung)
         save_bus_reservierungen(reservierungen)
 
-        return redirect(f"/bus/{event_id}")
+       return redirect('/bus'))
 
     return render_template(
         "bus_detail.html",
