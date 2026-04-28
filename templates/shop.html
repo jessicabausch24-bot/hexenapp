@@ -101,15 +101,23 @@ h1 {
 .footer-bar a:hover {
     text-decoration: underline;
 }
+.top-bar {
+    position: absolute;
+    top: 20px;
+    right: 30px;
+}
+
 .cart-btn {
-    display: inline-block;
-    margin: 15px 0;
+    background: black;
+    color: white;
     padding: 12px 20px;
-    background: white;
-    color: #1f1936;
-    border-radius: 20px;
+    border-radius: 25px;
     text-decoration: none;
     font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
 }
 
 .cart-btn:hover {
@@ -145,7 +153,11 @@ h1 {
             <h2>Merchandise</h2>
         </a>
 
-    <a href="{{ url_for('cart') }}" class="cart-btn">🛒 Warenkorb</a>
+    <div class="top-bar">
+    <a href="{{ url_for('cart') }}" class="cart-btn">
+        🛒 Warenkorb
+    </a>
+</div>
 
     </div>
 
