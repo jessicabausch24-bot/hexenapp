@@ -134,20 +134,25 @@ h1 {
     z-index: 1000;
 }
 
+.back-arrow {
+    position: fixed;
+    top: 20px;
+    left: 25px;
+    z-index: 1000;
+}
+
 .back-arrow a {
-    background: rgba(0,0,0,0.6);
     color: white;
-    font-size: 28px;
-    padding: 10px 16px;
-    border-radius: 50%;
+    font-size: 26px;
     text-decoration: none;
     font-weight: bold;
-    display: inline-block;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+    background: none;   /* 🔥 entfernt Kreis */
+    padding: 0;         /* 🔥 entfernt Button-Form */
+    box-shadow: none;   /* 🔥 entfernt Schatten */
 }
 
 .back-arrow a:hover {
-    transform: scale(1.15);
+    transform: scale(1.2);
 }
 </style>
 </head>
