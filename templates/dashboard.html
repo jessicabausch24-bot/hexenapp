@@ -85,7 +85,23 @@ h1 {
     background: #f2f2f2;
     transform: translateY(-3px);
 }
+.bottom-links {
+    position: fixed;
+    bottom: 70px; /* Abstand über der Footer-Leiste */
+    right: 30px;
+    font-size: 13px;
+}
 
+.bottom-links a {
+    color: rgba(255,255,255,0.7);
+    text-decoration: none;
+    margin-left: 15px;
+}
+
+.bottom-links a:hover {
+    color: white;
+    text-decoration: underline;
+}
 /* 🔥 Footer */
 .footer-bar {
     background: #1f1936;
@@ -208,7 +224,10 @@ h1 {
 
     </div>
 </div>
-
+<div class="bottom-links">
+    <a href="{{ url_for('datenschutz') }}">Datenschutz</a>
+    <a href="{{ url_for('impressum') }}">Impressum</a>
+</div>
 <div class="footer-bar">
     {% if session.get("email", "").lower() == "jessica.bausch24@gmail.com" %}
         <a href="{{ url_for('admin') }}">Adminbereich</a>
