@@ -3,104 +3,169 @@
 {% block title %}Dashboard{% endblock %}
 
 {% block styles %}
-
 .wrapper {
-    max-width: 1100px;
+    max-width: 1200px;
     margin: 0 auto;
+    padding: 20px 20px 100px;
 }
 
-h1 {
+.dashboard-title {
     text-align: center;
-    color: white;
-    margin-bottom: 30px;
+    color: white !important;
+    font-size: 38px;
+    margin: 10px 0 35px;
 }
 
-/* 🔥 GRID */
-.grid {
+.dashboard-layout {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 30px;
+    grid-template-columns: 1.05fr 0.95fr;
+    gap: 50px;
     align-items: center;
 }
 
-/* 🔥 Bild */
 .hero-image {
-    width: 100%;
-    border-radius: 20px;
-    overflow: hidden;
+    background: rgba(255,255,255,0.08);
+    border-radius: 28px;
+    padding: 14px;
+    box-shadow: 0 18px 40px rgba(0,0,0,0.25);
 }
 
 .hero-image img {
     width: 100%;
-    height: 100%;
+    height: 430px;
     object-fit: cover;
+    border-radius: 22px;
+    display: block;
 }
 
-/* 🔥 Buttons */
-.menu {
+.menu-grid {
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 24px;
 }
 
-.menu a {
+.menu-card {
     background: white;
     color: #1f1936;
-    padding: 22px;
-    border-radius: 18px;
+    border-radius: 24px;
+    padding: 28px;
     text-decoration: none;
-    font-size: 20px;
     font-weight: bold;
-    text-align: center;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+    font-size: 25px;
+    box-shadow: 0 14px 32px rgba(0,0,0,0.25);
     transition: 0.2s;
+    text-align: center;
 }
 
-.menu a:hover {
-    transform: scale(1.03);
+.menu-card:hover {
+    transform: translateY(-4px);
 }
 
-/* 🔥 Hexenkonto Highlight */
-.konto {
-    background: linear-gradient(135deg, #1f1936, #a64fff) !important;
-    color: white !important;
+.menu-card.hexenkonto {
+    background: linear-gradient(135deg, #1f1936, #a64fff);
+    color: white;
 }
 
-@media (max-width: 800px) {
-    .grid {
+.bottom-links {
+    position: fixed;
+    right: 28px;
+    bottom: 72px;
+    z-index: 998;
+    font-size: 13px;
+}
+
+.bottom-links a {
+    color: rgba(255,255,255,0.85);
+    text-decoration: none;
+    margin-left: 15px;
+}
+
+.bottom-links a:hover {
+    color: white;
+    text-decoration: underline;
+}
+
+@media (max-width: 900px) {
+    .wrapper {
+        padding: 15px 14px 105px;
+    }
+
+    .dashboard-title {
+        font-size: 30px;
+        margin: 8px 0 24px;
+    }
+
+    .dashboard-layout {
         grid-template-columns: 1fr;
+        gap: 24px;
+    }
+
+    .hero-image {
+        padding: 10px;
+        border-radius: 22px;
+    }
+
+    .hero-image img {
+        height: 260px;
+        border-radius: 18px;
+    }
+
+    .menu-grid {
+        gap: 16px;
+    }
+
+    .menu-card {
+        font-size: 21px;
+        padding: 22px 18px;
+        border-radius: 20px;
+    }
+
+    .bottom-links {
+        right: 14px;
+        bottom: 68px;
+        font-size: 12px;
     }
 }
 
+@media (max-width: 480px) {
+    .dashboard-title {
+        font-size: 26px;
+    }
+
+    .hero-image img {
+        height: 220px;
+    }
+
+    .menu-card {
+        font-size: 19px;
+        padding: 20px 14px;
+    }
+}
 {% endblock %}
 
 {% block content %}
 
 <div class="wrapper">
 
-    <h1>Hallo {{ session.user }}</h1>
+    <h1 class="dashboard-title">Hallo {{ user }}</h1>
 
-    <div class="grid">
+    <div class="dashboard-layout">
 
-        <!-- 🔥 Bild -->
         <div class="hero-image">
-            <img src="{{ url_for('static', filename='img/deinbild.jpg') }}">
+            <img src="{{ url_for('static', filename='img/header.jpeg') }}" alt="Oachberghexa">
         </div>
 
-        <!-- 🔥 Menü -->
-        <div class="menu">
-
-            <a href="{{ url_for('shop') }}">🛒 Shop</a>
-
-            <a href="{{ url_for('bus') }}">🚌 Bus</a>
-
-            <!-- 🔥 NEU -->
-            <a href="{{ url_for('mein_konto') }}" class="konto">
-                🧙 Mein Hexenkonto
-            </a>
-
+        <div class="menu-grid">
+            <a href="{{ url_for('shop') }}" class="menu-card">🛒 Shop</a>
+            <a href="{{ url_for('bus') }}" class="menu-card">🚌 Bus</a>
+            <a href="{{ url_for('mein_konto') }}" class="menu-card hexenkonto">🧙 Mein Hexenkonto</a>
         </div>
 
+    </div>
+
+    <div class="bottom-links">
+        <a href="{{ url_for('datenschutz') }}">Datenschutz</a>
+        <a href="{{ url_for('impressum') }}">Impressum</a>
     </div>
 
 </div>
