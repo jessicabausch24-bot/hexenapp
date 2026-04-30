@@ -140,8 +140,14 @@ def is_logged_in():
 
 
 def admin_required():
-    return session.get("email", "").lower() == "jessica.bausch24@gmail.com"
+    if not is_logged_in():
+        return False
 
+    users = load_users()
+    email = session.get("email", "").lower()
+    user = users.get(email)
+
+    return user and user.get("is_admin") == True
 # ---------------------------------------------------------
 # PRODUKTDATEN
 # ---------------------------------------------------------
@@ -489,9 +495,11 @@ def register():
             return render_template('register.html', error="E-Mail existiert bereits")
 
         users[email] = {
-            "name": name,
-            "password": generate_password_hash(password)
-        }
+    "name": name,
+    "password": generate_password_hash(password),
+    "is_admin": False
+}
+        
 
         save_users(users)
 
@@ -1387,25 +1395,13 @@ def admin_bestellliste():
         orders=orders,
         gesamt=gesamt
     )
-# ---------------------------------------------------------
-# ADMINBEREICH - USER
-# ---------------------------------------------------------
-
-@app.route('/admin/users')
-def admin_users():
-    if not admin_required():
-        return redirect('/login')
-
-    users = load_users()
-    return render_template('admin-users.html', users=users)
-
-
 @app.route('/admin/user-bearbeiten/<path:email>', methods=['GET', 'POST'])
 def admin_user_bearbeiten(email):
     if not admin_required():
         return redirect('/login')
 
     users = load_users()
+    email = email.strip().lower()
 
     if email not in users:
         abort(404)
@@ -1414,8 +1410,9 @@ def admin_user_bearbeiten(email):
 
     if request.method == 'POST':
         neuer_name = request.form.get('name', '').strip()
-        neue_email = request.form.get('email', '').strip()
+        neue_email = request.form.get('email', '').strip().lower()
         neues_passwort = request.form.get('password', '').strip()
+        ist_admin = request.form.get("is_admin") == "on"
 
         if not neuer_name or not neue_email:
             return render_template(
@@ -1435,7 +1432,9 @@ def admin_user_bearbeiten(email):
 
         neuer_user_datensatz = {
             "name": neuer_name,
-            "password": user["password"]
+            "password": user["password"],
+            "is_admin": ist_admin,
+            "maske": user.get("maske", "")
         }
 
         if neues_passwort:
@@ -1462,22 +1461,6 @@ def admin_user_bearbeiten(email):
         current_email=email,
         user=user
     )
-
-
-@app.route('/admin/user-loeschen/<path:email>')
-def admin_user_loeschen(email):
-    if not admin_required():
-        return redirect('/login')
-
-    users = load_users()
-
-    if email in users:
-        del users[email]
-        save_users(users)
-
-    return redirect('/admin/users')
-
-
 # ---------------------------------------------------------
 # ADMIN - BUS VERANSTALTUNGEN
 # ---------------------------------------------------------

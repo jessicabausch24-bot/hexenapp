@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin - Benutzer bearbeiten</title>
+
     <style>
         body {
             margin: 0;
@@ -42,7 +43,8 @@
             font-weight: bold;
         }
 
-        input {
+        input[type="text"],
+        input[type="email"] {
             width: 100%;
             padding: 12px 14px;
             margin-bottom: 18px;
@@ -50,6 +52,22 @@
             border-radius: 14px;
             font-size: 16px;
             box-sizing: border-box;
+        }
+
+        .admin-check {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: #f3f0ff;
+            padding: 14px;
+            border-radius: 14px;
+            margin-bottom: 18px;
+            font-weight: bold;
+        }
+
+        .admin-check input {
+            width: 20px;
+            height: 20px;
         }
 
         .btn {
@@ -89,7 +107,9 @@
         }
     </style>
 </head>
+
 <body>
+
 <div class="page-wrapper">
     <div class="card">
         <div class="card-body">
@@ -110,6 +130,11 @@
                 <input type="text" id="password" name="password" placeholder="Leer lassen, wenn es gleich bleiben soll">
                 <div class="hint">Nur ausfüllen, wenn das Passwort geändert werden soll.</div>
 
+                <label class="admin-check">
+                    <input type="checkbox" name="is_admin" {% if user.get('is_admin') %}checked{% endif %}>
+                    Adminrechte vergeben
+                </label>
+
                 <button type="submit" class="btn">Speichern</button>
             </form>
 
@@ -117,5 +142,6 @@
         </div>
     </div>
 </div>
+
 </body>
 </html>
