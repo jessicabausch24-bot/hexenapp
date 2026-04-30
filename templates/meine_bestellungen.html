@@ -68,13 +68,30 @@
 h1 {
     margin: 0;
 }
+.back-arrow {
+    position: absolute;
+    top: 20px;
+    left: 25px;
+}
 
+.back-arrow a {
+    font-size: 28px;
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.back-arrow a:hover {
+    transform: scale(1.2);
+}
 {% endblock %}
 
 {% block content %}
 
 <div class="wrapper">
-
+<div class="back-arrow">
+    <a href="javascript:history.back()">⬅</a>
+</div>
     <div class="header">
         <h1>Meine Bestellungen</h1>
     </div>
