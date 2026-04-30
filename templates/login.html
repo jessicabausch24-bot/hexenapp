@@ -107,6 +107,23 @@ body {
     text-decoration: none;
     margin: 0 8px;
 }
+.password-wrapper {
+    position: relative;
+}
+
+.password-wrapper input {
+    width: 100%;
+    padding-right: 40px;
+}
+
+.toggle-password {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    font-size: 18px;
+}
 </style>
 
 </head>
@@ -129,7 +146,10 @@ body {
             <input type="email" name="email" required>
 
             <label>Passwort</label>
-            <input type="password" name="password" required>
+            <div class="password-wrapper">
+    <input type="password" id="password" name="password">
+    <span class="toggle-password" onclick="togglePassword('password')">👁️</span>
+</div>
 
             <button type="submit">Login</button>
         </form>
@@ -149,6 +169,18 @@ body {
     <a href="{{ url_for('datenschutz') }}">Datenschutz</a>
     <a href="{{ url_for('impressum') }}">Impressum</a>
 </div>
+{% endblock %}
+
+<script>
+function togglePassword(id) {
+    const input = document.getElementById(id);
+    if (input.type === "password") {
+        input.type = "text";
+    } else {
+        input.type = "password";
+    }
+}
+</script>
 
 </body>
 </html>
