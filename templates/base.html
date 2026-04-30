@@ -11,24 +11,25 @@ body {
     font-family: Arial, sans-serif;
     background: linear-gradient(135deg, #1f1936, #a64fff);
     min-height: 100vh;
-    display: flex;
-    flex-direction: column;
 }
 
-/* CONTENT */
+/* CONTENT bleibt wie vorher */
 .main {
-    flex: 1;
     padding: 20px;
 }
 
-/* FOOTER */
+/* FOOTER FIX UNTEN (ohne Layout kaputt zu machen) */
 .footer-bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
     width: 100%;
     background: #1f1936;
     display: flex;
     justify-content: center;
-    gap: 20px;
-    padding: 15px;
+    gap: 30px;
+    padding: 15px 0;
+    z-index: 999;
 }
 
 .footer-bar a {
@@ -58,22 +59,6 @@ body {
 .back-arrow a:hover {
     transform: scale(1.2);
 }
-
-/* OPTIONAL: CARD BASIS */
-.card {
-    background: white;
-    color: #1f1936;
-    border-radius: 24px;
-    padding: 25px;
-    box-shadow: 0 20px 45px rgba(0,0,0,0.25);
-}
-
-/* RESPONSIVE */
-@media (max-width: 768px) {
-    .main {
-        padding: 15px;
-    }
-}
 </style>
 
 {% block styles %}{% endblock %}
@@ -82,19 +67,17 @@ body {
 
 <body>
 
-<!-- BACK BUTTON -->
+<!-- BACK BUTTON (nicht auf Dashboard + Login) -->
 {% if session.get('user') and request.endpoint not in ['dashboard', 'login'] %}
 <div class="back-arrow">
     <a href="javascript:history.back()">⬅</a>
 </div>
 {% endif %}
 
-<!-- MAIN CONTENT -->
 <div class="main">
     {% block content %}{% endblock %}
 </div>
 
-<!-- FOOTER -->
 {% if not hide_footer %}
 <div class="footer-bar">
     <a href="{{ url_for('dashboard') }}">Start</a>
