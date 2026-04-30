@@ -3,10 +3,10 @@
 {% block title %}{{ event.titel }}{% endblock %}
 
 {% block styles %}
-
 .wrapper {
     max-width: 800px;
     margin: 0 auto;
+    padding-bottom: 90px;
 }
 
 .card {
@@ -103,14 +103,13 @@ button {
     margin-top: 18px;
     line-height: 1.5;
 }
-
 {% endblock %}
 
 {% block content %}
 
 <div class="wrapper">
-
     <div class="card">
+
         {% if success %}
             <div class="success">{{ success }}</div>
         {% endif %}
@@ -158,8 +157,8 @@ button {
             Der Platz ist bis 5 Tage vor Veranstaltung über „Meine Reservierungen“ stornierbar.
             Für spätere Stornierungen fällt eine Stornierungsgebühr von 15 € an.
         </div>
-    </div>
 
+    </div>
 </div>
 
 {% endblock %}
