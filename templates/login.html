@@ -39,10 +39,13 @@ body {
     left: 50%;
     transform: translate(-50%, -50%);
     width: 380px;
+    max-width: calc(100vw - 32px);
     padding: 34px;
     background: rgba(255, 255, 255, 0.94);
     border-radius: 24px;
     box-shadow: 0 14px 45px rgba(0,0,0,0.35);
+    z-index: 10;
+    box-sizing: border-box;
 }
 
 .login-card label {
@@ -58,6 +61,39 @@ body {
     margin-bottom: 16px;
     border-radius: 12px;
     border: 1px solid #ccc;
+    font-size: 15px;
+    box-sizing: border-box;
+}
+
+.password-wrapper {
+    position: relative;
+}
+
+.password-wrapper input {
+    padding-right: 46px;
+}
+
+.toggle-password {
+    position: absolute;
+    right: 13px;
+    top: 14px;
+    width: 22px;
+    height: 14px;
+    border: 2px solid #555;
+    border-radius: 50%;
+    cursor: pointer;
+    box-sizing: border-box;
+}
+
+.toggle-password::after {
+    content: "";
+    position: absolute;
+    width: 6px;
+    height: 6px;
+    background: #555;
+    border-radius: 50%;
+    top: 2px;
+    left: 6px;
 }
 
 .login-card button {
@@ -67,25 +103,28 @@ body {
     border-radius: 14px;
     background: linear-gradient(90deg, #7b2ff7, #a64fff);
     color: white;
+    font-size: 16px;
     font-weight: bold;
     cursor: pointer;
 }
 
-.password-wrapper {
-    position: relative;
+.register-text {
+    margin-top: 16px;
+    text-align: center;
+    color: #333;
 }
 
-.password-wrapper input {
-    width: 100%;
-    padding-right: 40px;
+.register-text a {
+    color: #7b2ff7;
+    text-decoration: none;
+    font-weight: bold;
 }
 
-.toggle-password {
-    position: absolute;
-    right: 12px;
-    top: 50%;
-    transform: translateY(-50%);
-    cursor: pointer;
+.error {
+    margin-top: 15px;
+    color: #b00020;
+    text-align: center;
+    font-weight: bold;
 }
 
 .footer-links {
@@ -93,6 +132,44 @@ body {
     bottom: 12px;
     width: 100%;
     text-align: center;
+    font-size: 13px;
+    z-index: 20;
+}
+
+.footer-links a {
+    color: white;
+    text-decoration: none;
+    margin: 0 8px;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.6);
+}
+
+@media screen and (max-width: 768px) {
+    .login-card {
+        width: 86vw;
+        max-width: 360px;
+        padding: 26px 22px;
+        border-radius: 22px;
+    }
+
+    .login-card input {
+        padding: 12px;
+        font-size: 15px;
+        margin-bottom: 14px;
+    }
+
+    .password-wrapper input {
+        padding-right: 46px;
+    }
+
+    .login-card button {
+        padding: 13px;
+        font-size: 15px;
+    }
+
+    .footer-links {
+        font-size: 12px;
+        bottom: 8px;
+    }
 }
 </style>
 </head>
@@ -116,18 +193,27 @@ body {
 
             <label>Passwort</label>
             <div class="password-wrapper">
-                <input type="password" id="password" name="password">
-                <span onclick="togglePassword('password')">👁️</span>
+                <input type="password" id="password" name="password" required>
+                <span class="toggle-password" onclick="togglePassword('password')" title="Passwort anzeigen"></span>
             </div>
 
             <button type="submit">Login</button>
         </form>
 
+        <div class="register-text">
+            Noch kein Konto? <a href="{{ url_for('register') }}">Registrieren</a>
+        </div>
+
         {% if error %}
-            <div style="color:red; text-align:center;">{{ error }}</div>
+            <div class="error">{{ error }}</div>
         {% endif %}
     </div>
 
+</div>
+
+<div class="footer-links">
+    <a href="{{ url_for('datenschutz') }}">Datenschutz</a>
+    <a href="{{ url_for('impressum') }}">Impressum</a>
 </div>
 
 <script>
