@@ -12,7 +12,7 @@ body {
     background: linear-gradient(135deg, #1f1936, #a64fff);
     color: white;
     min-height: 100vh;
-    padding-bottom: 80px; /* wichtig für footer */
+    padding-bottom: 70px; /* wichtig für footer */
 }
 
 .wrapper {
@@ -116,7 +116,7 @@ button {
     left: 0;
     width: 100%;
     background: #1f1936;
-    padding: 14px 0;
+    padding: 12px 0;
     text-align: center;
     z-index: 999;
     box-shadow: 0 -2px 8px rgba(0,0,0,0.3);
@@ -125,9 +125,9 @@ button {
 .footer-bar a {
     color: white;
     text-decoration: none;
-    font-weight: 800;
-    margin: 0 28px;
-    font-size: 20px;
+    font-weight: bold;
+    margin: 0 15px;
+    font-size: 16px;   /* 🔥 vorher war zu groß */
 }
 
 .footer-bar a:hover {
@@ -141,19 +141,17 @@ button {
 }
 
 .back-arrow a {
-    background: rgba(0,0,0,0.6);
     color: white;
-    font-size: 28px;
-    padding: 10px 16px;
-    border-radius: 50%;
+    font-size: 26px;
     text-decoration: none;
     font-weight: bold;
-    display: inline-block;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+    background: none;   /* 🔥 entfernt Kreis */
+    padding: 0;         /* 🔥 entfernt Button-Form */
+    box-shadow: none;   /* 🔥 entfernt Schatten */
 }
 
 .back-arrow a:hover {
-    transform: scale(1.15);
+    transform: scale(1.2);
 }
 </style>
 
