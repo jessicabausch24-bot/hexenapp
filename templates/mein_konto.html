@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block title %}Mein Hexenkonto{% endblock %}
+
+{% block content %}
+
+<div class="wrapper">
+    <div class="card">
+        <h1>🧙 Mein Hexenkonto</h1>
+
+        <p><strong>Name:</strong> {{ user }}</p>
+        <p><strong>E-Mail:</strong> {{ email }}</p>
+
+        <div class="menu-grid">
+            <a href="{{ url_for('meine_bestellungen') }}" class="menu-card">
+                🛍️ Meine Bestellungen
+            </a>
+
+            <a href="{{ url_for('reservierungen') }}" class="menu-card">
+                🚌 Meine Reservierungen
+            </a>
+
+            <a href="{{ url_for('konto_bearbeiten') }}" class="menu-card">
+                ✏️ Meine Daten bearbeiten
+            </a>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

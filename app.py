@@ -536,6 +536,75 @@ def meine_bestellungen():
         "meine_bestellungen.html",
         orders=user_orders
     )
+@app.route('/mein-konto')
+def mein_konto():
+    if not is_logged_in():
+        return redirect('/login')
+
+    return render_template(
+        'mein_konto.html',
+        user=session.get("user"),
+        email=session.get("email")
+    )
+@app.route('/mein-konto/bearbeiten', methods=['GET', 'POST'])
+def konto_bearbeiten():
+    if not is_logged_in():
+        return redirect('/login')
+
+    users = load_users()
+    current_email = session.get("email")
+
+    if current_email not in users:
+        return redirect('/logout')
+
+    user = users[current_email]
+
+    if request.method == 'POST':
+        neuer_name = request.form.get("name", "").strip()
+        neue_email = request.form.get("email", "").strip().lower()
+        neues_passwort = request.form.get("password", "").strip()
+
+        if not neuer_name or not neue_email:
+            return render_template(
+                "konto_bearbeiten.html",
+                user=user,
+                email=current_email,
+                error="Name und E-Mail dürfen nicht leer sein."
+            )
+
+        if neue_email != current_email and neue_email in users:
+            return render_template(
+                "konto_bearbeiten.html",
+                user=user,
+                email=current_email,
+                error="Diese E-Mail ist bereits vergeben."
+            )
+
+        neuer_datensatz = {
+            "name": neuer_name,
+            "password": user["password"]
+        }
+
+        if neues_passwort:
+            neuer_datensatz["password"] = generate_password_hash(neues_passwort)
+
+        if neue_email != current_email:
+            del users[current_email]
+            users[neue_email] = neuer_datensatz
+            session["email"] = neue_email
+        else:
+            users[current_email] = neuer_datensatz
+
+        session["user"] = neuer_name
+        save_users(users)
+
+        return redirect('/mein-konto')
+
+    return render_template(
+        "konto_bearbeiten.html",
+        user=user,
+        email=current_email
+    )
 # ---------------------------------------------------------
 # MEINE RESERVIERUNGEN
 # ---------------------------------------------------------

@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block title %}Meine Daten bearbeiten{% endblock %}
+
+{% block content %}
+
+<div class="wrapper">
+    <div class="card">
+        <h1>✏️ Meine Daten bearbeiten</h1>
+
+        {% if error %}
+            <div class="error">{{ error }}</div>
+        {% endif %}
+
+        <form method="POST">
+            <label>Name</label>
+            <input type="text" name="name" value="{{ user.name }}" required>
+
+            <label>E-Mail</label>
+            <input type="email" name="email" value="{{ email }}" required>
+
+            <label>Neues Passwort</label>
+            <input type="password" name="password" placeholder="Leer lassen, wenn unverändert">
+
+            <button type="submit">Speichern</button>
+        </form>
+
+        <div class="footer-bar">
+            <a href="{{ url_for('mein_konto') }}">Zurück</a>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
