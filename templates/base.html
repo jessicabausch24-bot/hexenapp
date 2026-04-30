@@ -93,9 +93,15 @@ body {
 <div class="footer-bar">
     <a href="{{ url_for('dashboard') }}">Start</a>
 
-    {% if session.get('user') == "Jessi24" %}
+    <div class="footer-bar">
+    <a href="{{ url_for('dashboard') }}">Start</a>
+
+    {% if session.get('email', '').lower() == "jessica.bausch24@gmail.com" %}
         <a href="{{ url_for('admin') }}">Adminbereich</a>
     {% endif %}
+
+    <a href="{{ url_for('logout') }}">Logout</a>
+</div>
 
     <a href="{{ url_for('logout') }}">Logout</a>
 </div>

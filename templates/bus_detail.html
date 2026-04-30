@@ -127,7 +127,7 @@ button {
         {% set prozent = (belegt / event.gesamtplaetze * 100) if event.gesamtplaetze > 0 else 0 %}
 
         <div class="status-box">
-            <div class="status-large">🪑 {{ belegt }} / {{ event.gesamtplaetze }} belegt</div>
+            <div class="status-large"> {{ belegt }} / {{ event.gesamtplaetze }} belegt</div>
             <div>Noch frei: {{ frei }} Plätze</div>
 
             <div class="progress">
