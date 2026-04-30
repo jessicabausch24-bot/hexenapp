@@ -1,2 +1,88 @@
-<h1>Datenschutz</h1>
-<p>Diese Seite ist im Aufbau.</p>
+{% extends "base.html" %}
+
+{% block title %}Datenschutz{% endblock %}
+
+{% block content %}
+
+<div class="wrapper">
+    <div class="card">
+        <h1>Datenschutzerklärung</h1>
+
+        <h2>1. Verantwortlicher</h2>
+        <p>
+            Verantwortlich für diese Webseite/App ist:<br>
+            <strong>Oachberghexa</strong><br>
+            E-Mail: <strong>DEINE-EMAIL-HIER</strong>
+        </p>
+
+        <h2>2. Welche Daten werden gespeichert?</h2>
+        <p>
+            Bei der Nutzung dieser App speichern wir folgende Daten:
+        </p>
+        <ul>
+            <li>Name</li>
+            <li>E-Mail-Adresse</li>
+            <li>Passwort in verschlüsselter Form</li>
+            <li>Bestellungen</li>
+            <li>Reservierungen für Busfahrten</li>
+            <li>Stornierungen und Stornogebühren</li>
+        </ul>
+
+        <h2>3. Zweck der Speicherung</h2>
+        <p>
+            Die Daten werden benötigt, um Benutzerkonten, Bestellungen,
+            Reservierungen und den Adminbereich der Vereins-App bereitzustellen.
+        </p>
+
+        <h2>4. Rechtsgrundlage</h2>
+        <p>
+            Die Verarbeitung erfolgt auf Grundlage von Art. 6 Abs. 1 lit. b DSGVO
+            zur Bereitstellung der App-Funktionen sowie Art. 6 Abs. 1 lit. f DSGVO
+            aufgrund unseres berechtigten Interesses an einer funktionierenden Vereinsverwaltung.
+        </p>
+
+        <h2>5. Speicherung und Hosting</h2>
+        <p>
+            Die App wird bei PythonAnywhere betrieben. Die Daten werden in Dateien
+            auf dem Server gespeichert und nicht öffentlich zugänglich gemacht.
+        </p>
+
+        <h2>6. Cookies / Login-Sitzung</h2>
+        <p>
+            Für den Login wird eine technische Sitzung verwendet. Diese ist notwendig,
+            damit angemeldete Benutzer die App nutzen können. Es werden keine Tracking-Cookies eingesetzt.
+        </p>
+
+        <h2>7. Weitergabe von Daten</h2>
+        <p>
+            Eine Weitergabe personenbezogener Daten an Dritte erfolgt nicht,
+            außer sie ist zur technischen Bereitstellung der App erforderlich.
+        </p>
+
+        <h2>8. Speicherdauer</h2>
+        <p>
+            Daten werden gespeichert, solange sie für Vereinszwecke, Bestellungen,
+            Reservierungen oder gesetzliche Nachweispflichten benötigt werden.
+        </p>
+
+        <h2>9. Rechte der Nutzer</h2>
+        <p>
+            Nutzer haben das Recht auf Auskunft, Berichtigung, Löschung,
+            Einschränkung der Verarbeitung und Widerspruch gegen die Verarbeitung ihrer Daten.
+        </p>
+
+        <h2>10. Kontakt</h2>
+        <p>
+            Bei Fragen zum Datenschutz oder zur Löschung von Daten kann eine Nachricht
+            an folgende E-Mail-Adresse gesendet werden:<br>
+            <strong>vorstand.oachberghexa@gmx.de</strong>
+        </p>
+
+        <div class="footer-bar">
+            <a href="{{ url_for('dashboard') }}">Start</a>
+            <a href="{{ url_for('logout') }}">Logout</a>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

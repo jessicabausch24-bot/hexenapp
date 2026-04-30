@@ -1,2 +1,64 @@
-<h1>Impressum</h1>
-<p>Diese Seite ist im Aufbau.</p>
+{% extends "base.html" %}
+
+{% block title %}Impressum{% endblock %}
+
+{% block content %}
+
+<div class="wrapper">
+    <div class="card">
+        <h1>Impressum</h1>
+
+        <h2>Angaben gemäß § 5 TMG</h2>
+        <p>
+            <strong>Oachberghexa</strong><br>
+            Erlamer Oachberghexa e.V.<br>
+            Straße Hausnummer<br>
+            PLZ Ort
+        </p>
+
+        <h2>Vertreten durch</h2>
+        <p>
+            Vorstandschaft Oachberghexa Erlaheim<br>
+    
+        </p>
+
+        <h2>Kontakt</h2>
+        <p>
+            E-Mail: <strong>vorstand.oachberghexa@gmx.de
+            </strong>
+        </p>
+
+        <h2>Verantwortlich für den Inhalt nach § 55 Abs. 2 RStV</h2>
+        <p>
+            Name der verantwortlichen Person<br>
+            Anschrift wie oben
+        </p>
+
+        <h2>Haftung für Inhalte</h2>
+        <p>
+            Die Inhalte unserer Seiten wurden mit größter Sorgfalt erstellt.
+            Für die Richtigkeit, Vollständigkeit und Aktualität der Inhalte
+            können wir jedoch keine Gewähr übernehmen.
+        </p>
+
+        <h2>Haftung für Links</h2>
+        <p>
+            Unsere App enthält ggf. Links zu externen Webseiten Dritter,
+            auf deren Inhalte wir keinen Einfluss haben.
+            Deshalb können wir für diese fremden Inhalte auch keine Gewähr übernehmen.
+        </p>
+
+        <h2>Urheberrecht</h2>
+        <p>
+            Die durch die Seitenbetreiber erstellten Inhalte und Werke auf
+            diesen Seiten unterliegen dem deutschen Urheberrecht.
+        </p>
+
+        <div class="footer-bar">
+            <a href="{{ url_for('dashboard') }}">Start</a>
+            <a href="{{ url_for('logout') }}">Logout</a>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
