@@ -163,9 +163,7 @@
     <a href="{{ url_for('bus') }}" class="menu-card"> Bus</a>
     <a href="{{ url_for('mein_konto') }}" class="menu-card hexenkonto"> Mein Hexenkonto</a>
 
-    {% if session.get('email', '').lower() == "jessica.bausch24@gmail.com" %}
-        <a href="{{ url_for('admin') }}" class="menu-card"> Adminbereich</a>
-    {% endif %}
+    
 </div>
 
     </div>
