@@ -12,7 +12,7 @@ body {
     background: linear-gradient(135deg, #1f1936, #a64fff);
     color: white;
     min-height: 100vh;
-    padding-bottom: 70px; /* wichtig für footer */
+    padding-bottom: 80px; /* wichtig für footer */
 }
 
 .wrapper {
@@ -111,20 +111,23 @@ button {
 }
 
 .footer-bar {
-    background: #1f1936;
-    padding: 12px;
-    text-align: center;
-}
-
-.footer-bar {
     position: fixed;
     bottom: 0;
     left: 0;
     width: 100%;
     background: #1f1936;
-    padding: 12px;
+    padding: 14px 0;
     text-align: center;
     z-index: 999;
+    box-shadow: 0 -2px 8px rgba(0,0,0,0.3);
+}
+
+.footer-bar a {
+    color: white;
+    text-decoration: none;
+    font-weight: 800;
+    margin: 0 28px;
+    font-size: 20px;
 }
 
 .footer-bar a:hover {
