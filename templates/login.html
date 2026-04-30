@@ -1,191 +1,114 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login</title>
 
-    <style>
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background: linear-gradient(135deg, #1f1936, #a64fff);
-            min-height: 100vh;
-            overflow: hidden;
-        }
+<style>
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg, #1f1936, #a64fff);
+    min-height: 100vh;
+    overflow: hidden;
+}
 
-        .login-wrapper {
-            display: flex;
-            width: 100%;
-            min-height: 100vh;
-            position: relative;
-        }
+.login-wrapper {
+    display: flex;
+    width: 100%;
+    min-height: 100vh;
+    position: relative;
+}
 
-        .side {
-            flex: 1;
-            height: 100vh;
-            overflow: hidden;
-        }
+.side {
+    flex: 1;
+    height: 100vh;
+    overflow: hidden;
+}
 
-        .side img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
+.side img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
 
-        .side.left::after {
-            content: "";
-            position: absolute;
-            left: 0;
-            top: 0;
-            width: 50%;
-            height: 100%;
-            background: linear-gradient(to right, rgba(31,25,54,0.4), transparent);
-            pointer-events: none;
-        }
+.login-card {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 380px;
+    padding: 34px;
+    background: rgba(255, 255, 255, 0.94);
+    border-radius: 24px;
+    box-shadow: 0 14px 45px rgba(0,0,0,0.35);
+    z-index: 10;
+    box-sizing: border-box;
+}
 
-        .side.right::before {
-            content: "";
-            position: absolute;
-            right: 0;
-            top: 0;
-            width: 50%;
-            height: 100%;
-            background: linear-gradient(to left, rgba(31,25,54,0.4), transparent);
-            pointer-events: none;
-        }
+.login-card label {
+    display: block;
+    margin-bottom: 7px;
+    font-weight: bold;
+    color: #222;
+}
 
-        .login-card {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 380px;
-            padding: 34px;
-            background: rgba(255, 255, 255, 0.94);
-            border-radius: 24px;
-            box-shadow: 0 14px 45px rgba(0,0,0,0.35);
-            z-index: 10;
-            box-sizing: border-box;
-        }
+.login-card input {
+    width: 100%;
+    padding: 13px;
+    margin-bottom: 16px;
+    border-radius: 12px;
+    border: 1px solid #ccc;
+    font-size: 15px;
+    box-sizing: border-box;
+}
 
-        .login-card label {
-            display: block;
-            margin-bottom: 7px;
-            font-weight: bold;
-            color: #222;
-        }
+.login-card button {
+    width: 100%;
+    padding: 14px;
+    border: none;
+    border-radius: 14px;
+    background: linear-gradient(90deg, #7b2ff7, #a64fff);
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+}
 
-        .login-card input {
-            width: 100%;
-            padding: 13px;
-            margin-bottom: 16px;
-            border-radius: 12px;
-            border: 1px solid #ccc;
-            font-size: 15px;
-            box-sizing: border-box;
-        }
+.register-text {
+    margin-top: 16px;
+    text-align: center;
+    color: #333;
+}
 
-        .login-card button {
-            width: 100%;
-            padding: 14px;
-            border: none;
-            border-radius: 14px;
-            background: linear-gradient(90deg, #7b2ff7, #a64fff);
-            color: white;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-        }
+.register-text a {
+    color: #7b2ff7;
+    text-decoration: none;
+}
 
-        .register-text {
-            margin-top: 16px;
-            text-align: center;
-            color: #333;
-        }
+.error {
+    margin-top: 15px;
+    color: #b00020;
+    text-align: center;
+    font-weight: bold;
+}
 
-        .register-text a {
-            color: #7b2ff7;
-            text-decoration: none;
-        }
+.footer-links {
+    position: absolute;
+    bottom: 12px;
+    width: 100%;
+    text-align: center;
+    font-size: 13px;
+}
 
-        .error {
-            margin-top: 15px;
-            color: #b00020;
-            text-align: center;
-            font-weight: bold;
-        }
+.footer-links a {
+    color: white;
+    text-decoration: none;
+    margin: 0 8px;
+}
+</style>
 
-        .message {
-            margin-top: 15px;
-            color: green;
-            text-align: center;
-            font-weight: bold;
-        }
-
-        .footer-links {
-            position: absolute;
-            bottom: 12px;
-            left: 0;
-            width: 100%;
-            text-align: center;
-            z-index: 20;
-            font-size: 13px;
-        }
-
-        .footer-links a {
-            color: white;
-            text-decoration: none;
-            margin: 0 8px;
-            text-shadow: 0 2px 8px rgba(0,0,0,0.6);
-        }
-
-        @media screen and (max-width: 768px) {
-            body {
-                overflow: hidden;
-            }
-
-            .login-wrapper {
-                height: 100vh;
-            }
-
-            .side {
-                display: block;
-                flex: 1;
-                height: 100vh;
-            }
-
-            .login-card {
-                width: 90vw;
-                max-width: 90vw;
-                padding: 38px 24px;
-                border-radius: 26px;
-            }
-
-            .login-card input {
-                height: 54px;
-                font-size: 17px;
-            }
-
-            .login-card button {
-                height: 56px;
-                font-size: 17px;
-            }
-
-            .login-card label {
-                font-size: 17px;
-            }
-
-            .register-text {
-                font-size: 15px;
-            }
-
-            .footer-links {
-                font-size: 12px;
-                bottom: 8px;
-            }
-        }
-    </style>
 </head>
 
 <body>
@@ -193,48 +116,38 @@
 <div class="login-wrapper">
 
     <div class="side left">
-        <img src="{{ url_for('static', filename='img/Links_Login.jpeg') }}">
+        <img src="{{ url_for('static', filename='img/login_left.jpg') }}">
+    </div>
+
+    <div class="side right">
+        <img src="{{ url_for('static', filename='img/login_right.jpg') }}">
     </div>
 
     <div class="login-card">
-
-        <form action="/login" method="POST">
-
+        <form method="POST">
             <label>E-Mail</label>
-            <input type="email" name="email" required placeholder="deine@email.de">
+            <input type="email" name="email" required>
 
             <label>Passwort</label>
-            <input type="password" name="password" required placeholder="********">
+            <input type="password" name="password" required>
 
-            <button type="submit">Einloggen</button>
-
-            <p class="register-text">
-                Noch kein Konto?
-                <a href="{{ url_for('register') }}"><b>Jetzt registrieren</b></a>
-            </p>
-
+            <button type="submit">Login</button>
         </form>
+
+        <div class="register-text">
+            Noch kein Konto? <a href="{{ url_for('register') }}">Registrieren</a>
+        </div>
 
         {% if error %}
             <div class="error">{{ error }}</div>
         {% endif %}
-
-        {% if success %}
-            <div class="message">{{ success }}</div>
-        {% endif %}
-
     </div>
 
-    <div class="side right">
-        <img src="{{ url_for('static', filename='img/Recht_Login.jpeg') }}">
-    </div>
+</div>
 
-    <div class="footer-links">
-        <a href="/datenschutz">Datenschutz</a>
-        |
-        <a href="/impressum">Impressum</a>
-    </div>
-
+<div class="footer-links">
+    <a href="{{ url_for('datenschutz') }}">Datenschutz</a>
+    <a href="{{ url_for('impressum') }}">Impressum</a>
 </div>
 
 </body>

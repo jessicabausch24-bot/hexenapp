@@ -15,7 +15,9 @@ body {
     display: flex;
     flex-direction: column;
 }
-
+<div class="back-arrow">
+    <a href="javascript:history.back()">⬅</a>
+</div>
 .main {
     flex: 1;
     padding: 20px;
@@ -39,7 +41,28 @@ body {
 .footer-bar a:hover {
     text-decoration: underline;
 }
+.back-arrow {
+    position: fixed;
+    top: 20px;
+    left: 25px;
+    z-index: 1000;
+}
 
+.back-arrow a {
+    background: rgba(0,0,0,0.4);
+    color: white;
+    font-size: 26px;
+    padding: 8px 14px;
+    border-radius: 50%;
+    text-decoration: none;
+    font-weight: bold;
+    display: inline-block;
+    transition: 0.2s;
+}
+
+.back-arrow a:hover {
+    transform: scale(1.2);
+}
 {% block styles %}{% endblock %}
 </style>
 </head>
