@@ -558,8 +558,9 @@ def konto_bearbeiten():
         return redirect('/logout')
 
     user = users[current_email]
+    
     if "maske" not in user:
-    user["maske"] = ""
+        user["maske"] = ""
 
     if request.method == 'POST':
         neuer_name = request.form.get("name", "").strip()
