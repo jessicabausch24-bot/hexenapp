@@ -558,9 +558,12 @@ def konto_bearbeiten():
         return redirect('/logout')
 
     user = users[current_email]
+    if "maske" not in user:
+    user["maske"] = ""
 
     if request.method == 'POST':
         neuer_name = request.form.get("name", "").strip()
+        maske = request.form.get("maske", "").strip()
         neue_email = request.form.get("email", "").strip().lower()
         neues_passwort = request.form.get("password", "").strip()
 
@@ -582,7 +585,8 @@ def konto_bearbeiten():
 
         neuer_datensatz = {
             "name": neuer_name,
-            "password": user["password"]
+            "password": user["password"],
+            "maske": maske
         }
 
         if neues_passwort:
