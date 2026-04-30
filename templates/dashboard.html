@@ -1,235 +1,108 @@
-<!DOCTYPE html>
-<html lang="de">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Dashboard</title>
+{% extends "base.html" %}
 
-<style>
-body {
-    margin: 0;
-    font-family: Arial, sans-serif;
-    background: linear-gradient(135deg, #1f1936, #a64fff);
-    color: white;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    overflow-x: hidden;
-}
+{% block title %}Dashboard{% endblock %}
 
-/* 🔥 Hauptbereich */
-.main {
-    flex: 1;
-    display: flex;
-    justify-content: center;
-    padding: 20px 15px;
-}
+{% block styles %}
 
 .wrapper {
-    max-width: 1200px;
-    width: 100%;
+    max-width: 1100px;
+    margin: 0 auto;
 }
 
-/* 🔥 Titel */
 h1 {
     text-align: center;
-    margin-bottom: 25px;
-    font-size: 34px;
+    color: white;
+    margin-bottom: 30px;
 }
 
-/* 🔥 Layout */
-.dashboard {
-    display: flex;
+/* 🔥 GRID */
+.grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
     align-items: center;
-    justify-content: center;
-    gap: 50px;
 }
 
 /* 🔥 Bild */
-.left {
-    flex: 1;
-    display: flex;
-    justify-content: center;
-}
-
-.side-img {
+.hero-image {
     width: 100%;
-    max-width: 420px;
-    max-height: 480px;
-    object-fit: contain;
+    border-radius: 20px;
+    overflow: hidden;
 }
 
-/* 🔥 Kacheln */
-.right {
-    flex: 1;
+.hero-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 
-.grid {
-    display: grid;
-    gap: 18px;
+/* 🔥 Buttons */
+.menu {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
 }
 
-.card {
+.menu a {
     background: white;
     color: #1f1936;
-    border-radius: 18px;
     padding: 22px;
-    text-align: center;
+    border-radius: 18px;
     text-decoration: none;
-    font-weight: bold;
     font-size: 20px;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.25);
-}
-
-.card:hover {
-    background: #f2f2f2;
-    transform: translateY(-3px);
-}
-.bottom-links {
-    position: fixed;
-    bottom: 70px; /* Abstand über der Footer-Leiste */
-    right: 30px;
-    font-size: 13px;
-}
-
-.bottom-links a {
-    color: rgba(255,255,255,0.7);
-    text-decoration: none;
-    margin-left: 15px;
-}
-
-.bottom-links a:hover {
-    color: white;
-    text-decoration: underline;
-}
-/* 🔥 Footer */
-.footer-bar {
-    background: #1f1936;
-    padding: 12px;
-    text-align: center;
-}
-
-.footer-bar a {
-    color: white;
-    text-decoration: none;
     font-weight: bold;
-    margin: 0 15px;
-    font-size: 16px;
+    text-align: center;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+    transition: 0.2s;
 }
 
-.footer-bar a:hover {
-    text-decoration: underline;
+.menu a:hover {
+    transform: scale(1.03);
 }
 
-/* 🔥 MOBILE OPTIMIERUNG */
+/* 🔥 Hexenkonto Highlight */
+.konto {
+    background: linear-gradient(135deg, #1f1936, #a64fff) !important;
+    color: white !important;
+}
+
 @media (max-width: 800px) {
-
-    .main {
-        padding: 15px 12px;
-    }
-
-    h1 {
-        font-size: 26px;
-        margin-bottom: 15px;
-    }
-
-    .dashboard {
-        flex-direction: column;
-        gap: 20px;
-    }
-
-    .left {
-        width: 100%;
-    }
-
-    .side-img {
-        max-width: 220px;
-        max-height: 240px;
-    }
-
-    .right {
-        width: 100%;
-    }
-
     .grid {
-        width: 100%;
-        gap: 12px;
-    }
-
-    .card {
-        width: 100%;
-        box-sizing: border-box;
-        padding: 18px;
-        font-size: 18px;
+        grid-template-columns: 1fr;
     }
 }
 
-/* 🔥 EXTRA kleine Handys */
-@media (max-width: 420px) {
+{% endblock %}
 
-    .side-img {
-        max-width: 180px;
-    }
+{% block content %}
 
-    h1 {
-        font-size: 24px;
-    }
+<div class="wrapper">
 
-    .card {
-        padding: 16px;
-        font-size: 17px;
-    }
-}
-</style>
-</head>
+    <h1>Hallo {{ session.user }}</h1>
 
-<body>
+    <div class="grid">
 
-<div class="main">
-    <div class="wrapper">
+        <!-- 🔥 Bild -->
+        <div class="hero-image">
+            <img src="{{ url_for('static', filename='img/deinbild.jpg') }}">
+        </div>
 
-        <h1>Hallo {{ user }}</h1>
+        <!-- 🔥 Menü -->
+        <div class="menu">
 
-        <div class="dashboard">
+            <a href="{{ url_for('shop') }}">🛒 Shop</a>
 
-            <div class="left">
-                <img src="{{ url_for('static', filename='img/header.jpeg') }}"
-                     alt="Hexenbild"
-                     class="side-img">
-            </div>
+            <a href="{{ url_for('bus') }}">🚌 Bus</a>
 
-            <div class="right">
-                <div class="grid">
-
-                    <a class="card" href="{{ url_for('shop') }}">
-                        🛒 Shop
-                    </a>
-
-                    <a class="card" href="{{ url_for('bus') }}">
-                        🚌 Bus
-                    </a>
-                    <a href="{{ url_for('mein_konto') }}" class="menu-card">
-                        🧙 Mein Hexenkonto
-                    </a>
-
-                </div>
-            </div>
+            <!-- 🔥 NEU -->
+            <a href="{{ url_for('mein_konto') }}" class="konto">
+                🧙 Mein Hexenkonto
+            </a>
 
         </div>
 
     </div>
-</div>
-<div class="bottom-links">
-    <a href="{{ url_for('datenschutz') }}">Datenschutz</a>
-    <a href="{{ url_for('impressum') }}">Impressum</a>
-</div>
-<div class="footer-bar">
-    {% if session.get("email", "").lower() == "jessica.bausch24@gmail.com" %}
-        <a href="{{ url_for('admin') }}">Adminbereich</a>
-    {% endif %}
 
-    <a href="{{ url_for('logout') }}">Logout</a>
 </div>
 
-</body>
-</html>
+{% endblock %}
