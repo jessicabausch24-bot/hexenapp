@@ -11,14 +11,13 @@ body {
     font-family: Arial, sans-serif;
     background: linear-gradient(135deg, #1f1936, #a64fff);
     min-height: 100vh;
+    padding-bottom: 80px;
 }
 
-/* CONTENT bleibt wie vorher */
 .main {
     padding: 20px;
 }
 
-/* FOOTER FIX UNTEN (ohne Layout kaputt zu machen) */
 .footer-bar {
     position: fixed;
     bottom: 0;
@@ -27,7 +26,7 @@ body {
     background: #1f1936;
     display: flex;
     justify-content: center;
-    gap: 30px;
+    gap: 35px;
     padding: 15px 0;
     z-index: 999;
 }
@@ -38,7 +37,6 @@ body {
     font-weight: bold;
 }
 
-/* BACK BUTTON */
 .back-arrow {
     position: fixed;
     top: 20px;
@@ -57,17 +55,16 @@ body {
 }
 
 .back-arrow a:hover {
-    transform: scale(1.2);
+    transform: scale(1.1);
 }
-</style>
 
 {% block styles %}{% endblock %}
+</style>
 
 </head>
 
 <body>
 
-<!-- BACK BUTTON (nicht auf Dashboard + Login) -->
 {% if session.get('user') and request.endpoint not in ['dashboard', 'login'] %}
 <div class="back-arrow">
     <a href="javascript:history.back()">⬅</a>
