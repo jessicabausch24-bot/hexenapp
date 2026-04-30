@@ -3,44 +3,41 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>{% block title %}Oachberghexa App{% endblock %}</title>
+<title>{% block title %}Hexenapp{% endblock %}</title>
 
 <style>
 body {
     margin: 0;
     font-family: Arial, sans-serif;
     background: linear-gradient(135deg, #1f1936, #a64fff);
-    color: white;
     min-height: 100vh;
     display: flex;
     flex-direction: column;
 }
-<div class="back-arrow">
-    <a href="javascript:history.back()">⬅</a>
-</div>
+
+/* CONTENT */
 .main {
     flex: 1;
     padding: 20px;
-    box-sizing: border-box;
 }
 
+/* FOOTER */
 .footer-bar {
+    width: 100%;
     background: #1f1936;
-    padding: 14px;
-    text-align: center;
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    padding: 15px;
 }
 
 .footer-bar a {
     color: white;
     text-decoration: none;
     font-weight: bold;
-    margin: 0 18px;
-    font-size: 16px;
 }
 
-.footer-bar a:hover {
-    text-decoration: underline;
-}
+/* BACK BUTTON */
 .back-arrow {
     position: fixed;
     top: 20px;
@@ -56,28 +53,54 @@ body {
     border-radius: 50%;
     text-decoration: none;
     font-weight: bold;
-    display: inline-block;
-    transition: 0.2s;
 }
 
 .back-arrow a:hover {
     transform: scale(1.2);
 }
-{% block styles %}{% endblock %}
+
+/* OPTIONAL: CARD BASIS */
+.card {
+    background: white;
+    color: #1f1936;
+    border-radius: 24px;
+    padding: 25px;
+    box-shadow: 0 20px 45px rgba(0,0,0,0.25);
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+    .main {
+        padding: 15px;
+    }
+}
 </style>
+
+{% block styles %}{% endblock %}
+
 </head>
 
 <body>
 
+<!-- BACK BUTTON -->
+{% if session.get('user') and request.endpoint not in ['dashboard', 'login'] %}
+<div class="back-arrow">
+    <a href="javascript:history.back()">⬅</a>
+</div>
+{% endif %}
+
+<!-- MAIN CONTENT -->
 <div class="main">
     {% block content %}{% endblock %}
 </div>
 
+<!-- FOOTER -->
 {% if not hide_footer %}
 <div class="footer-bar">
     <a href="{{ url_for('dashboard') }}">Start</a>
     <a href="{{ url_for('logout') }}">Logout</a>
 </div>
 {% endif %}
+
 </body>
 </html>
