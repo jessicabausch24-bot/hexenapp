@@ -43,8 +43,6 @@ body {
     background: rgba(255, 255, 255, 0.94);
     border-radius: 24px;
     box-shadow: 0 14px 45px rgba(0,0,0,0.35);
-    z-index: 10;
-    box-sizing: border-box;
 }
 
 .login-card label {
@@ -60,8 +58,6 @@ body {
     margin-bottom: 16px;
     border-radius: 12px;
     border: 1px solid #ccc;
-    font-size: 15px;
-    box-sizing: border-box;
 }
 
 .login-card button {
@@ -71,42 +67,10 @@ body {
     border-radius: 14px;
     background: linear-gradient(90deg, #7b2ff7, #a64fff);
     color: white;
-    font-size: 16px;
     font-weight: bold;
     cursor: pointer;
 }
 
-.register-text {
-    margin-top: 16px;
-    text-align: center;
-    color: #333;
-}
-
-.register-text a {
-    color: #7b2ff7;
-    text-decoration: none;
-}
-
-.error {
-    margin-top: 15px;
-    color: #b00020;
-    text-align: center;
-    font-weight: bold;
-}
-
-.footer-links {
-    position: absolute;
-    bottom: 12px;
-    width: 100%;
-    text-align: center;
-    font-size: 13px;
-}
-
-.footer-links a {
-    color: white;
-    text-decoration: none;
-    margin: 0 8px;
-}
 .password-wrapper {
     position: relative;
 }
@@ -122,10 +86,15 @@ body {
     top: 50%;
     transform: translateY(-50%);
     cursor: pointer;
-    font-size: 18px;
+}
+
+.footer-links {
+    position: absolute;
+    bottom: 12px;
+    width: 100%;
+    text-align: center;
 }
 </style>
-
 </head>
 
 <body>
@@ -147,38 +116,24 @@ body {
 
             <label>Passwort</label>
             <div class="password-wrapper">
-    <input type="password" id="password" name="password">
-    <span class="toggle-password" onclick="togglePassword('password')">👁️</span>
-</div>
+                <input type="password" id="password" name="password">
+                <span onclick="togglePassword('password')">👁️</span>
+            </div>
 
             <button type="submit">Login</button>
         </form>
 
-        <div class="register-text">
-            Noch kein Konto? <a href="{{ url_for('register') }}">Registrieren</a>
-        </div>
-
         {% if error %}
-            <div class="error">{{ error }}</div>
+            <div style="color:red; text-align:center;">{{ error }}</div>
         {% endif %}
     </div>
 
 </div>
 
-<div class="footer-links">
-    <a href="{{ url_for('datenschutz') }}">Datenschutz</a>
-    <a href="{{ url_for('impressum') }}">Impressum</a>
-</div>
-{% endblock %}
-
 <script>
 function togglePassword(id) {
     const input = document.getElementById(id);
-    if (input.type === "password") {
-        input.type = "text";
-    } else {
-        input.type = "password";
-    }
+    input.type = input.type === "password" ? "text" : "password";
 }
 </script>
 

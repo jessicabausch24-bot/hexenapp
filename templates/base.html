@@ -79,7 +79,7 @@ body {
 
 <body>
 
-{% if session.get('user') and request.endpoint not in ['dashboard', 'login'] %}
+{% if session.get('user') and request.endpoint not in ['dashboard', 'login', 'register'] %}
 <div class="back-arrow">
     <a href="javascript:history.back()">⬅</a>
 </div>
