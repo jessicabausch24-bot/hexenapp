@@ -16,8 +16,10 @@
     margin-bottom: 20px;
 }
 
-h1 {
+/* 🔥 Titel oben */
+.header h1 {
     margin: 0;
+    color: white !important;
 }
 
 .cart-link {
@@ -71,7 +73,7 @@ h1 {
     object-fit: cover;
 }
 
-/* 🔥 Titel */
+/* 🔥 Titel (jetzt wieder schwarz) */
 .title-box {
     background: white;
     padding: 15px;
@@ -80,14 +82,7 @@ h1 {
 .title-box h2 {
     margin: 0;
     font-size: 22px;
-    color: white!important;
-}
-
-/* 🔥 Typ */
-.type {
-    color: #666;
-    font-size: 14px;
-    margin-top: 5px;
+    color: black !important;
 }
 
 /* 🔥 Preis */
@@ -121,8 +116,6 @@ h1 {
 
             <div class="title-box">
                 <h2>{{ produkt.name }}</h2>
-
-                
 
                 {% if produkt.preis is defined %}
                     <div class="price">{{ "%.2f"|format(produkt.preis) }} €</div>

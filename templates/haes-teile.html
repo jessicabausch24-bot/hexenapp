@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}Häß-Teile{% endblock %}
+{% block title %}Merchandise{% endblock %}
 
 {% block styles %}
 
@@ -16,8 +16,10 @@
     margin-bottom: 20px;
 }
 
-h1 {
+/* 🔥 Titel oben */
+.header h1 {
     margin: 0;
+    color: white !important;
 }
 
 .cart-link {
@@ -71,7 +73,7 @@ h1 {
     object-fit: cover;
 }
 
-/* 🔥 Titel */
+/* 🔥 Titel (jetzt wieder schwarz) */
 .title-box {
     background: white;
     padding: 15px;
@@ -80,7 +82,7 @@ h1 {
 .title-box h2 {
     margin: 0;
     font-size: 22px;
-    color: white!important;
+    color: black !important;
 }
 
 /* 🔥 Preis */
@@ -88,11 +90,6 @@ h1 {
     font-weight: bold;
     color: black;
     margin-top: 5px;
-}
-
-.type {
-    color: #666;
-    font-size: 14px;
 }
 
 {% endblock %}
