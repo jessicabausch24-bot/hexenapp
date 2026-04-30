@@ -54,21 +54,7 @@
             box-sizing: border-box;
         }
 
-        .admin-check {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            background: #f3f0ff;
-            padding: 14px;
-            border-radius: 14px;
-            margin-bottom: 18px;
-            font-weight: bold;
-        }
 
-        .admin-check input {
-            width: 20px;
-            height: 20px;
-        }
 
         .btn {
             width: 100%;
@@ -104,15 +90,16 @@
             color: #666;
             margin-top: -10px;
             margin-bottom: 16px;
-        }.admin-check {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    background: #f3f0ff;
-    padding: 14px;
-    border-radius: 14px;
-    margin-bottom: 18px;
-    font-weight: bold;
+        }
+        .admin-check {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        background: #f3f0ff;
+        padding: 14px;
+        border-radius: 14px;
+        margin-bottom: 18px;
+        font-weight: bold;
 }
 
 .admin-check input {
@@ -144,14 +131,12 @@
                 <input type="text" id="password" name="password" placeholder="Leer lassen, wenn es gleich bleiben soll">
                 <div class="hint">Nur ausfüllen, wenn das Passwort geändert werden soll.</div>
 
-                <label class="admin-check">
-                    <input type="checkbox" name="is_admin" {% if user.get('is_admin') %}checked{% endif %}>
-                    Adminrechte vergeben
-                </label>
-                <label class="admin-check">
+    
+
+            <label class="admin-check">
                 <input type="checkbox" name="is_admin" {% if user.get('is_admin') %}checked{% endif %}>
                  Adminrechte vergeben
-                </label>
+            </label>
                 <button type="submit" class="btn">Speichern</button>
             </form>
 
