@@ -92,8 +92,12 @@ body {
 {% if not hide_footer %}
 <div class="footer-bar">
     <a href="{{ url_for('dashboard') }}">Start</a>
+
+    {% if session.get('user') == "Jessi24" %}
+        <a href="{{ url_for('admin') }}">Adminbereich</a>
+    {% endif %}
+
     <a href="{{ url_for('logout') }}">Logout</a>
-    <a href="{{ url_for('Admin') }}">Admin</a>
 </div>
 {% endif %}
 
