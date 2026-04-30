@@ -2,94 +2,96 @@
 
 {% block title %}Mein Hexenkonto{% endblock %}
 
-{% block content %}
 {% block styles %}
 .wrapper {
-    max-width: 1000px;
+    max-width: 1100px;
     margin: 0 auto;
 }
 
-.card {
+.header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.header h1 {
+    font-size: 36px;
+    margin-bottom: 8px;
+}
+
+.header p {
+    font-size: 18px;
+    opacity: 0.9;
+}
+
+.menu-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 22px;
+}
+
+.menu-card {
     background: white;
     color: #1f1936;
     border-radius: 24px;
-    padding: 32px;
-    box-shadow: 0 20px 45px rgba(0,0,0,0.25);
-}
-
-.konto-info {
-    background: #f3f0ff;
-    padding: 18px;
-    border-radius: 18px;
-    margin-bottom: 25px;
-}
-
-.konto-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 18px;
-}
-
-.konto-card {
-    background: linear-gradient(135deg, #1f1936, #a64fff);
-    color: white;
+    padding: 30px;
+    text-align: center;
     text-decoration: none;
-    border-radius: 20px;
-    padding: 24px;
-    min-height: 170px;
-    box-shadow: 0 12px 25px rgba(0,0,0,0.25);
+    box-shadow: 0 18px 35px rgba(0,0,0,0.25);
     transition: 0.2s;
 }
 
-.konto-card:hover {
-    transform: scale(1.03);
+.menu-card:hover {
+    transform: scale(1.04);
 }
 
-.konto-icon {
-    font-size: 34px;
-    margin-bottom: 10px;
+.menu-icon {
+    font-size: 42px;
+    margin-bottom: 14px;
 }
 
-.konto-card h2 {
+.menu-card h2 {
     margin: 0 0 10px;
+    font-size: 24px;
 }
 
-.konto-card p {
-    opacity: 0.9;
+.menu-card p {
+    margin: 0;
+    font-size: 16px;
+    color: #555;
 }
 {% endblock %}
 
+{% block content %}
+
 <div class="wrapper">
-    <div class="card">
+
+    <div class="header">
         <h1>🧙 Mein Hexenkonto</h1>
-
-        <div class="konto-info">
-            <p><strong>Name:</strong> {{ user }}</p>
-            <p><strong>E-Mail:</strong> {{ email }}</p>
-        </div>
-
-        <div class="konto-grid">
-
-            <a href="{{ url_for('meine_bestellungen') }}" class="konto-card">
-                <div class="konto-icon">🛍️</div>
-                <h2>Meine Bestellungen</h2>
-                <p>Alle deine bisherigen Bestellungen ansehen.</p>
-            </a>
-
-            <a href="{{ url_for('reservierungen') }}" class="konto-card">
-                <div class="konto-icon">🚌</div>
-                <h2>Meine Reservierungen</h2>
-                <p>Deine Busplätze ansehen oder stornieren.</p>
-            </a>
-
-            <a href="{{ url_for('konto_bearbeiten') }}" class="konto-card">
-                <div class="konto-icon">✏️</div>
-                <h2>Meine Daten</h2>
-                <p>Name, E-Mail oder Passwort ändern.</p>
-            </a>
-
-        </div>
+        <p>Hallo {{ user }}</p>
     </div>
+
+    <div class="menu-grid">
+
+        <a href="{{ url_for('meine_bestellungen') }}" class="menu-card">
+            <div class="menu-icon">🛍️</div>
+            <h2>Meine Bestellungen</h2>
+            <p>Alle bisherigen Bestellungen ansehen.</p>
+        </a>
+
+        <a href="{{ url_for('reservierungen') }}" class="menu-card">
+            <div class="menu-icon">🚌</div>
+            <h2>Meine Reservierungen</h2>
+            <p>Busplätze ansehen oder stornieren.</p>
+        </a>
+
+        <a href="{{ url_for('konto_bearbeiten') }}" class="menu-card">
+            <div class="menu-icon">✏️</div>
+            <h2>Meine Daten</h2>
+            <p>Name, E-Mail oder Passwort ändern.</p>
+        </a>
+
+    </div>
+
 </div>
 
 {% endblock %}
