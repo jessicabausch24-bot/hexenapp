@@ -144,7 +144,7 @@ def admin_required():
         return False
 
     users = load_users()
-    email = session.get("email", "").lower()
+    email = session.get("email", "").strip().lower()
     user = users.get(email)
 
     return user and user.get("is_admin") == True
@@ -443,10 +443,22 @@ def load_users():
 
 def save_users(users):
     ensure_data_files()
+
+    if not users:
+        print("WARNUNG: users ist leer – wird NICHT gespeichert!")
+        return
+
+    # Backup erstellen
+    try:
+        with open(USER_FILE, "r", encoding="utf-8") as f:
+            old_data = f.read()
+        with open(USER_FILE + ".backup", "w", encoding="utf-8") as f:
+            f.write(old_data)
+    except:
+        pass
+
     with open(USER_FILE, "w", encoding="utf-8") as f:
         json.dump(users, f, indent=4, ensure_ascii=False)
-
-
 # ---------------------------------------------------------
 # LOGIN
 # ---------------------------------------------------------
@@ -1461,6 +1473,7 @@ def admin_user_bearbeiten(email):
         current_email=email,
         user=user
     )
+    
 # ---------------------------------------------------------
 # ADMIN - BUS VERANSTALTUNGEN
 # ---------------------------------------------------------
