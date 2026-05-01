@@ -144,11 +144,14 @@ def admin_required():
         return False
 
     users = load_users()
-    email = session.get("email", "").strip().lower()
+    session_email = session.get("email", "").strip().lower()
 
-    for user_email, user_data in users.items():
-        if user_email.lower() == email:
-            return user_data.get("is_admin") == True
+    print("SESSION EMAIL:", session_email)
+    print("USERS:", users)
+
+    for email, user in users.items():
+        if email.lower() == session_email:
+            return user.get("is_admin") == True
 
     return False
 # ---------------------------------------------------------
