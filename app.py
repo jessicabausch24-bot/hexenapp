@@ -1410,6 +1410,14 @@ def admin_bestellliste():
         orders=orders,
         gesamt=gesamt
     )
+@app.route('/admin/users')
+def admin_users():
+    if not admin_required():
+        return redirect('/login')
+
+    users = load_users()
+    return render_template('admin-users.html', users=users)
+
 @app.route('/admin/user-bearbeiten/<path:email>', methods=['GET', 'POST'])
 def admin_user_bearbeiten(email):
     if not admin_required():
