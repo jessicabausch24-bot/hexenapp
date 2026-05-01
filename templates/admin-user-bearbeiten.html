@@ -6,6 +6,56 @@
 <title>Admin - Benutzer bearbeiten</title>
 
 <style>
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg, #1f1936, #a64fff);
+    color: white;
+    padding: 20px;
+    min-height: 100vh;
+    box-sizing: border-box;
+}
+
+.page-wrapper {
+    max-width: 700px;
+    margin: 0 auto;
+}
+
+.card {
+    background: white;
+    color: #1f1936;
+    border-radius: 24px;
+    padding: 34px;
+    box-shadow: 0 20px 45px rgba(0,0,0,0.25);
+}
+
+h1 {
+    margin-top: 0;
+    font-size: 34px;
+}
+
+label {
+    display: block;
+    margin: 18px 0 8px;
+    font-weight: bold;
+}
+
+input[type="text"],
+input[type="email"] {
+    width: 100%;
+    padding: 14px;
+    border: 1px solid #d9d9d9;
+    border-radius: 16px;
+    font-size: 16px;
+    box-sizing: border-box;
+}
+
+.hint {
+    font-size: 14px;
+    color: #666;
+    margin-top: 8px;
+}
+
 .admin-check {
     display: flex;
     align-items: center;
@@ -13,34 +63,50 @@
     background: #f3f0ff;
     padding: 16px 18px;
     border-radius: 16px;
-    margin: 20px 0;
+    margin: 22px 0;
     color: #1f1936;
     font-weight: bold;
-    font-size: 16px;
 }
 
 .admin-check input {
     width: 22px;
     height: 22px;
     accent-color: #6a1cff;
+}
+
+.btn {
+    width: 100%;
+    padding: 15px;
+    background: #6a1cff;
+    color: white;
+    border: none;
+    border-radius: 16px;
+    font-size: 16px;
+    font-weight: bold;
     cursor: pointer;
 }
 
-.admin-check span {
+.back-link {
     display: inline-block;
+    margin-top: 18px;
+    color: #6a1cff;
+    text-decoration: none;
+    font-weight: bold;
 }
 
-/* Mobil bleibt sauber */
+.error {
+    color: #b00020;
+    font-weight: bold;
+    margin-bottom: 16px;
+}
+
 @media (max-width: 600px) {
-    .admin-check {
-        font-size: 15px;
-        padding: 14px;
-        gap: 10px;
+    .card {
+        padding: 24px;
     }
 
-    .admin-check input {
-        width: 20px;
-        height: 20px;
+    h1 {
+        font-size: 28px;
     }
 }
 </style>
@@ -50,6 +116,7 @@
 
 <div class="page-wrapper">
     <div class="card">
+
         <h1>Benutzer bearbeiten</h1>
 
         {% if error %}
@@ -67,15 +134,16 @@
             <input type="text" id="password" name="password" placeholder="Leer lassen, wenn es gleich bleiben soll">
             <div class="hint">Nur ausfüllen, wenn das Passwort geändert werden soll.</div>
 
-           <label class="admin-check">
-    <input type="checkbox" name="is_admin" {% if user.get('is_admin') %}checked{% endif %}>
-    <span>Adminrechte vergeben</span>
-</label>
+            <label class="admin-check">
+                <input type="checkbox" name="is_admin" {% if user.get('is_admin') %}checked{% endif %}>
+                <span>Adminrechte vergeben</span>
+            </label>
 
             <button type="submit" class="btn">Speichern</button>
         </form>
 
         <a class="back-link" href="{{ url_for('admin_users') }}">← Zurück zur Benutzerverwaltung</a>
+
     </div>
 </div>
 
