@@ -1224,20 +1224,26 @@ def admin_produkt_bearbeiten(produkt_id):
             produkt["typ"] = request.form.get('typ', '').strip()
             produkt["preis"] = float(request.form.get('preis', 0))
 
-            groessen_roh = request.form.get('groessen', '').strip()
-            produkt["groessen"] = [
-                g.strip()
-                for g in groessen_roh.split(",")
-                if g.strip()
-            ] if groessen_roh else []
+            groessen_namen = request.form.getlist("groesse_name[]")
+groessen_preise_form = request.form.getlist("groesse_preis[]")
 
-            groessen_preise = {}
-            for groesse in produkt["groessen"]:
-                preis_feld = request.form.get(f"preis_{groesse}", "").strip()
-                if preis_feld:
-                    groessen_preise[groesse] = float(preis_feld.replace(",", "."))
+neue_groessen = []
+groessen_preise = {}
 
-            produkt["groessen_preise"] = groessen_preise
+for groesse, preis_feld in zip(groessen_namen, groessen_preise_form):
+    groesse = groesse.strip()
+    preis_feld = preis_feld.strip()
+
+    if not groesse:
+        continue
+
+    neue_groessen.append(groesse)
+
+    if preis_feld:
+        groessen_preise[groesse] = float(preis_feld.replace(",", "."))
+
+produkt["groessen"] = neue_groessen
+produkt["groessen_preise"] = groessen_preise
 
             bild_datei = request.files.get("bild_upload")
 

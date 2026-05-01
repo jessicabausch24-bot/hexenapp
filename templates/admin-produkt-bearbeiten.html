@@ -108,6 +108,18 @@ textarea {
     color: white;
     text-decoration: underline;
 }
+.size-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-top: 12px;
+}
+
+@media (max-width: 600px) {
+    .size-row {
+        grid-template-columns: 1fr;
+    }
+}
 </style>
 </head>
 
@@ -147,31 +159,35 @@ textarea {
                 Dieser Preis gilt, wenn für eine Größe kein eigener Preis eingetragen ist.
             </div>
 
-            <label for="groessen">Größen (kommasepariert)</label>
-            <textarea id="groessen" name="groessen">{{ produkt.groessen | join(', ') if produkt.groessen else '' }}</textarea>
+            <div class="price-box">
+    <h3>Größen & Preise</h3>
 
-            <div class="hint">
-                Beispiel: S, M, L, XL
-            </div>
+    {% for groesse in produkt.groessen %}
+        <div class="size-row">
+            <input
+                type="text"
+                name="groesse_name[]"
+                value="{{ groesse }}"
+                placeholder="Größe">
 
-            {% if produkt.groessen %}
-                <div class="price-box">
-                    <h3>Preise pro Größe</h3>
-                    <div class="hint">
-                        Leer lassen = Standardpreis verwenden. Nach neuen Größen erst speichern, dann erneut bearbeiten.
-                    </div>
+            <input
+                type="number"
+                step="0.01"
+                name="groesse_preis[]"
+                value="{{ produkt.get('groessen_preise', {}).get(groesse, '') }}"
+                placeholder="Preis">
+        </div>
+    {% endfor %}
 
-                    {% for groesse in produkt.groessen %}
-                        <label>Preis für {{ groesse }} (€)</label>
-                        <input
-                            type="number"
-                            step="0.01"
-                            name="preis_{{ groesse }}"
-                            value="{{ produkt.get('groessen_preise', {}).get(groesse, '') }}"
-                            placeholder="Leer lassen = Standardpreis">
-                    {% endfor %}
-                </div>
-            {% endif %}
+    <div class="size-row">
+        <input type="text" name="groesse_name[]" placeholder="Neue Größe">
+        <input type="number" step="0.01" name="groesse_preis[]" placeholder="Preis">
+    </div>
+
+    <div class="hint">
+        Leer lassen = Standardpreis verwenden. Neue Größe unten eintragen.
+    </div>
+</div>
 
             <label for="bild">Aktueller Bild-Dateiname</label>
             <input type="text" id="bild" name="bild" value="{{ produkt.bild if produkt.bild else '' }}">
