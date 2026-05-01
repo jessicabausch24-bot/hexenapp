@@ -16,7 +16,7 @@ body {
 }
 
 .wrapper {
-    max-width: 650px;
+    max-width: 700px;
     margin: 0 auto;
 }
 
@@ -67,6 +67,18 @@ textarea {
     box-shadow: 0 8px 20px rgba(0,0,0,0.2);
 }
 
+.price-box {
+    background: #f3f0ff;
+    border-radius: 16px;
+    padding: 16px;
+    margin-top: 18px;
+}
+
+.price-box h3 {
+    margin-top: 0;
+    margin-bottom: 10px;
+}
+
 .hint {
     font-size: 13px;
     color: #666;
@@ -107,10 +119,16 @@ textarea {
 
     <div class="card">
 
+        {% if error %}
+            <div style="color:#b00020; font-weight:bold; margin-bottom:15px;">
+                {{ error }}
+            </div>
+        {% endif %}
+
         <div class="preview">
             <p><strong>Aktuelles Bild</strong></p>
 
-            <img src="{{ url_for('static', filename='images/' + (produkt.bild if produkt.bild else 'placeholder.png')) }}"
+            <img src="{{ url_for('static', filename='img/' + (produkt.bild if produkt.bild else 'placeholder.png')) }}"
                  alt="{{ produkt.name }}">
         </div>
 
@@ -122,17 +140,44 @@ textarea {
             <label for="typ">Typ</label>
             <input type="text" id="typ" name="typ" value="{{ produkt.typ }}" required>
 
-            <label for="preis">Preis (€)</label>
+            <label for="preis">Standardpreis (€)</label>
             <input type="number" id="preis" name="preis" step="0.01" value="{{ produkt.preis }}" required>
+
+            <div class="hint">
+                Dieser Preis gilt, wenn für eine Größe kein eigener Preis eingetragen ist.
+            </div>
 
             <label for="groessen">Größen (kommasepariert)</label>
             <textarea id="groessen" name="groessen">{{ produkt.groessen | join(', ') if produkt.groessen else '' }}</textarea>
+
+            <div class="hint">
+                Beispiel: S, M, L, XL
+            </div>
+
+            {% if produkt.groessen %}
+                <div class="price-box">
+                    <h3>Preise pro Größe</h3>
+                    <div class="hint">
+                        Leer lassen = Standardpreis verwenden. Nach neuen Größen erst speichern, dann erneut bearbeiten.
+                    </div>
+
+                    {% for groesse in produkt.groessen %}
+                        <label>Preis für {{ groesse }} (€)</label>
+                        <input
+                            type="number"
+                            step="0.01"
+                            name="preis_{{ groesse }}"
+                            value="{{ produkt.get('groessen_preise', {}).get(groesse, '') }}"
+                            placeholder="Leer lassen = Standardpreis">
+                    {% endfor %}
+                </div>
+            {% endif %}
 
             <label for="bild">Aktueller Bild-Dateiname</label>
             <input type="text" id="bild" name="bild" value="{{ produkt.bild if produkt.bild else '' }}">
 
             <div class="hint">
-                Beispiel: pulli.jpg — Datei muss in static/images liegen.
+                Beispiel: pulli.jpg — Datei muss in static/img liegen.
             </div>
 
             <label for="bild_upload">Neues Bild hochladen</label>

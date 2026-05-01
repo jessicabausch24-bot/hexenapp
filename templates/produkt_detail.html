@@ -11,7 +11,7 @@
 
 .product-card {
     background: white;
-    color: #1f1936; /* 🔥 FIX */
+    color: #1f1936;
     border-radius: 24px;
     padding: 30px;
     box-shadow: 0 20px 45px rgba(0,0,0,0.25);
@@ -35,10 +35,8 @@
     max-width: 90%;
     max-height: 100%;
     object-fit: contain;
-};
+}
 
-
-/* 🔥 Überschrift fix */
 .product-card h1 {
     color: #6a1cff;
 }
@@ -92,19 +90,22 @@ button {
     <div class="product-card">
 
         <div class="image-box">
-    <img src="{{ url_for('static', filename='img/' ~ produkt.bild) }}" alt="{{ produkt.name }}" class="product-img">
-</div>
+            <img src="{{ url_for('static', filename='img/' ~ produkt.bild) }}" alt="{{ produkt.name }}" class="product-img">
+        </div>
 
         <div>
             <h1>{{ produkt.name }}</h1>
             <p><strong>Kategorie:</strong> {{ produkt.typ }}</p>
-            <div class="price">{{ "%.2f"|format(produkt.preis) }} €</div>
+
+            <div class="price" id="price-display">
+                {{ "%.2f"|format(produkt.preis) }} €
+            </div>
 
             <form action="{{ url_for('add_to_cart', produkt_id=produkt.id) }}" method="POST">
 
                 {% if produkt.groessen %}
                     <label>Größe</label>
-                    <select name="groesse">
+                    <select name="groesse" id="groesse-select">
                         {% for groesse in produkt.groessen %}
                             <option value="{{ groesse }}">{{ groesse }}</option>
                         {% endfor %}
@@ -137,5 +138,35 @@ button {
 
     </div>
 </div>
+
+<script>
+const standardPreis = {{ produkt.preis | float }};
+const groessenPreise = {{ produkt.get("groessen_preise", {}) | tojson }};
+
+function formatEuro(value) {
+    return Number(value).toFixed(2).replace(".", ",") + " €";
+}
+
+function updatePrice() {
+    const select = document.getElementById("groesse-select");
+    const priceDisplay = document.getElementById("price-display");
+
+    if (!select || !priceDisplay) return;
+
+    const groesse = select.value;
+    const preis = groessenPreise[groesse] !== undefined ? groessenPreise[groesse] : standardPreis;
+
+    priceDisplay.textContent = formatEuro(preis);
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+    const select = document.getElementById("groesse-select");
+
+    if (select) {
+        select.addEventListener("change", updatePrice);
+        updatePrice();
+    }
+});
+</script>
 
 {% endblock %}

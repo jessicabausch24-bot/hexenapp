@@ -939,23 +939,30 @@ def add_to_cart(produkt_id):
     anzahl = int(request.form.get("anzahl", 1))
     anmerkung = request.form.get("anmerkung", "").strip()
 
+    preis = produkt.get("preis", 0)
+
+    groessen_preise = produkt.get("groessen_preise", {})
+    if groesse and groesse in groessen_preise:
+    preis = float(groessen_preise[groesse])
+
     extras_data = {}
     for extra in produkt.get("extras", []):
-        extras_data[extra["label"]] = request.form.get(extra["name"], "").strip()
+    extras_data[extra["label"]] = request.form.get(extra["name"], "").strip()
 
     cart = session.get("cart", [])
 
     cart.append({
-        "id": produkt["id"],
-        "name": produkt["name"],
-        "preis": produkt["preis"],
-        "groesse": groesse,
-        "anzahl": anzahl,
-        "anmerkung": anmerkung,
-        "bild": produkt.get("bild", None),
-        "extras": extras_data,
-        "groessen_verfuegbar": produkt.get("groessen", [])
-    })
+    "id": produkt["id"],
+    "name": produkt["name"],
+    "preis": preis,
+    "groesse": groesse,
+    "anzahl": anzahl,
+    "anmerkung": anmerkung,
+    "bild": produkt.get("bild", None),
+    "extras": extras_data,
+    "groessen_verfuegbar": produkt.get("groessen", [])
+})
+
 
     session["cart"] = cart
     session.modified = True
@@ -1137,6 +1144,12 @@ def admin_produkt_hinzufuegen():
         groessen_roh = request.form.get('groessen', '').strip()
         groessen = [g.strip() for g in groessen_roh.split(",") if g.strip()] if groessen_roh else []
 
+        groessen_preise = {}
+        for groesse in groessen:
+            preis_feld = request.form.get(f"preis_{groesse}", "").strip()
+            if preis_feld:
+                groessen_preise[groesse] = float(preis_feld.replace(",", "."))
+
         bild_datei = request.files.get("bild_upload")
         if bild_datei and bild_datei.filename:
             filename = secure_filename(bild_datei.filename)
@@ -1184,6 +1197,7 @@ def admin_produkt_hinzufuegen():
             "typ": typ,
             "preis": preis,
             "groessen": groessen,
+            "groessen_preise": groessen_preise,
             "bild": bild,
             "extras": extras
         })
@@ -1192,7 +1206,6 @@ def admin_produkt_hinzufuegen():
         return redirect('/admin/produkte')
 
     return render_template('admin-produkt-hinzufuegen.html')
-
 
 @app.route('/admin/produkt-bearbeiten/<int:produkt_id>', methods=['GET', 'POST'])
 def admin_produkt_bearbeiten(produkt_id):
@@ -1218,6 +1231,14 @@ def admin_produkt_bearbeiten(produkt_id):
                 if g.strip()
             ] if groessen_roh else []
 
+            groessen_preise = {}
+            for groesse in produkt["groessen"]:
+                preis_feld = request.form.get(f"preis_{groesse}", "").strip()
+                if preis_feld:
+                    groessen_preise[groesse] = float(preis_feld.replace(",", "."))
+
+            produkt["groessen_preise"] = groessen_preise
+
             bild_datei = request.files.get("bild_upload")
 
             if bild_datei and bild_datei.filename:
@@ -1241,7 +1262,6 @@ def admin_produkt_bearbeiten(produkt_id):
             )
 
     return render_template('admin-produkt-bearbeiten.html', produkt=produkt)
-
 
 @app.route('/admin/produkt-loeschen/<int:produkt_id>')
 def admin_produkt_loeschen(produkt_id):
