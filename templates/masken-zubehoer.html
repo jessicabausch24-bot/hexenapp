@@ -109,11 +109,17 @@
 
             <div class="title-box">
                 <h2>{{ produkt.name }}</h2>
+{% set preise = produkt.get('groessen_preise', {}).values() | list %}
 
-                {% if produkt.preis is defined %}
-                    <div class="price">{{ "%.2f"|format(produkt.preis) }} €</div>
-                {% endif %}
-            </div>
+{% if preise %}
+    <div class="price">
+        ab {{ "%.2f"|format(preise | min) }} €
+    </div>
+{% else %}
+    <div class="price">
+        {{ "%.2f"|format(produkt.preis) }} €
+    </div>
+{% endif %}               
 
         </a>
         {% endfor %}

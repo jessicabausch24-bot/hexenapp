@@ -925,7 +925,6 @@ def produkt_detail(produkt_id):
 # ---------------------------------------------------------
 # WARENKORB
 # ---------------------------------------------------------
-
 @app.route('/add_to_cart/<int:produkt_id>', methods=['POST'])
 def add_to_cart(produkt_id):
     if not is_logged_in():
@@ -940,14 +939,14 @@ def add_to_cart(produkt_id):
     anmerkung = request.form.get("anmerkung", "").strip()
 
     preis = produkt.get("preis", 0)
-
     groessen_preise = produkt.get("groessen_preise", {})
+
     if groesse and groesse in groessen_preise:
-    preis = float(groessen_preise[groesse])
+        preis = float(groessen_preise[groesse])
 
     extras_data = {}
     for extra in produkt.get("extras", []):
-    extras_data[extra["label"]] = request.form.get(extra["name"], "").strip()
+        extras_data[extra["label"]] = request.form.get(extra["name"], "").strip()
 
     cart = session.get("cart", [])
 
@@ -963,13 +962,10 @@ def add_to_cart(produkt_id):
     "groessen_verfuegbar": produkt.get("groessen", [])
 })
 
-
     session["cart"] = cart
     session.modified = True
 
     return redirect('/cart')
-
-
 @app.route('/cart', methods=['GET', 'POST'])
 def cart():
     if not is_logged_in():
