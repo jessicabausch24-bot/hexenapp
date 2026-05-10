@@ -521,6 +521,7 @@ def login():
             if check_password_hash(user["password"], password):
                 session['user'] = user["name"]
                 session['email'] = email
+                session['is_admin'] = user.get("is_admin", False)
                 return redirect('/dashboard')
 
         return render_template('login.html', error="E-Mail oder Passwort falsch")
@@ -1436,11 +1437,13 @@ def admin_user_bearbeiten(email):
             if session.get("email") == email:
                 session["email"] = neue_email
                 session["user"] = neuer_name
+                session["is_admin"] = ist_admin
         else:
             users[email] = neuer_user_datensatz
 
             if session.get("email") == email:
                 session["user"] = neuer_name
+                session["is_admin"] = ist_admin
 
         save_users(users)
         return redirect('/admin/users')

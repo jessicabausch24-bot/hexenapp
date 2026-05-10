@@ -96,7 +96,7 @@ body {
     <div class="footer-bar">
     <a href="{{ url_for('dashboard') }}">Start</a>
 
-    {% if session.get('email', '').lower() == "jessica.bausch24@gmail.com" %}
+    {% if session.get('is_admin') %}
         <a href="{{ url_for('admin') }}">Adminbereich</a>
     {% endif %}
 
