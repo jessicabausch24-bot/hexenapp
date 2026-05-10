@@ -2,18 +2,149 @@
 <html lang="de">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Shop-Einstellungen</title>
+
+<style>
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg, #1f1936, #a64fff);
+    color: white;
+    padding: 20px;
+    min-height: 100vh;
+    box-sizing: border-box;
+}
+
+.wrapper {
+    max-width: 700px;
+    margin: 0 auto;
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 28px;
+    color: white;
+}
+
+.card {
+    background: white;
+    color: #1f1936;
+    border-radius: 24px;
+    padding: 30px;
+    box-shadow: 0 20px 45px rgba(0,0,0,0.25);
+}
+
+.status-box {
+    background: #f3f0ff;
+    border-radius: 18px;
+    padding: 18px;
+    margin-bottom: 22px;
+    line-height: 1.5;
+}
+
+label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+
+input {
+    width: 100%;
+    padding: 14px;
+    border-radius: 14px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+    box-sizing: border-box;
+}
+
+.hint {
+    color: #666;
+    font-size: 14px;
+    margin-top: 8px;
+}
+
+.btn {
+    width: 100%;
+    margin-top: 22px;
+    padding: 15px;
+    border: none;
+    border-radius: 16px;
+    background: #6a1cff;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.btn:hover {
+    background: #5200b8;
+}
+
+.back {
+    display: block;
+    margin-top: 22px;
+    color: white;
+    text-align: center;
+    text-decoration: underline;
+    font-weight: bold;
+}
+
+.clear-info {
+    margin-top: 18px;
+    font-size: 14px;
+    color: #666;
+}
+</style>
 </head>
+
 <body>
-    <h1>Shop-Einstellungen</h1>
 
-    <form method="POST">
-        <label>Bestellungen annehmen bis einschließlich:</label>
-        <input type="date" name="shop_closed_after" value="{{ settings.get('shop_closed_after', '') }}">
+<div class="wrapper">
 
-        <button type="submit">Speichern</button>
-    </form>
+    <h1>🛑 Shop-Einstellungen</h1>
 
-    <a href="{{ url_for('admin') }}">Zurück zum Adminbereich</a>
+    <div class="card">
+
+        <div class="status-box">
+            <strong>Bestellschluss:</strong><br>
+            {% if settings.get('shop_closed_after') %}
+                Bestellungen sind bis einschließlich
+                <strong>{{ settings.get('shop_closed_after') }}</strong>
+                möglich.
+            {% else %}
+                Es ist aktuell kein Bestellschluss gesetzt.
+            {% endif %}
+        </div>
+
+        <form method="POST">
+            <label for="shop_closed_after">
+                Bestellungen annehmen bis einschließlich
+            </label>
+
+            <input
+                type="date"
+                id="shop_closed_after"
+                name="shop_closed_after"
+                value="{{ settings.get('shop_closed_after', '') }}">
+
+            <div class="hint">
+                Ab dem Tag danach können keine Bestellungen mehr abgeschickt werden.
+                Leer lassen = Shop bleibt offen.
+            </div>
+
+            <button type="submit" class="btn">Speichern</button>
+        </form>
+
+        <div class="clear-info">
+            Zum Wiederöffnen einfach das Datum löschen und speichern.
+        </div>
+
+    </div>
+
+    <a class="back" href="{{ url_for('admin') }}">← Zurück zum Adminbereich</a>
+
+</div>
+
 </body>
 </html>
