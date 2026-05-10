@@ -18,6 +18,7 @@ PRODUCTS_FILE = os.path.join(DATA_DIR, "products.json")
 BUS_EVENTS_FILE = os.path.join(DATA_DIR, "bus_events.json")
 BUS_RESERVIERUNGEN_FILE = os.path.join(DATA_DIR, "bus_reservierungen.json")
 STORNO_FILE = os.path.join(DATA_DIR, "stornogebuehren.json")
+SETTINGS_FILE = os.path.join(DATA_DIR, "settings.json")
 
 
 # ---------------------------------------------------------
@@ -47,6 +48,43 @@ def ensure_data_files():
         with open(STORNO_FILE, "w", encoding="utf-8") as f:
             json.dump([], f, indent=4, ensure_ascii=False)
 
+def load_settings():
+    ensure_data_files()
+
+    if not os.path.exists(SETTINGS_FILE):
+        settings = {
+            "shop_closed_after": ""
+        }
+        save_settings(settings)
+        return settings
+
+    with open(SETTINGS_FILE, "r", encoding="utf-8") as f:
+        return json.load(f)
+
+
+def save_settings(settings):
+    ensure_data_files()
+
+    with open(SETTINGS_FILE, "w", encoding="utf-8") as f:
+        json.dump(settings, f, indent=4, ensure_ascii=False)
+
+
+def shop_is_closed():
+    settings = load_settings()
+
+    closed_after = settings.get("shop_closed_after", "")
+
+    if not closed_after:
+        return False
+
+    today = datetime.date.today()
+
+    close_date = datetime.datetime.strptime(
+        closed_after,
+        "%Y-%m-%d"
+    ).date()
+
+    return today > close_date
 # ---------------- USERS ----------------
 
 def load_users():
@@ -978,6 +1016,13 @@ def cart():
     message = None
 
     if request.method == 'POST':
+        if shop_is_closed():
+            return render_template(
+            'cart.html',
+            cart_items=cart_items,
+            total=sum(item.get('preis', 0) * item.get('anzahl', 1) for item in cart_items),
+            message="Der Shop ist geschlossen. Es können keine Bestellungen mehr abgegeben werden."
+        )
         if not cart_items:
             return render_template(
                 'cart.html',
@@ -1042,7 +1087,6 @@ def cart():
     total = sum(item.get('preis', 0) * item.get('anzahl', 1) for item in cart_items)
     return render_template('cart.html', cart_items=cart_items, total=total, message=message)
 
-
 @app.route('/update_cart', methods=['POST'])
 def update_cart():
     if not is_logged_in():
@@ -1095,6 +1139,19 @@ def update_size():
 # ---------------------------------------------------------
 # ADMINBEREICH
 # ---------------------------------------------------------
+@app.route('/admin/shop-einstellungen', methods=['GET', 'POST'])
+def admin_shop_einstellungen():
+    if not admin_required():
+        return redirect('/login')
+
+    settings = load_settings()
+
+    if request.method == 'POST':
+        settings["shop_closed_after"] = request.form.get("shop_closed_after", "").strip()
+        save_settings(settings)
+        return redirect('/admin/shop-einstellungen')
+
+    return render_template('admin-shop-einstellungen.html', settings=settings)
 
 @app.route('/admin')
 def admin():
