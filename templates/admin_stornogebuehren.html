@@ -146,6 +146,7 @@ th {
                         <th>Veranstaltungsdatum</th>
                         <th>Plätze</th>
                         <th>Betrag</th>
+                        <th>Aktion</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -158,6 +159,13 @@ th {
                         <td>{{ s.veranstaltungsdatum }}</td>
                         <td>{{ s.anzahl }}</td>
                         <td>{{ "%.2f"|format(s.betrag) }} €</td>
+                        <td>
+                            <a href="/admin/storno-loeschen/{{ s.id }}"
+                               onclick="return confirm('Stornoeintrag wirklich löschen?');"
+                               style="color: #cf2a2a; text-decoration: none; font-weight: bold;">
+                                Löschen
+                            </a>
+                        </td>
                     </tr>
                     {% endfor %}
                 </tbody>

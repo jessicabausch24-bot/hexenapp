@@ -166,13 +166,13 @@
                 {% elif r.stornogebuehr %}
                     <div class="hint">
                         Die kostenlose Stornierungsfrist ist abgelaufen.
-                        Für diese Stornierung fällt eine Stornierungsgebühr von 15 € an.
+                        Für diese Stornierung fällt eine Stornierungsgebühr von {{ "%.2f"|format(stornogebuehr) }} € an.
                     </div>
 
                     <a class="btn btn-warning"
                        href="/reservierung-stornieren/{{ r.id }}"
-                       onclick="return confirm('Die kostenlose Frist ist abgelaufen. Es fällt eine Stornierungsgebühr von 15 € an. Trotzdem stornieren?');">
-                        ⚠️ Stornieren mit 15 € Gebühr
+                       onclick="return confirm('Die kostenlose Frist ist abgelaufen. Es fällt eine Stornierungsgebühr von {{ "%.2f"|format(stornogebuehr) }} € an. Trotzdem stornieren?');">
+                        ⚠️ Stornieren mit {{ "%.2f"|format(stornogebuehr) }} € Gebühr
                     </a>
                 {% endif %}
 

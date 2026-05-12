@@ -821,11 +821,15 @@ def bus_detail(event_id):
 
         return redirect('/bus')
 
+    settings = load_settings()
+    stornogebuehr = settings.get('stornogebuehr', 5.0)
+
     return render_template(
         "bus_detail.html",
         event=event,
         belegt=belegt,
-        frei=frei
+        frei=frei,
+        stornogebuehr=stornogebuehr
     )
 # ---------------------------------------------------------
 # BUS RESERVIERUNG STORNIEREN
