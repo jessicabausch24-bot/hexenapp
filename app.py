@@ -726,10 +726,14 @@ def reservierungen():
             r["stornogebuehr"] = True
 
     meine_reservierungen = list(reversed(meine_reservierungen))
+    
+    settings = load_settings()
+    stornogebuehr = settings.get('stornogebuehr', 5.0)
 
     return render_template(
         "reservierungen.html",
-        reservierungen=meine_reservierungen
+        reservierungen=meine_reservierungen,
+        stornogebuehr=stornogebuehr
     )
 # ---------------------------------------------------------
 # BUS KALENDER
@@ -1775,6 +1779,18 @@ def admin_stornogebuehren():
         stornos=stornos,
         gesamt=gesamt
     )
+
+
+@app.route('/admin/storno-loeschen/<storno_id>')
+def admin_storno_loeschen(storno_id):
+    if not admin_required():
+        return redirect('/login')
+    
+    stornos = load_stornogebuehren()
+    stornos = [s for s in stornos if s.get('id') != storno_id]
+    save_stornogebuehren(stornos)
+    
+    return redirect('/admin/stornogebuehren')
 @app.route('/debug-files')
 def debug_files():
     return {
