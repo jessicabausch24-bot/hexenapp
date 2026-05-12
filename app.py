@@ -53,7 +53,8 @@ def load_settings():
 
     if not os.path.exists(SETTINGS_FILE):
         settings = {
-            "shop_closed_after": ""
+            "shop_closed_after": "",
+            "stornogebuehr": 5.0
         }
         save_settings(settings)
         return settings
@@ -742,6 +743,9 @@ def bus():
     veranstaltungen = load_bus_events()
     reservierungen = load_bus_reservierungen()
 
+    # Nur aktive Veranstaltungen anzeigen
+    veranstaltungen = [v for v in veranstaltungen if v.get("is_active", True)]
+
     belegung = {}
 
     for v in veranstaltungen:
@@ -864,6 +868,9 @@ def reservierung_stornieren(reservierung_id):
 
     if stornogebuehr:
         stornos = load_stornogebuehren()
+        settings = load_settings()
+        storno_betrag = settings.get("stornogebuehr", 5.0)
+        
         stornos.append({
             "id": str(uuid.uuid4()),
             "datum": datetime.datetime.now().strftime("%d.%m.%Y %H:%M"),
@@ -872,7 +879,7 @@ def reservierung_stornieren(reservierung_id):
             "veranstaltung": reservierung.get("ausfahrt"),
             "veranstaltungsdatum": reservierung.get("veranstaltungsdatum"),
             "anzahl": reservierung.get("anzahl", 1),
-            "betrag": 15.00
+            "betrag": storno_betrag
         })
         save_stornogebuehren(stornos)
 
@@ -1149,6 +1156,13 @@ def admin_shop_einstellungen():
 
     if request.method == 'POST':
         settings["shop_closed_after"] = request.form.get("shop_closed_after", "").strip()
+        
+        try:
+            stornogebuehr = float(request.form.get("stornogebuehr", "5.0").strip().replace(",", "."))
+            settings["stornogebuehr"] = max(0, stornogebuehr)  # Nicht negativ
+        except:
+            settings["stornogebuehr"] = 5.0
+        
         save_settings(settings)
         return redirect('/admin/shop-einstellungen')
 
@@ -1504,7 +1518,8 @@ def admin_bus_event_hinzufuegen():
             "datum": datum,
             "abfahrtszeit": abfahrtszeit,
             "haltestellen": haltestellen,
-            "gesamtplaetze": gesamtplaetze
+            "gesamtplaetze": gesamtplaetze,
+            "is_active": request.form.get("is_active") == "on"
         }
 
         events.append(event)
@@ -1535,12 +1550,28 @@ def admin_bus_event_bearbeiten(event_id):
         event["haltestellen"] = [h.strip() for h in haltestellen_roh.split(",") if h.strip()]
 
         event["gesamtplaetze"] = int(request.form.get("gesamtplaetze", 0))
+        event["is_active"] = request.form.get("is_active") == "on"
 
         save_bus_events(events)
 
         return redirect('/admin/bus')
 
     return render_template("admin_bus_event_form.html", event=event)
+
+
+@app.route('/admin/bus/toggle/<event_id>')
+def admin_bus_event_toggle(event_id):
+    if not admin_required():
+        return redirect('/login')
+
+    events = load_bus_events()
+    event = next((e for e in events if e["id"] == event_id), None)
+
+    if event:
+        event["is_active"] = not event.get("is_active", True)
+        save_bus_events(events)
+
+    return redirect('/admin/bus')
 
 
 @app.route('/admin/bus/loeschen/<event_id>')

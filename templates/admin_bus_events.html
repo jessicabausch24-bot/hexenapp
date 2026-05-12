@@ -94,6 +94,40 @@ h1 {
     color: white;
     text-decoration: underline;
 }
+
+.status-badge {
+    display: inline-block;
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.status-active {
+    background: #4caf50;
+    color: white;
+}
+
+.status-inactive {
+    background: #f44336;
+    color: white;
+}
+
+.toggle-btn {
+    padding: 6px 12px;
+    border: none;
+    border-radius: 8px;
+    background: #ff9800;
+    color: white;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 13px;
+}
+
+.toggle-btn:hover {
+    background: #e68900;
+}
 </style>
 </head>
 
@@ -109,6 +143,12 @@ h1 {
 
     {% for event in events %}
         <div class="card">
+
+            {% if event.get('is_active', True) %}
+                <div class="status-badge status-active">✓ AKTIV - Nutzer können diese sehen</div>
+            {% else %}
+                <div class="status-badge status-inactive">✗ INAKTIV - Unsichtbar für Nutzer</div>
+            {% endif %}
 
             <div class="row">
 
@@ -127,6 +167,14 @@ h1 {
 
                     <a class="edit" href="/admin/bus/bearbeiten/{{ event.id }}">
                         Bearbeiten
+                    </a>
+
+                    <a href="/admin/bus/toggle/{{ event.id }}" class="toggle-btn">
+                        {% if event.get('is_active', True) %}
+                            🔴 Deaktivieren
+                        {% else %}
+                            🟢 Aktivieren
+                        {% endif %}
                     </a>
 
                     <a class="delete"

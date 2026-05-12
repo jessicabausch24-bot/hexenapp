@@ -1,8 +1,0 @@
-
-{
-    "jessica.bausch24@gmail.com": {
-        "name": "Jessi24",
-        "password": "scrypt:32768:8:1$G8NqB5nH1MFIzhgR$a35dc220dd13f609d93fe49b67b237471b4a9fa08112bb3dd76e123254b266f3304f48f6ad1f22083863a3e3b728f96c5ae5bc114ed1b6da0d001a6fd5b76736",
-        "is_admin": true
- }
-}

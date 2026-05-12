@@ -115,6 +115,8 @@ input {
             {% else %}
                 Es ist aktuell kein Bestellschluss gesetzt.
             {% endif %}
+            <br><br>
+            <strong>Stornogebühr:</strong> {{ "%.2f"|format(settings.get('stornogebuehr', 5.0)) }} €
         </div>
 
         <form method="POST">
@@ -133,11 +135,27 @@ input {
                 Leer lassen = Shop bleibt offen.
             </div>
 
+            <label for="stornogebuehr" style="margin-top: 24px;">
+                Stornogebühr (€)
+            </label>
+
+            <input
+                type="number"
+                id="stornogebuehr"
+                name="stornogebuehr"
+                value="{{ settings.get('stornogebuehr', 5.0) }}"
+                step="0.50"
+                min="0">
+
+            <div class="hint">
+                Diese Gebühr wird berechnet, wenn eine Reservierung zu spät storniert wird.
+            </div>
+
             <button type="submit" class="btn">Speichern</button>
         </form>
 
         <div class="clear-info">
-            Zum Wiederöffnen einfach das Datum löschen und speichern.
+            Zum Wiederöffnen des Shops einfach das Datum löschen und speichern.
         </div>
 
     </div>

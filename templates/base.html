@@ -93,15 +93,9 @@ body {
 <div class="footer-bar">
     <a href="{{ url_for('dashboard') }}">Start</a>
 
-    <div class="footer-bar">
-    <a href="{{ url_for('dashboard') }}">Start</a>
-
     {% if session.get('is_admin') %}
         <a href="{{ url_for('admin') }}">Adminbereich</a>
     {% endif %}
-
-    <a href="{{ url_for('logout') }}">Logout</a>
-</div>
 
     <a href="{{ url_for('logout') }}">Logout</a>
 </div>

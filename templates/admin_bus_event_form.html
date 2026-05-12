@@ -88,6 +88,11 @@ button {
             <label>Gesamtplätze</label>
             <input type="number" name="gesamtplaetze" value="{{ event.gesamtplaetze if event else '' }}" min="1" required>
 
+            <label style="display: flex; align-items: center; margin-top: 20px;">
+                <input type="checkbox" name="is_active" {% if not event or event.get('is_active', True) %}checked{% endif %} style="width: auto; margin-right: 10px;">
+                Veranstaltung ist aktiv (Nutzer können diese sehen)
+            </label>
+
             <button type="submit">Speichern</button>
         </form>
     </div>
