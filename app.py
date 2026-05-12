@@ -1175,6 +1175,118 @@ def admin():
     return render_template('admin.html')
 
 
+# ---------------------------------------------------------
+# ADMINBEREICH - PRODUKTE
+# ---------------------------------------------------------
+
+@app.route('/admin/produkte')
+def admin_produkte():
+    if not admin_required():
+        return redirect('/login')
+    
+    load_products()
+    
+    return render_template('admin-produkte.html',
+                         haes_teile=products.get('haes_teile', []),
+                         masken_zubehoer=products.get('masken_zubehoer', []),
+                         merchandise=products.get('merchandise', []),
+                         sonstiges=products.get('sonstiges', []))
+
+
+@app.route('/admin/produkt-hinzufuegen', methods=['GET', 'POST'])
+def admin_produkt_hinzufuegen():
+    if not admin_required():
+        return redirect('/login')
+    
+    load_products()
+    
+    if request.method == 'POST':
+        try:
+            name = request.form.get('name', '').strip()
+            typ = request.form.get('typ', '').strip()
+            kategorie = request.form.get('kategorie', 'sonstiges').strip()
+            preis = float(request.form.get('preis', 0))
+            
+            groessen_namen = request.form.getlist("groesse_name[]")
+            groessen_preise_form = request.form.getlist("groesse_preis[]")
+            
+            neue_groessen = []
+            groessen_preise = {}
+            
+            for groesse, preis_feld in zip(groessen_namen, groessen_preise_form):
+                groesse = groesse.strip()
+                preis_feld = preis_feld.strip()
+                
+                if not groesse:
+                    continue
+                
+                neue_groessen.append(groesse)
+                
+                if preis_feld:
+                    groessen_preise[groesse] = float(preis_feld.replace(",", "."))
+            
+            bild = "placeholder.png"
+            bild_datei = request.files.get("bild_upload")
+            
+            if bild_datei and bild_datei.filename:
+                filename = secure_filename(bild_datei.filename)
+                upload_folder = os.path.join("static", "img")
+                os.makedirs(upload_folder, exist_ok=True)
+                upload_path = os.path.join(upload_folder, filename)
+                bild_datei.save(upload_path)
+                bild = filename
+            
+            neue_id = 1
+            for kat in products.values():
+                for p in kat:
+                    if p.get('id', 0) >= neue_id:
+                        neue_id = p['id'] + 1
+            
+            neues_produkt = {
+                'id': neue_id,
+                'name': name,
+                'typ': typ,
+                'preis': preis,
+                'groessen': neue_groessen,
+                'groessen_preise': groessen_preise,
+                'bild': bild
+            }
+            
+            if kategorie not in products:
+                products[kategorie] = []
+            
+            products[kategorie].append(neues_produkt)
+            save_products()
+            
+            return redirect('/admin/produkte')
+            
+        except Exception as e:
+            return render_template(
+                'admin-produkt-hinzufuegen.html',
+                error=f"Fehler beim Hinzufügen: {e}"
+            )
+    
+    return render_template('admin-produkt-hinzufuegen.html')
+
+
+@app.route('/admin/produkt-loeschen/<int:produkt_id>')
+def admin_produkt_loeschen(produkt_id):
+    if not admin_required():
+        return redirect('/login')
+    
+    load_products()
+    
+    for kategorie in products.values():
+        products_list = [p for p in kategorie if p['id'] != produkt_id]
+        if len(products_list) < len(kategorie):
+            kategorie.clear()
+            kategorie.extend(products_list)
+            save_products()
+            return redirect('/admin/produkte')
+    
+    return redirect('/admin/produkte')
+
+
 @app.route('/admin/produkt-bearbeiten/<int:produkt_id>', methods=['GET', 'POST'])
 def admin_produkt_bearbeiten(produkt_id):
     if not admin_required():
