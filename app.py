@@ -808,6 +808,8 @@ def bus_detail(event_id):
         abort(404)
 
     event["anreise_typ"] = event.get("anreise_typ", "bus")
+    event["haltestellen"] = event.get("haltestellen", []) or []
+    event["gesamtplaetze"] = int(event.get("gesamtplaetze", 0))
 
     belegt = 0
     frei = 0
@@ -1703,6 +1705,10 @@ def admin_bus_events():
     belegung_bus = {}
     belegung_eigene = {}
     for event in events:
+        event["anreise_typ"] = event.get("anreise_typ", "bus")
+        event["haltestellen"] = event.get("haltestellen", []) or []
+        event["gesamtplaetze"] = int(event.get("gesamtplaetze", 0))
+
         event_id = event["id"]
         belegung_bus[event_id] = sum(
             r.get("anzahl", 0)

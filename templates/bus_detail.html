@@ -123,7 +123,7 @@ button {
         <p><strong>Datum:</strong> {{ event.datum }}</p>
         {% if event.anreise_typ|default('bus') in ['bus', 'bus_und_eigene_anreise'] %}
             <p><strong>Abfahrtszeit:</strong> {{ event.abfahrtszeit }}</p>
-            <p><strong>Haltestellen:</strong> {{ event.haltestellen|join(", ") }}</p>
+            <p><strong>Haltestellen:</strong> {{ event.haltestellen|default([])|join(", ") }}</p>
 
             {% set prozent = (belegt / event.gesamtplaetze * 100) if event.gesamtplaetze > 0 else 0 %}
 
@@ -160,11 +160,17 @@ button {
             </div>
         {% endif %}
 
-        {% if event.anreise_typ in ['bus_und_eigene_anreise', 'eigene_anreise'] %}
+        {% if event.anreise_typ|default('bus') in ['bus_und_eigene_anreise', 'eigene_anreise'] %}
             <div class="status-box" style="background: #e7f8ea; color: #147a2e; margin-top: 20px;">
                 <div style="font-size: 18px; font-weight: bold;">🚶 Eigene Anreise</div>
                 <div>Für diese Veranstaltung kannst du dich auch einfach selbstständig anmelden und dann vor Ort anreisen.</div>
             </div>
+
+            {% if event.anreise_typ == 'bus_und_eigene_anreise' %}
+                <div class="hint" style="background: #f0f7ff; color: #1f4e8f;">
+                    Du kannst hier zwischen Busplatz und eigener Anreise wählen.
+                </div>
+            {% endif %}
 
             <form method="POST" action="/anreise-bestaetigen/{{ event.id }}">
                 <input type="hidden" name="event_id" value="{{ event.id }}">
