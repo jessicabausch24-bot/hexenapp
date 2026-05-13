@@ -169,9 +169,14 @@ h1 {
                 <div class="info">
                     <strong>{{ event.titel }}</strong><br>
                     📅 {{ event.datum }}<br>
-                    🕒 {{ event.abfahrtszeit }}<br>
-                    📍 {{ event.haltestellen | join(", ") }}<br>
-                    🪑 {{ belegung.get(event.id, 0) }} / {{ event.gesamtplaetze }} belegt
+                    {% if event.get('anreise_typ', 'bus') == 'bus' %}
+                        🕒 {{ event.abfahrtszeit }}<br>
+                        📍 {{ event.haltestellen | join(", ") }}<br>
+                        🪑 {{ belegung.get(event.id, 0) }} / {{ event.gesamtplaetze }} belegt
+                    {% else %}
+                        🚶 Eigene Anreise<br>
+                        👥 {{ belegung.get(event.id, 0) }} Anmeldungen
+                    {% endif %}
                 </div>
 
                 <div class="actions">

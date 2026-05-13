@@ -121,44 +121,60 @@ button {
         <h1>🚌 {{ event.titel }}</h1>
 
         <p><strong>Datum:</strong> {{ event.datum }}</p>
-        <p><strong>Abfahrtszeit:</strong> {{ event.abfahrtszeit }}</p>
-        <p><strong>Haltestellen:</strong> {{ event.haltestellen|join(", ") }}</p>
-
-        {% set prozent = (belegt / event.gesamtplaetze * 100) if event.gesamtplaetze > 0 else 0 %}
-
-        <div class="status-box">
-            <div class="status-large"> {{ belegt }} / {{ event.gesamtplaetze }} belegt</div>
-            <div>Noch frei: {{ frei }} Plätze</div>
-
-            <div class="progress">
-                <div class="progress-fill" style="width: {{ prozent }}%;"></div>
-            </div>
-        </div>
-
-        {% if frei > 0 %}
-            <form method="POST">
-                <label for="anzahl">Anzahl Plätze</label>
-                <select id="anzahl" name="anzahl">
-                    {% for i in range(1, frei + 1) %}
-                        {% if i <= 10 %}
-                            <option value="{{ i }}">{{ i }}</option>
-                        {% endif %}
-                    {% endfor %}
-                </select>
-
-                <button type="submit">Reservierung speichern</button>
-            </form>
-        {% else %}
-            <div class="error">Diese Veranstaltung ist bereits ausgebucht.</div>
+        {% if event.anreise_typ == 'bus' %}
+            <p><strong>Abfahrtszeit:</strong> {{ event.abfahrtszeit }}</p>
+            <p><strong>Haltestellen:</strong> {{ event.haltestellen|join(", ") }}</p>
         {% endif %}
 
-        <div class="hint">
-            <strong>Hinweis:</strong><br>
-            Der Platz ist bis 5 Tage vor Veranstaltung über „Meine Reservierungen“ stornierbar.
-            Für spätere Stornierungen fällt eine Stornierungsgebühr von {{ "%.2f"|format(stornogebuehr) }} € an.
-        </div>
+        {% if event.anreise_typ == 'bus' %}
+            {% set prozent = (belegt / event.gesamtplaetze * 100) if event.gesamtplaetze > 0 else 0 %}
 
-    </div>
-</div>
+            <div class="status-box">
+                <div class="status-large"> {{ belegt }} / {{ event.gesamtplaetze }} belegt</div>
+                <div>Noch frei: {{ frei }} Plätze</div>
+
+                <div class="progress">
+                    <div class="progress-fill" style="width: {{ prozent }}%;"></div>
+                </div>
+            </div>
+
+            {% if frei > 0 %}
+                <form method="POST">
+                    <label for="anzahl">Anzahl Plätze</label>
+                    <select id="anzahl" name="anzahl">
+                        {% for i in range(1, frei + 1) %}
+                            {% if i <= 10 %}
+                                <option value="{{ i }}">{{ i }}</option>
+                            {% endif %}
+                        {% endfor %}
+                    </select>
+
+                    <button type="submit">Busplatz reservieren</button>
+                </form>
+            {% else %}
+                <div class="error">Diese Veranstaltung ist bereits ausgebucht.</div>
+            {% endif %}
+
+            <div class="hint">
+                <strong>Hinweis:</strong><br>
+                Der Platz ist bis 5 Tage vor Veranstaltung über „Meine Reservierungen“ stornierbar.
+                Für spätere Stornierungen fällt eine Stornierungsgebühr von {{ "%.2f"|format(stornogebuehr) }} € an.
+            </div>
+        {% else %}
+            <div class="status-box" style="background: #e7f8ea; color: #147a2e;">
+                <div style="font-size: 18px; font-weight: bold;">🚶 Eigene Anreise</div>
+                <div>Für diese Veranstaltung werden keine Busplätze angeboten. Bitte komme selbstständig zur Veranstaltung.</div>
+            </div>
+
+            <form method="POST" action="/anreise-bestaetigen/{{ event.id }}">
+                <input type="hidden" name="event_id" value="{{ event.id }}">
+                <button type="submit" style="background: #4caf50;">✅ Eigene Anreise bestätigen</button>
+            </form>
+
+            <div class="hint">
+                <strong>Hinweis:</strong><br>
+                Bei eigener Anreise ist keine Stornierung notwendig. Du kannst einfach zur Veranstaltung kommen.
+            </div>
+        {% endif %}
 
 {% endblock %}

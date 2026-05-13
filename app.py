@@ -698,6 +698,10 @@ def reservierungen():
         r["stornogebuehr"] = False
         r["stornierbar_kostenlos"] = False
 
+        # Für eigene Anreise keine Stornierungsoptionen
+        if r.get("anreise_typ") == "eigene_anreise":
+            continue
+
         datum_roh = r.get("veranstaltungsdatum", "")
 
         event_date = None
@@ -783,13 +787,16 @@ def bus_detail(event_id):
     if not event:
         abort(404)
 
-    belegt = sum(
-        r.get("anzahl", 0)
-        for r in reservierungen
-        if r.get("veranstaltung_id") == event_id
-    )
-
-    frei = event.get("gesamtplaetze", 0) - belegt
+    belegt = 0
+    frei = 0
+    
+    if event.get('anreise_typ', 'bus') == 'bus':
+        belegt = sum(
+            r.get("anzahl", 0)
+            for r in reservierungen
+            if r.get("veranstaltung_id") == event_id
+        )
+        frei = event.get("gesamtplaetze", 0) - belegt
 
     if request.method == 'POST':
         anzahl = int(request.form.get("anzahl", 1))
@@ -831,6 +838,67 @@ def bus_detail(event_id):
         frei=frei,
         stornogebuehr=stornogebuehr
     )
+
+
+# ---------------------------------------------------------  
+# EIGENE ANREISE BESTÄTIGEN
+# ---------------------------------------------------------
+
+@app.route('/anreise-bestaetigen/<event_id>', methods=['POST'])
+def anreise_bestaetigen(event_id):
+    if not is_logged_in():
+        return redirect('/login')
+
+    veranstaltungen = load_bus_events()
+    event = next((v for v in veranstaltungen if v["id"] == event_id), None)
+
+    if not event:
+        abort(404)
+
+    # Prüfen ob bereits eine Anmeldung besteht
+    reservierungen = load_bus_reservierungen()
+    email = session.get("email")
+    
+    existing = next((r for r in reservierungen if r.get("veranstaltung_id") == event_id and r.get("email") == email), None)
+    
+    if existing:
+        return render_template(
+            "bus_detail.html",
+            event=event,
+            belegt=0,
+            frei=0,
+            stornogebuehr=0,
+            error="Du hast dich bereits für diese Veranstaltung angemeldet."
+        )
+
+    # Anmeldung für eigene Anreise erstellen
+    anmeldung = {
+        "id": str(uuid.uuid4()),
+        "datum": datetime.datetime.now().strftime("%d.%m.%Y %H:%M"),
+        "name": session.get("user"),
+        "email": session.get("email"),
+        "veranstaltung_id": event["id"],
+        "ausfahrt": event.get("titel"),
+        "veranstaltungsdatum": event.get("datum"),
+        "abfahrtszeit": "Eigene Anreise",
+        "haltestellen": ["Eigene Anreise"],
+        "anzahl": 1,
+        "anreise_typ": "eigene_anreise"
+    }
+
+    reservierungen.append(anmeldung)
+    save_bus_reservierungen(reservierungen)
+
+    return render_template(
+        "bus_detail.html",
+        event=event,
+        belegt=0,
+        frei=0,
+        stornogebuehr=0,
+        success="Eigene Anreise erfolgreich bestätigt!"
+    )
+
+
 # ---------------------------------------------------------
 # BUS RESERVIERUNG STORNIEREN
 # ---------------------------------------------------------
@@ -1600,14 +1668,25 @@ def admin_bus_events():
     events = load_bus_events()
     reservierungen = load_bus_reservierungen()
 
+    # Sortiere Veranstaltungen nach Datum (aufsteigend)
+    events = sorted(events, key=lambda x: x.get('datum', ''))
+
     belegung = {}
     for event in events:
         event_id = event["id"]
-        belegung[event_id] = sum(
-            r.get("anzahl", 0)
-            for r in reservierungen
-            if r.get("veranstaltung_id") == event_id
-        )
+        if event.get('anreise_typ', 'bus') == 'bus':
+            # Für Bus-Veranstaltungen: Summe der reservierten Plätze
+            belegung[event_id] = sum(
+                r.get("anzahl", 0)
+                for r in reservierungen
+                if r.get("veranstaltung_id") == event_id
+            )
+        else:
+            # Für eigene Anreise: Anzahl der Anmeldungen
+            belegung[event_id] = sum(
+                1 for r in reservierungen
+                if r.get("veranstaltung_id") == event_id
+            )
 
     return render_template(
         "admin_bus_events.html",
@@ -1629,6 +1708,7 @@ def admin_bus_event_hinzufuegen():
         abfahrtszeit = request.form.get("abfahrtszeit", "").strip()
         haltestellen_roh = request.form.get("haltestellen", "").strip()
         gesamtplaetze = int(request.form.get("gesamtplaetze", 0))
+        anreise_typ = request.form.get("anreise_typ", "bus")
 
         haltestellen = [h.strip() for h in haltestellen_roh.split(",") if h.strip()]
 
@@ -1639,6 +1719,7 @@ def admin_bus_event_hinzufuegen():
             "abfahrtszeit": abfahrtszeit,
             "haltestellen": haltestellen,
             "gesamtplaetze": gesamtplaetze,
+            "anreise_typ": anreise_typ,
             "is_active": request.form.get("is_active") == "on"
         }
 
@@ -1670,6 +1751,7 @@ def admin_bus_event_bearbeiten(event_id):
         event["haltestellen"] = [h.strip() for h in haltestellen_roh.split(",") if h.strip()]
 
         event["gesamtplaetze"] = int(request.form.get("gesamtplaetze", 0))
+        event["anreise_typ"] = request.form.get("anreise_typ", "bus")
         event["is_active"] = request.form.get("is_active") == "on"
 
         save_bus_events(events)

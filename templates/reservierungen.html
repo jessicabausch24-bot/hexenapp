@@ -126,11 +126,15 @@
                 <div class="res-head">
                     <div>
                         <strong>{{ r.ausfahrt }}</strong><br>
-                        <span class="res-id">Reservierungsnummer: {{ r.id }}</span>
+                        <span class="res-id">{% if r.anreise_typ == 'eigene_anreise' %}Anmeldung{% else %}Reservierungsnummer{% endif %}: {{ r.id }}</span>
                     </div>
 
                     <div class="places">
-                        {{ r.anzahl }} Platz{% if r.anzahl != 1 %}plätze{% endif %}
+                        {% if r.anreise_typ == 'eigene_anreise' %}
+                            ✅ Angemeldet
+                        {% else %}
+                            {{ r.anzahl }} Platz{% if r.anzahl != 1 %}plätze{% endif %}
+                        {% endif %}
                     </div>
                 </div>
 
@@ -139,41 +143,49 @@
                         <strong>Datum:</strong> {{ r.veranstaltungsdatum }}<br>
                     {% endif %}
 
-                    {% if r.abfahrtszeit %}
-                        <strong>Abfahrt:</strong> {{ r.abfahrtszeit }}<br>
+                    {% if r.anreise_typ != 'eigene_anreise' %}
+                        {% if r.abfahrtszeit %}
+                            <strong>Abfahrt:</strong> {{ r.abfahrtszeit }}<br>
+                        {% endif %}
+
+                        {% if r.haltestellen %}
+                            <strong>Haltestellen:</strong> {{ r.haltestellen|join(", ") }}<br>
+                        {% endif %}
                     {% endif %}
 
-                    {% if r.haltestellen %}
-                        <strong>Haltestellen:</strong> {{ r.haltestellen|join(", ") }}<br>
-                    {% endif %}
-
-                    <strong>Reserviert am:</strong> {{ r.datum }}<br>
+                    <strong>{% if r.anreise_typ == 'eigene_anreise' %}Angemeldet{% else %}Reserviert{% endif %} am:</strong> {{ r.datum }}<br>
                     <strong>Name:</strong> {{ r.name }}<br>
                     <strong>E-Mail:</strong> {{ r.email }}
                 </div>
 
-                {% if r.stornierbar_kostenlos %}
-                    <div class="hint">
-                        Diese Reservierung kann noch kostenlos storniert werden.
+                {% if r.anreise_typ != 'eigene_anreise' %}
+                    {% if r.stornierbar_kostenlos %}
+                        <div class="hint">
+                            Diese Reservierung kann noch kostenlos storniert werden.
+                        </div>
+
+                        <a class="btn btn-danger"
+                           href="/reservierung-stornieren/{{ r.id }}"
+                           onclick="return confirm('Reservierung wirklich kostenlos stornieren?');">
+                            ❌ Kostenlos stornieren
+                        </a>
+
+                    {% elif r.stornogebuehr %}
+                        <div class="hint">
+                            Die kostenlose Stornierungsfrist ist abgelaufen.
+                            Für diese Stornierung fällt eine Stornierungsgebühr von {{ "%.2f"|format(stornogebuehr) }} € an.
+                        </div>
+
+                        <a class="btn btn-warning"
+                           href="/reservierung-stornieren/{{ r.id }}"
+                           onclick="return confirm('Die kostenlose Frist ist abgelaufen. Es fällt eine Stornierungsgebühr von {{ "%.2f"|format(stornogebuehr) }} € an. Trotzdem stornieren?');">
+                            ⚠️ Stornieren mit {{ "%.2f"|format(stornogebuehr) }} € Gebühr
+                        </a>
+                    {% endif %}
+                {% else %}
+                    <div class="hint" style="background: #e7f8ea; color: #147a2e;">
+                        Bei eigener Anreise ist keine Stornierung notwendig. Du kannst einfach zur Veranstaltung kommen.
                     </div>
-
-                    <a class="btn btn-danger"
-                       href="/reservierung-stornieren/{{ r.id }}"
-                       onclick="return confirm('Reservierung wirklich kostenlos stornieren?');">
-                        ❌ Kostenlos stornieren
-                    </a>
-
-                {% elif r.stornogebuehr %}
-                    <div class="hint">
-                        Die kostenlose Stornierungsfrist ist abgelaufen.
-                        Für diese Stornierung fällt eine Stornierungsgebühr von {{ "%.2f"|format(stornogebuehr) }} € an.
-                    </div>
-
-                    <a class="btn btn-warning"
-                       href="/reservierung-stornieren/{{ r.id }}"
-                       onclick="return confirm('Die kostenlose Frist ist abgelaufen. Es fällt eine Stornierungsgebühr von {{ "%.2f"|format(stornogebuehr) }} € an. Trotzdem stornieren?');">
-                        ⚠️ Stornieren mit {{ "%.2f"|format(stornogebuehr) }} € Gebühr
-                    </a>
                 {% endif %}
 
             </div>

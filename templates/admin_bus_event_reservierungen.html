@@ -48,21 +48,26 @@ body {
 <body>
 <div class="wrapper">
 
-    <h1>Reservierungen für {{ event.titel }}</h1>
-    <p>Datum: {{ event.datum }} | Abfahrt: {{ event.abfahrtszeit }}</p>
+    <h1>{% if event.anreise_typ == 'bus' %}Reservierungen{% else %}Anmeldungen{% endif %} für {{ event.titel }}</h1>
+    <p>Datum: {{ event.datum }}
+    {% if event.anreise_typ == 'bus' %}| Abfahrt: {{ event.abfahrtszeit }}{% endif %}</p>
 
     {% if reservierungen %}
         {% for r in reservierungen %}
             <div class="card">
                 <strong>{{ r.name }}</strong><br>
                 E-Mail: {{ r.email }}<br>
-                Plätze: {{ r.anzahl }}<br>
-                Reserviert am: {{ r.datum }}<br>
+                {% if event.anreise_typ == 'bus' %}
+                    Plätze: {{ r.anzahl }}<br>
+                {% else %}
+                    Anmeldung: Eigene Anreise<br>
+                {% endif %}
+                Angemeldet am: {{ r.datum }}<br>
 
                 <a class="btn-danger"
                    href="/admin/bus/reservierung-loeschen/{{ r.id }}"
-                   onclick="return confirm('Reservierung wirklich löschen?');">
-                   Reservierung löschen
+                   onclick="return confirm('{% if event.anreise_typ == 'bus' %}Reservierung{% else %}Anmeldung{% endif %} wirklich löschen?');">
+                   {% if event.anreise_typ == 'bus' %}Reservierung{% else %}Anmeldung{% endif %} löschen
                 </a>
             </div>
         {% endfor %}
