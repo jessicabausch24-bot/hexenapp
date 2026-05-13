@@ -823,7 +823,82 @@ def bus_detail(event_id):
         frei = event.get("gesamtplaetze", 0) - belegt
 
     if request.method == 'POST':
-        anzahl = int(request.form.get("anzahl", 1))
+        anreise_typ = request.form.get("anreise_typ")
+        if not anreise_typ:
+            anreise_typ = "bus" if event.get("anreise_typ") in ["bus", "bus_und_eigene_anreise"] else "eigene_anreise"
+
+        if anreise_typ == "eigene_anreise":
+            if event.get("anreise_typ") not in ["eigene_anreise", "bus_und_eigene_anreise"]:
+                return render_template(
+                    "bus_detail.html",
+                    event=event,
+                    belegt=belegt,
+                    frei=frei,
+                    stornogebuehr=load_settings().get('stornogebuehr', 5.0),
+                    error="Eigene Anreise ist für diese Veranstaltung nicht möglich."
+                )
+
+            existing = next(
+                (r for r in reservierungen if r.get("veranstaltung_id") == event_id and r.get("email") == session.get("email")),
+                None
+            )
+            if existing:
+                return render_template(
+                    "bus_detail.html",
+                    event=event,
+                    belegt=belegt,
+                    frei=frei,
+                    stornogebuehr=load_settings().get('stornogebuehr', 5.0),
+                    error="Du hast dich bereits für diese Veranstaltung angemeldet."
+                )
+
+            reservierung = {
+                "id": str(uuid.uuid4()),
+                "datum": datetime.datetime.now().strftime("%d.%m.%Y %H:%M"),
+                "name": session.get("user"),
+                "email": session.get("email"),
+                "veranstaltung_id": event["id"],
+                "ausfahrt": event.get("titel"),
+                "veranstaltungsdatum": event.get("datum"),
+                "abfahrtszeit": "Eigene Anreise",
+                "haltestellen": ["Eigene Anreise"],
+                "anzahl": 1,
+                "anreise_typ": "eigene_anreise"
+            }
+
+            reservierungen.append(reservierung)
+            save_bus_reservierungen(reservierungen)
+
+            belegt = sum(
+                r.get("anzahl", 0)
+                for r in reservierungen
+                if r.get("veranstaltung_id") == event_id and r.get("anreise_typ", "bus") == "bus"
+            )
+            frei = event.get("gesamtplaetze", 0) - belegt
+
+            return render_template(
+                "bus_detail.html",
+                event=event,
+                belegt=belegt,
+                frei=frei,
+                stornogebuehr=load_settings().get('stornogebuehr', 5.0),
+                success="Eigene Anreise erfolgreich bestätigt!"
+            )
+
+        if event.get("anreise_typ") not in ["bus", "bus_und_eigene_anreise"]:
+            return render_template(
+                "bus_detail.html",
+                event=event,
+                belegt=belegt,
+                frei=frei,
+                stornogebuehr=load_settings().get('stornogebuehr', 5.0),
+                error="Busreservierungen für diese Veranstaltung sind nicht möglich."
+            )
+
+        try:
+            anzahl = int(request.form.get("anzahl", 1))
+        except ValueError:
+            anzahl = 1
 
         if anzahl > frei:
             return render_template(
@@ -831,6 +906,7 @@ def bus_detail(event_id):
                 event=event,
                 belegt=belegt,
                 frei=frei,
+                stornogebuehr=load_settings().get('stornogebuehr', 5.0),
                 error="Es sind nicht mehr genügend Plätze frei."
             )
 
@@ -880,6 +956,20 @@ def anreise_bestaetigen(event_id):
     if not event:
         abort(404)
 
+    event["anreise_typ"] = event.get("anreise_typ", "bus")
+    event["haltestellen"] = event.get("haltestellen", []) or []
+    event["gesamtplaetze"] = int(event.get("gesamtplaetze", 0))
+
+    if event.get("anreise_typ") not in ["eigene_anreise", "bus_und_eigene_anreise"]:
+        return render_template(
+            "bus_detail.html",
+            event=event,
+            belegt=0,
+            frei=0,
+            stornogebuehr=load_settings().get('stornogebuehr', 5.0),
+            error="Eigene Anreise ist für diese Veranstaltung nicht möglich."
+        )
+
     # Prüfen ob bereits eine Anmeldung besteht
     reservierungen = load_bus_reservierungen()
     email = session.get("email")
@@ -892,7 +982,7 @@ def anreise_bestaetigen(event_id):
             event=event,
             belegt=0,
             frei=0,
-            stornogebuehr=0,
+            stornogebuehr=load_settings().get('stornogebuehr', 5.0),
             error="Du hast dich bereits für diese Veranstaltung angemeldet."
         )
 
@@ -914,12 +1004,22 @@ def anreise_bestaetigen(event_id):
     reservierungen.append(anmeldung)
     save_bus_reservierungen(reservierungen)
 
+    belegt = 0
+    frei = 0
+    if event.get('anreise_typ') in ['bus', 'bus_und_eigene_anreise']:
+        belegt = sum(
+            r.get("anzahl", 0)
+            for r in reservierungen
+            if r.get("veranstaltung_id") == event_id and r.get("anreise_typ", "bus") == "bus"
+        )
+        frei = event.get("gesamtplaetze", 0) - belegt
+
     return render_template(
         "bus_detail.html",
         event=event,
-        belegt=0,
-        frei=0,
-        stornogebuehr=0,
+        belegt=belegt,
+        frei=frei,
+        stornogebuehr=load_settings().get('stornogebuehr', 5.0),
         success="Eigene Anreise erfolgreich bestätigt!"
     )
 

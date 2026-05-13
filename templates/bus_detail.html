@@ -136,44 +136,81 @@ button {
                 </div>
             </div>
 
-            {% if frei > 0 %}
-                <form method="POST">
-                    <label for="anzahl">Anzahl Plätze</label>
-                    <select id="anzahl" name="anzahl">
-                        {% for i in range(1, frei + 1) %}
-                            {% if i <= 10 %}
-                                <option value="{{ i }}">{{ i }}</option>
-                            {% endif %}
-                        {% endfor %}
-                    </select>
+            {% if event.anreise_typ == 'bus' %}
+                {% if frei > 0 %}
+                    <form method="POST">
+                        <input type="hidden" name="anreise_typ" value="bus">
 
-                    <button type="submit">Busplatz reservieren</button>
-                </form>
+                        <label for="anzahl">Anzahl Plätze</label>
+                        <select id="anzahl" name="anzahl">
+                            {% for i in range(1, frei + 1) %}
+                                {% if i <= 10 %}
+                                    <option value="{{ i }}">{{ i }}</option>
+                                {% endif %}
+                            {% endfor %}
+                        </select>
+
+                        <button type="submit">Busplatz reservieren</button>
+                    </form>
+                {% else %}
+                    <div class="error">Diese Veranstaltung ist bereits ausgebucht.</div>
+                {% endif %}
             {% else %}
-                <div class="error">Diese Veranstaltung ist bereits ausgebucht.</div>
+                <form method="POST" id="anreise-form">
+                    <label>Anreise wählen</label>
+                    <div class="radio-group">
+                        <label>
+                            <input type="radio" name="anreise_typ" value="bus"
+                                   onchange="toggleAnreise('bus')"
+                                   {% if frei == 0 %}disabled{% else %}checked{% endif %}>
+                            🚌 Busplatz reservieren
+                        </label>
+                        <label>
+                            <input type="radio" name="anreise_typ" value="eigene_anreise"
+                                   onchange="toggleAnreise('eigene')"
+                                   {% if frei == 0 %}checked{% endif %}>
+                            🚶 Eigene Anreise
+                        </label>
+                    </div>
+
+                    <div id="bus-options" style="margin-top: 18px; {% if frei == 0 %}display: none;{% endif %}">
+                        {% if frei > 0 %}
+                            <label for="anzahl">Anzahl Plätze</label>
+                            <select id="anzahl" name="anzahl">
+                                {% for i in range(1, frei + 1) %}
+                                    {% if i <= 10 %}
+                                        <option value="{{ i }}">{{ i }}</option>
+                                    {% endif %}
+                                {% endfor %}
+                            </select>
+                        {% else %}
+                            <div class="hint" style="background: #f0f7ff; color: #1f4e8f;">
+                                Busplätze sind ausgebucht. Bitte wähle Eigene Anreise.
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <button type="submit" id="anreise-submit">{% if frei == 0 %}✅ Eigene Anreise bestätigen{% else %}Busplatz reservieren{% endif %}</button>
+                </form>
+
+                <div class="hint" style="background: #f0f7ff; color: #1f4e8f; margin-top: 18px;">
+                    Wähle hier zwischen Busplatz und eigener Anreise.
+                </div>
             {% endif %}
 
             <div class="hint">
-                <strong>Hinweis:</strong><br>
-                Der Platz ist bis 5 Tage vor Veranstaltung über „Meine Reservierungen“ stornierbar.
                 Für spätere Stornierungen fällt eine Stornierungsgebühr von {{ "%.2f"|format(stornogebuehr) }} € an.
             </div>
         {% endif %}
 
-        {% if event.anreise_typ|default('bus') in ['bus_und_eigene_anreise', 'eigene_anreise'] %}
+        {% if event.anreise_typ == 'eigene_anreise' %}
             <div class="status-box" style="background: #e7f8ea; color: #147a2e; margin-top: 20px;">
                 <div style="font-size: 18px; font-weight: bold;">🚶 Eigene Anreise</div>
                 <div>Für diese Veranstaltung kannst du dich auch einfach selbstständig anmelden und dann vor Ort anreisen.</div>
             </div>
 
-            {% if event.anreise_typ == 'bus_und_eigene_anreise' %}
-                <div class="hint" style="background: #f0f7ff; color: #1f4e8f;">
-                    Du kannst hier zwischen Busplatz und eigener Anreise wählen.
-                </div>
-            {% endif %}
-
-            <form method="POST" action="/anreise-bestaetigen/{{ event.id }}">
-                <input type="hidden" name="event_id" value="{{ event.id }}">
+            <form method="POST">
+                <input type="hidden" name="anreise_typ" value="eigene_anreise">
                 <button type="submit" style="background: #4caf50;">✅ Eigene Anreise bestätigen</button>
             </form>
 
@@ -182,5 +219,23 @@ button {
                 Bei eigener Anreise ist keine Stornierung notwendig. Du kannst einfach zur Veranstaltung kommen.
             </div>
         {% endif %}
+
+        <script>
+            function toggleAnreise(type) {
+                const busOptions = document.getElementById("bus-options");
+                const submitButton = document.getElementById("anreise-submit");
+                if (!busOptions || !submitButton) return;
+
+                if (type === "eigene") {
+                    busOptions.style.display = "none";
+                    submitButton.textContent = "✅ Eigene Anreise bestätigen";
+                    submitButton.disabled = false;
+                } else {
+                    busOptions.style.display = "block";
+                    submitButton.textContent = "Busplatz reservieren";
+                    submitButton.disabled = {{ 'true' if frei == 0 else 'false' }};
+                }
+            }
+        </script>
 
 {% endblock %}
