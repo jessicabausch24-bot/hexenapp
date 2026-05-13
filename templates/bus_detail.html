@@ -121,12 +121,12 @@ button {
         <h1>🚌 {{ event.titel }}</h1>
 
         <p><strong>Datum:</strong> {{ event.datum }}</p>
-        {% if event.anreise_typ == 'bus' %}
+        {% if event.anreise_typ|default('bus') == 'bus' %}
             <p><strong>Abfahrtszeit:</strong> {{ event.abfahrtszeit }}</p>
             <p><strong>Haltestellen:</strong> {{ event.haltestellen|join(", ") }}</p>
         {% endif %}
 
-        {% if event.anreise_typ == 'bus' %}
+        {% if event.anreise_typ|default('bus') == 'bus' %}
             {% set prozent = (belegt / event.gesamtplaetze * 100) if event.gesamtplaetze > 0 else 0 %}
 
             <div class="status-box">

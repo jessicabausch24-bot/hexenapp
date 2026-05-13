@@ -754,14 +754,24 @@ def bus():
     # Nur aktive Veranstaltungen anzeigen
     veranstaltungen = [v for v in veranstaltungen if v.get("is_active", True)]
 
+    # Standardwert für anreise_typ sicherstellen
+    for v in veranstaltungen:
+        v["anreise_typ"] = v.get("anreise_typ", "bus")
+
     belegung = {}
 
     for v in veranstaltungen:
-        belegung[v["id"]] = sum(
-            r.get("anzahl", 0)
-            for r in reservierungen
-            if r.get("veranstaltung_id") == v["id"]
-        )
+        if v.get("anreise_typ", "bus") == "bus":
+            belegung[v["id"]] = sum(
+                r.get("anzahl", 0)
+                for r in reservierungen
+                if r.get("veranstaltung_id") == v["id"]
+            )
+        else:
+            belegung[v["id"]] = sum(
+                1 for r in reservierungen
+                if r.get("veranstaltung_id") == v["id"]
+            )
 
     return render_template(
         "bus.html",
@@ -787,10 +797,12 @@ def bus_detail(event_id):
     if not event:
         abort(404)
 
+    event["anreise_typ"] = event.get("anreise_typ", "bus")
+
     belegt = 0
     frei = 0
     
-    if event.get('anreise_typ', 'bus') == 'bus':
+    if event.get('anreise_typ') == 'bus':
         belegt = sum(
             r.get("anzahl", 0)
             for r in reservierungen
