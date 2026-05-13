@@ -198,7 +198,7 @@ button {
                 </div>
             {% endif %}
 
-            <div class="hint">
+            <div id="cancellation-hint" class="hint" style="display: {% if event.anreise_typ == 'bus' or frei > 0 %}block{% else %}none{% endif %};">
                 Für spätere Stornierungen fällt eine Stornierungsgebühr von {{ "%.2f"|format(stornogebuehr) }} € an.
             </div>
         {% endif %}
@@ -226,14 +226,21 @@ button {
                 const submitButton = document.getElementById("anreise-submit");
                 if (!busOptions || !submitButton) return;
 
-                if (type === "eigene") {
-                    busOptions.style.display = "none";
-                    submitButton.textContent = "✅ Eigene Anreise bestätigen";
-                    submitButton.disabled = false;
-                } else {
-                    busOptions.style.display = "block";
-                    submitButton.textContent = "Busplatz reservieren";
-                    submitButton.disabled = {{ 'true' if frei == 0 else 'false' }};
+const cancellationHint = document.getElementById("cancellation-hint");
+                    if (type === "eigene") {
+                        busOptions.style.display = "none";
+                        submitButton.textContent = "✅ Eigene Anreise bestätigen";
+                        submitButton.disabled = false;
+                        if (cancellationHint) {
+                            cancellationHint.style.display = "none";
+                        }
+                    } else {
+                        busOptions.style.display = "block";
+                        submitButton.textContent = "Busplatz reservieren";
+                        submitButton.disabled = {{ 'true' if frei == 0 else 'false' }};
+                        if (cancellationHint) {
+                            cancellationHint.style.display = "block";
+                        }
                 }
             }
         </script>

@@ -65,11 +65,11 @@ body {
                 Angemeldet am: {{ r.datum }}<br>
 
                 <a class="btn-danger"
-                   href="/admin/bus/reservierung-loeschen/{{ r.id }}"
+                   href="/admin/bus/reservierung-loeschen/{{ r['id'] }}"
                    onclick="return confirm('{% if r.anreise_typ|default('bus') == 'bus' %}Reservierung{% else %}Anmeldung{% endif %} wirklich löschen?');">
                    {% if r.anreise_typ|default('bus') == 'bus' %}Reservierung{% else %}Anmeldung{% endif %} löschen
                 </a>
-                <a class="btn-danger" href="/admin/bus/reservierung-bearbeiten/{{ r.id }}" style="background: #4caf50; margin-left: 10px;">
+                <a class="btn-danger" href="/admin/bus/reservierung-bearbeiten/{{ r['id'] }}" style="background: #4caf50; margin-left: 10px;">
                     Bearbeiten
                 </a>
             </div>

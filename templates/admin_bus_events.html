@@ -156,7 +156,7 @@ h1 {
                 <div class="status-badge status-inactive">✗ INAKTIV - Unsichtbar für Nutzer</div>
             {% endif %}
 
-            <a href="/admin/bus/toggle/{{ event.id }}" class="toggle-btn">
+            <a href="/admin/bus/toggle/{{ event['id'] }}" class="toggle-btn">
                 {% if event.get('is_active', True) %}
                     🔴 Deaktivieren
                 {% else %}
@@ -172,29 +172,29 @@ h1 {
                     {% if event.get('anreise_typ', 'bus') == 'bus' %}
                         🕒 {{ event.abfahrtszeit }}<br>
                         📍 {{ event.haltestellen | join(", ") }}<br>
-                        🪑 {{ belegung_bus.get(event.id, 0) }} / {{ event.gesamtplaetze }} belegt
+                        🪑 {{ belegung_bus.get(event['id'], 0) }} / {{ event.gesamtplaetze }} belegt
                     {% elif event.get('anreise_typ') == 'bus_und_eigene_anreise' %}
                         🕒 {{ event.abfahrtszeit }}<br>
                         📍 {{ event.haltestellen | join(", ") }}<br>
-                        🪑 {{ belegung_bus.get(event.id, 0) }} / {{ event.gesamtplaetze }} belegt<br>
-                        🚶 {{ belegung_eigene.get(event.id, 0) }} Anmeldung{% if belegung_eigene.get(event.id, 0) != 1 %}en{% endif %}
+                        🪑 {{ belegung_bus.get(event['id'], 0) }} / {{ event.gesamtplaetze }} belegt<br>
+                        🚶 {{ belegung_eigene.get(event['id'], 0) }} Anmeldung{% if belegung_eigene.get(event['id'], 0) != 1 %}en{% endif %}
                     {% else %}
                         🚶 Eigene Anreise<br>
-                        👥 {{ belegung_eigene.get(event.id, 0) }} Anmeldung{% if belegung_eigene.get(event.id, 0) != 1 %}en{% endif %}
+                        👥 {{ belegung_eigene.get(event['id'], 0) }} Anmeldung{% if belegung_eigene.get(event['id'], 0) != 1 %}en{% endif %}
                     {% endif %}
                 </div>
 
                 <div class="actions">
-                    <a class="view" href="/admin/bus/reservierungen/{{ event.id }}">
-                        Einsehen
+                    <a class="view" href="/admin/bus/reservierungen/{{ event['id'] }}">
+                        Reservierungen
                     </a>
 
-                    <a class="edit" href="/admin/bus/bearbeiten/{{ event.id }}">
+                    <a class="edit" href="/admin/bus/bearbeiten/{{ event['id'] }}">
                         Bearbeiten
                     </a>
 
                     <a class="delete"
-                       href="/admin/bus/loeschen/{{ event.id }}"
+                       href="/admin/bus/loeschen/{{ event['id'] }}"
                        onclick="return confirm('Wirklich löschen?');">
                         Löschen
                     </a>
