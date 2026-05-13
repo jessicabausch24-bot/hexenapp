@@ -1717,7 +1717,8 @@ def admin_bus_events():
     return render_template(
         "admin_bus_events.html",
         events=events,
-        belegung=belegung
+        belegung_bus=belegung_bus,
+        belegung_eigene=belegung_eigene
     )
 
 
