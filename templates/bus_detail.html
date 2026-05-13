@@ -121,12 +121,10 @@ button {
         <h1>🚌 {{ event.titel }}</h1>
 
         <p><strong>Datum:</strong> {{ event.datum }}</p>
-        {% if event.anreise_typ|default('bus') == 'bus' %}
+        {% if event.anreise_typ|default('bus') in ['bus', 'bus_und_eigene_anreise'] %}
             <p><strong>Abfahrtszeit:</strong> {{ event.abfahrtszeit }}</p>
             <p><strong>Haltestellen:</strong> {{ event.haltestellen|join(", ") }}</p>
-        {% endif %}
 
-        {% if event.anreise_typ|default('bus') == 'bus' %}
             {% set prozent = (belegt / event.gesamtplaetze * 100) if event.gesamtplaetze > 0 else 0 %}
 
             <div class="status-box">
@@ -160,10 +158,12 @@ button {
                 Der Platz ist bis 5 Tage vor Veranstaltung über „Meine Reservierungen“ stornierbar.
                 Für spätere Stornierungen fällt eine Stornierungsgebühr von {{ "%.2f"|format(stornogebuehr) }} € an.
             </div>
-        {% else %}
-            <div class="status-box" style="background: #e7f8ea; color: #147a2e;">
+        {% endif %}
+
+        {% if event.anreise_typ in ['bus_und_eigene_anreise', 'eigene_anreise'] %}
+            <div class="status-box" style="background: #e7f8ea; color: #147a2e; margin-top: 20px;">
                 <div style="font-size: 18px; font-weight: bold;">🚶 Eigene Anreise</div>
-                <div>Für diese Veranstaltung werden keine Busplätze angeboten. Bitte komme selbstständig zur Veranstaltung.</div>
+                <div>Für diese Veranstaltung kannst du dich auch einfach selbstständig anmelden und dann vor Ort anreisen.</div>
             </div>
 
             <form method="POST" action="/anreise-bestaetigen/{{ event.id }}">

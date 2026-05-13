@@ -94,10 +94,11 @@
 
         <div class="calendar-grid">
             {% for v in veranstaltungen %}
-                {% set belegt = belegung.get(v.id, 0) %}
-            {% if v.anreise_typ == 'bus' %}
-                {% set prozent = (belegt / v.gesamtplaetze * 100) if v.gesamtplaetze > 0 else 0 %}
-            {% endif %}
+                {% set belegt = belegung_bus.get(v.id, 0) %}
+                {% set eigene = belegung_eigene.get(v.id, 0) %}
+                {% if v.anreise_typ in ['bus', 'bus_und_eigene_anreise'] %}
+                    {% set prozent = (belegt / v.gesamtplaetze * 100) if v.gesamtplaetze > 0 else 0 %}
+                {% endif %}
 
                 <a class="day-card" href="{{ url_for('bus_detail', event_id=v.id) }}">
                     
@@ -125,9 +126,29 @@
                                 <div class="progress-fill" style="width: {{ prozent }}%;"></div>
                             </div>
                         </div>
+                    {% elif v.anreise_typ == 'bus_und_eigene_anreise' %}
+                        <div class="info-line">
+                            🕒 {{ v.abfahrtszeit }}
+                        </div>
+
+                        <div class="info-line">
+                            📍 {{ v.haltestellen | join(", ") }}
+                        </div>
+
+                        <div class="seat-status">
+                             {{ belegt }} / {{ v.gesamtplaetze }} belegt
+
+                            <div class="progress">
+                                <div class="progress-fill" style="width: {{ prozent }}%;"></div>
+                            </div>
+                        </div>
+
+                        <div class="info-line" style="margin-top: 10px; font-weight: bold; color: #147a2e;">
+                            🚶 {{ eigene }} Anmeldung{% if eigene != 1 %}en{% endif %}
+                        </div>
                     {% else %}
                         <div class="info-line" style="font-weight: bold; color: #147a2e;">
-                            🚶 Eigene Anreise • {{ belegt }} Anmeldung{% if belegt != 1 %}en{% endif %}
+                            🚶 Eigene Anreise • {{ eigene }} Anmeldung{% if eigene != 1 %}en{% endif %}
                         </div>
                     {% endif %}
 

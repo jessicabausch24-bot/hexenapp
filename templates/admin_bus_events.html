@@ -172,10 +172,15 @@ h1 {
                     {% if event.get('anreise_typ', 'bus') == 'bus' %}
                         🕒 {{ event.abfahrtszeit }}<br>
                         📍 {{ event.haltestellen | join(", ") }}<br>
-                        🪑 {{ belegung.get(event.id, 0) }} / {{ event.gesamtplaetze }} belegt
+                        🪑 {{ belegung_bus.get(event.id, 0) }} / {{ event.gesamtplaetze }} belegt
+                    {% elif event.get('anreise_typ') == 'bus_und_eigene_anreise' %}
+                        🕒 {{ event.abfahrtszeit }}<br>
+                        📍 {{ event.haltestellen | join(", ") }}<br>
+                        🪑 {{ belegung_bus.get(event.id, 0) }} / {{ event.gesamtplaetze }} belegt<br>
+                        🚶 {{ belegung_eigene.get(event.id, 0) }} Anmeldung{% if belegung_eigene.get(event.id, 0) != 1 %}en{% endif %}
                     {% else %}
                         🚶 Eigene Anreise<br>
-                        👥 {{ belegung.get(event.id, 0) }} Anmeldungen
+                        👥 {{ belegung_eigene.get(event.id, 0) }} Anmeldung{% if belegung_eigene.get(event.id, 0) != 1 %}en{% endif %}
                     {% endif %}
                 </div>
 

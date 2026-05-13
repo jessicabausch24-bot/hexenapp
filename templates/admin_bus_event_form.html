@@ -80,16 +80,16 @@ button {
             <input type="date" name="datum" value="{{ event.datum if event else '' }}" required>
 
             <label>Abfahrtszeit</label>
-            <input type="text" name="abfahrtszeit" value="{{ event.abfahrtszeit if event else '' }}" placeholder="z.B. 11:30 Uhr" required>
+            <input type="text" name="abfahrtszeit" value="{{ event.abfahrtszeit if event else '' }}" placeholder="z.B. 11:30 Uhr">
 
             <label>Haltestellen</label>
             <textarea name="haltestellen" placeholder="Rathaus, Sportplatz, Festhalle">{{ event.haltestellen|join(', ') if event else '' }}</textarea>
 
             <label>Gesamtplätze</label>
-            <input type="number" name="gesamtplaetze" value="{{ event.gesamtplaetze if event else '' }}" min="0" required>
+            <input type="number" name="gesamtplaetze" value="{{ event.gesamtplaetze if event else '' }}" min="0">
 
             <label style="margin-top: 20px;">Anreise-Option</label>
-            <div style="display: flex; gap: 20px; margin-top: 10px;">
+            <div style="display: flex; gap: 20px; margin-top: 10px; flex-wrap: wrap;">
                 <label style="display: flex; align-items: center; font-weight: normal;">
                     <input type="radio" name="anreise_typ" value="bus" {% if not event or event.get('anreise_typ', 'bus') == 'bus' %}checked{% endif %} style="margin-right: 8px;">
                     🚌 Busplätze anbieten
@@ -98,7 +98,14 @@ button {
                     <input type="radio" name="anreise_typ" value="eigene_anreise" {% if event and event.get('anreise_typ') == 'eigene_anreise' %}checked{% endif %} style="margin-right: 8px;">
                     🚶 Eigene Anreise
                 </label>
+                <label style="display: flex; align-items: center; font-weight: normal;">
+                    <input type="radio" name="anreise_typ" value="bus_und_eigene_anreise" {% if event and event.get('anreise_typ') == 'bus_und_eigene_anreise' %}checked{% endif %} style="margin-right: 8px;">
+                    🚌 + 🚶 Bus & Eigene Anreise
+                </label>
             </div>
+            <p style="margin-top: 10px; color: #1f1936; font-size: 14px;">
+                Bei „Bus & Eigene Anreise" können Nutzer entweder einen Busplatz buchen oder sich für die eigene Anreise anmelden.
+            </p>
 
             <label style="display: flex; align-items: center; margin-top: 20px;">
                 <input type="checkbox" name="is_active" {% if not event or event.get('is_active', True) %}checked{% endif %} style="width: auto; margin-right: 10px;">

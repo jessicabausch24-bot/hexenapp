@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<title>Reservierung bearbeiten</title>
+
+<style>
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg, #1f1936, #a64fff);
+    color: white;
+    padding: 20px;
+    min-height: 100vh;
+}
+
+.wrapper {
+    max-width: 650px;
+    margin: 0 auto;
+}
+
+.card {
+    background: white;
+    color: #1f1936;
+    border-radius: 20px;
+    padding: 25px;
+}
+
+label {
+    display: block;
+    margin-top: 15px;
+    margin-bottom: 8px;
+    font-weight: bold;
+}
+
+input, textarea, select {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 12px;
+    border-radius: 12px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+}
+
+button {
+    width: 100%;
+    margin-top: 20px;
+    padding: 14px;
+    border: none;
+    border-radius: 14px;
+    background: #6a1cff;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.back {
+    display: inline-block;
+    margin-top: 20px;
+    color: white;
+}
+
+.radio-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.radio-group label {
+    font-weight: normal;
+}
+</style>
+</head>
+
+<body>
+<div class="wrapper">
+
+    <h1>Reservierung bearbeiten</h1>
+
+    <div class="card">
+        <p><strong>Veranstaltung:</strong> {{ event.titel }}</p>
+        <p><strong>Datum:</strong> {{ event.datum }}{% if event.anreise_typ != 'eigene_anreise' %} | Abfahrt: {{ event.abfahrtszeit }}{% endif %}</p>
+
+        <form method="POST">
+            <label>Name</label>
+            <input type="text" name="name" value="{{ reservierung.name }}" required>
+
+            <label>E-Mail</label>
+            <input type="email" name="email" value="{{ reservierung.email }}" required>
+
+            {% if event.anreise_typ == 'bus_und_eigene_anreise' %}
+                <label>Anreise-Typ</label>
+                <div class="radio-group">
+                    <label><input type="radio" name="anreise_typ" value="bus" {% if reservierung.anreise_typ == 'bus' %}checked{% endif %}> 🚌 Busplatz</label>
+                    <label><input type="radio" name="anreise_typ" value="eigene_anreise" {% if reservierung.anreise_typ == 'eigene_anreise' %}checked{% endif %}> 🚶 Eigene Anreise</label>
+                </div>
+            {% elif event.anreise_typ == 'bus' %}
+                <input type="hidden" name="anreise_typ" value="bus">
+            {% else %}
+                <input type="hidden" name="anreise_typ" value="eigene_anreise">
+            {% endif %}
+
+            {% if reservierung.anreise_typ == 'bus' %}
+                <label>Anzahl Plätze</label>
+                <input type="number" name="anzahl" min="1" value="{{ reservierung.anzahl }}">
+            {% endif %}
+
+            <button type="submit">Speichern</button>
+        </form>
+    </div>
+
+    <a class="back" href="/admin/bus/reservierungen/{{ event.id }}">← Zurück zu Reservierungen</a>
+
+</div>
+</body>
+</html>

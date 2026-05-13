@@ -57,7 +57,7 @@ body {
             <div class="card">
                 <strong>{{ r.name }}</strong><br>
                 E-Mail: {{ r.email }}<br>
-                {% if event.anreise_typ|default('bus') == 'bus' %}
+                {% if r.anreise_typ|default('bus') == 'bus' %}
                     Plätze: {{ r.anzahl }}<br>
                 {% else %}
                     Anmeldung: Eigene Anreise<br>
@@ -66,8 +66,11 @@ body {
 
                 <a class="btn-danger"
                    href="/admin/bus/reservierung-loeschen/{{ r.id }}"
-                   onclick="return confirm('{% if event.anreise_typ|default('bus') == 'bus' %}Reservierung{% else %}Anmeldung{% endif %} wirklich löschen?');">
-                   {% if event.anreise_typ|default('bus') == 'bus' %}Reservierung{% else %}Anmeldung{% endif %} löschen
+                   onclick="return confirm('{% if r.anreise_typ|default('bus') == 'bus' %}Reservierung{% else %}Anmeldung{% endif %} wirklich löschen?');">
+                   {% if r.anreise_typ|default('bus') == 'bus' %}Reservierung{% else %}Anmeldung{% endif %} löschen
+                </a>
+                <a class="btn-danger" href="/admin/bus/reservierung-bearbeiten/{{ r.id }}" style="background: #4caf50; margin-left: 10px;">
+                    Bearbeiten
                 </a>
             </div>
         {% endfor %}

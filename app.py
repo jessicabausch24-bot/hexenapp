@@ -758,25 +758,35 @@ def bus():
     for v in veranstaltungen:
         v["anreise_typ"] = v.get("anreise_typ", "bus")
 
-    belegung = {}
+    # Sortiere Veranstaltungen nach Datum (frühester Termin zuerst)
+    def parse_event_datum(event):
+        try:
+            return datetime.datetime.strptime(event.get("datum", ""), "%Y-%m-%d")
+        except:
+            return datetime.datetime.max
+
+    veranstaltungen = sorted(veranstaltungen, key=parse_event_datum)
+
+    belegung_bus = {}
+    belegung_eigene = {}
 
     for v in veranstaltungen:
-        if v.get("anreise_typ", "bus") == "bus":
-            belegung[v["id"]] = sum(
-                r.get("anzahl", 0)
-                for r in reservierungen
-                if r.get("veranstaltung_id") == v["id"]
-            )
-        else:
-            belegung[v["id"]] = sum(
-                1 for r in reservierungen
-                if r.get("veranstaltung_id") == v["id"]
-            )
+        anreise_typ = v.get("anreise_typ", "bus")
+        belegung_bus[v["id"]] = sum(
+            r.get("anzahl", 0)
+            for r in reservierungen
+            if r.get("veranstaltung_id") == v["id"] and r.get("anreise_typ", "bus") == "bus"
+        )
+        belegung_eigene[v["id"]] = sum(
+            1 for r in reservierungen
+            if r.get("veranstaltung_id") == v["id"] and r.get("anreise_typ") == "eigene_anreise"
+        )
 
     return render_template(
         "bus.html",
         veranstaltungen=veranstaltungen,
-        belegung=belegung
+        belegung_bus=belegung_bus,
+        belegung_eigene=belegung_eigene
     )
 
 
@@ -802,11 +812,11 @@ def bus_detail(event_id):
     belegt = 0
     frei = 0
     
-    if event.get('anreise_typ') == 'bus':
+    if event.get('anreise_typ') in ['bus', 'bus_und_eigene_anreise']:
         belegt = sum(
             r.get("anzahl", 0)
             for r in reservierungen
-            if r.get("veranstaltung_id") == event_id
+            if r.get("veranstaltung_id") == event_id and r.get("anreise_typ", "bus") == "bus"
         )
         frei = event.get("gesamtplaetze", 0) - belegt
 
@@ -832,7 +842,8 @@ def bus_detail(event_id):
             "veranstaltungsdatum": event.get("datum"),
             "abfahrtszeit": event.get("abfahrtszeit"),
             "haltestellen": event.get("haltestellen", []),
-            "anzahl": anzahl
+            "anzahl": anzahl,
+            "anreise_typ": "bus"
         }
 
         reservierungen.append(reservierung)
@@ -1680,25 +1691,28 @@ def admin_bus_events():
     events = load_bus_events()
     reservierungen = load_bus_reservierungen()
 
-    # Sortiere Veranstaltungen nach Datum (aufsteigend)
-    events = sorted(events, key=lambda x: x.get('datum', ''))
+    # Sortiere Veranstaltungen nach Datum (frühester Termin zuerst)
+    def parse_event_datum(event):
+        try:
+            return datetime.datetime.strptime(event.get("datum", ""), "%Y-%m-%d")
+        except:
+            return datetime.datetime.max
 
-    belegung = {}
+    events = sorted(events, key=parse_event_datum)
+
+    belegung_bus = {}
+    belegung_eigene = {}
     for event in events:
         event_id = event["id"]
-        if event.get('anreise_typ', 'bus') == 'bus':
-            # Für Bus-Veranstaltungen: Summe der reservierten Plätze
-            belegung[event_id] = sum(
-                r.get("anzahl", 0)
-                for r in reservierungen
-                if r.get("veranstaltung_id") == event_id
-            )
-        else:
-            # Für eigene Anreise: Anzahl der Anmeldungen
-            belegung[event_id] = sum(
-                1 for r in reservierungen
-                if r.get("veranstaltung_id") == event_id
-            )
+        belegung_bus[event_id] = sum(
+            r.get("anzahl", 0)
+            for r in reservierungen
+            if r.get("veranstaltung_id") == event_id and r.get("anreise_typ", "bus") == "bus"
+        )
+        belegung_eigene[event_id] = sum(
+            1 for r in reservierungen
+            if r.get("veranstaltung_id") == event_id and r.get("anreise_typ") == "eigene_anreise"
+        )
 
     return render_template(
         "admin_bus_events.html",
@@ -1828,6 +1842,72 @@ def admin_bus_event_reservierungen(event_id):
         "admin_bus_event_reservierungen.html",
         event=event,
         reservierungen=event_reservierungen
+    )
+
+
+@app.route('/admin/bus/reservierung-bearbeiten/<reservierung_id>', methods=['GET', 'POST'])
+def admin_bus_reservierung_bearbeiten(reservierung_id):
+    if not admin_required():
+        return redirect('/login')
+
+    events = load_bus_events()
+    reservierungen = load_bus_reservierungen()
+
+    reservierung = next(
+        (r for r in reservierungen if r["id"] == reservierung_id),
+        None
+    )
+
+    if not reservierung:
+        return "Reservierung nicht gefunden", 404
+
+    event = next(
+        (e for e in events if e["id"] == reservierung.get("veranstaltung_id")),
+        None
+    )
+
+    if not event:
+        return "Veranstaltung nicht gefunden", 404
+
+    event["anreise_typ"] = event.get("anreise_typ", "bus")
+    available_types = ["bus"]
+    if event["anreise_typ"] == "bus_und_eigene_anreise":
+        available_types = ["bus", "eigene_anreise"]
+    elif event["anreise_typ"] == "eigene_anreise":
+        available_types = ["eigene_anreise"]
+
+    if request.method == 'POST':
+        reservierung["name"] = request.form.get("name", reservierung.get("name", "")).strip()
+        reservierung["email"] = request.form.get("email", reservierung.get("email", "")).strip()
+
+        if event["anreise_typ"] == "bus_und_eigene_anreise":
+            anreise_typ = request.form.get("anreise_typ", reservierung.get("anreise_typ", "bus"))
+            if anreise_typ not in available_types:
+                anreise_typ = available_types[0]
+            reservierung["anreise_typ"] = anreise_typ
+        else:
+            reservierung["anreise_typ"] = "eigene_anreise" if event["anreise_typ"] == "eigene_anreise" else "bus"
+
+        if reservierung["anreise_typ"] == "bus":
+            try:
+                reservierung["anzahl"] = max(1, int(request.form.get("anzahl", reservierung.get("anzahl", 1))))
+            except ValueError:
+                reservierung["anzahl"] = reservierung.get("anzahl", 1)
+            reservierung["abfahrtszeit"] = event.get("abfahrtszeit")
+            reservierung["haltestellen"] = event.get("haltestellen", [])
+        else:
+            reservierung["anzahl"] = 1
+            reservierung["abfahrtszeit"] = "Eigene Anreise"
+            reservierung["haltestellen"] = ["Eigene Anreise"]
+
+        save_bus_reservierungen(reservierungen)
+        return redirect(f'/admin/bus/reservierungen/{event["id"]}')
+
+    return render_template(
+        "admin_bus_reservierung_bearbeiten.html",
+        event=event,
+        reservierung=reservierung,
+        available_types=available_types
     )
 
 
